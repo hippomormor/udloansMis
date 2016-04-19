@@ -39,6 +39,7 @@ public class UdlånsMis extends javax.swing.JFrame {
         dateThread.start();
         Thread checkForServerThread = new Thread(checkforserver);
         checkForServerThread.start();
+        
     }
 
     public void setDate(String date) {
@@ -158,6 +159,11 @@ public class UdlånsMis extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jButton2.setText("Udlån komponenter");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -300,6 +306,10 @@ public class UdlånsMis extends javax.swing.JFrame {
             //jTable2.setBackground(Color.red);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
