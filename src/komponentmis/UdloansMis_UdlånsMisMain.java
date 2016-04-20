@@ -13,7 +13,7 @@ import java.util.Date;
  *
  * @author Lenovo
  */
-public class UdlånsMisMain {
+public class UdloansMis_UdlånsMisMain {
 
     public static void main(String[] args) {
       /* Set the Nimbus look and feel */
@@ -29,17 +29,17 @@ public class UdlånsMisMain {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        UdlånsMis GUI = new UdlånsMis();
+        UdloansMis_UdlånsMis GUI = new UdloansMis_UdlånsMis();
         GUI.init();
         GUI.setVisible(true);
         

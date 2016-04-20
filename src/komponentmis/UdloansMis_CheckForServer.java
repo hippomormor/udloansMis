@@ -11,13 +11,13 @@ import java.util.logging.Logger;
  *
  * @author Lenovo
  */
-public class CheckForServer implements Runnable {
+public class UdloansMis_CheckForServer implements Runnable {
     public boolean isConnectedToServer = false;
 
 
-    private static UdlånsMis GUI;
+    private static UdloansMis_UdlånsMis GUI;
 
-    public CheckForServer(UdlånsMis GUI) {
+    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI) {
         this.GUI = GUI;
     }
     
@@ -29,7 +29,7 @@ public class CheckForServer implements Runnable {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CheckForServer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UdloansMis_CheckForServer.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

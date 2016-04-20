@@ -14,12 +14,12 @@ import java.util.logging.Logger;
  *
  * @author Lenovo
  */
-public class Dato implements Runnable { 
+public class UdloansMis_Dato implements Runnable { 
 
     private final DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
     private java.util.Date date;
-    private static UdlånsMis GUI;
-    public Dato(UdlånsMis GUI) {
+    private static UdloansMis_UdlånsMis GUI;
+    public UdloansMis_Dato(UdloansMis_UdlånsMis GUI) {
         date = new java.util.Date();
         this.GUI = GUI;
     }
@@ -35,7 +35,7 @@ public class Dato implements Runnable {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
-                Logger.getLogger(Dato.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UdloansMis_Dato.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
