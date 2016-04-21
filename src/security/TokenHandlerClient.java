@@ -28,7 +28,7 @@ public class TokenHandlerClient {
     // Generate random 7-bit prime number
     private BigInteger generateRandom() {
         randomToken = BigInteger.probablePrime(7, new SecureRandom());
-        System.out.println("Random prime generated" + randomToken);
+        System.out.println("Random prime generated");
         return randomToken;
     }
 
