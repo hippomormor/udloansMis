@@ -1,4 +1,4 @@
-package komponentmis;
+package eksemplerFraKapitel19;
 import java.util.ArrayList;
 
 public interface RMI_KontoI extends java.rmi.Remote

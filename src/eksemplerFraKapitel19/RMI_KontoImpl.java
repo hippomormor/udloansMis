@@ -1,4 +1,4 @@
-package komponentmis;
+package eksemplerFraKapitel19;
 import java.util.ArrayList;
 import java.rmi.server.UnicastRemoteObject;
 

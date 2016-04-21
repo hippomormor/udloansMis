@@ -1,4 +1,4 @@
-package komponentmis;
+package eksemplerFraKapitel19;
 import java.rmi.Naming;
 public class RMI_Kontoserver
 {
