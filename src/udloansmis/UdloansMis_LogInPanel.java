@@ -206,7 +206,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     GUI.init();
                     GUI.setVisible(true);
                 } else {
-                    // If credentials are acceptedfrom javabog/brugeradmin, but rejected from server (different user on server and client)
+                    // If credentials are accepted from javabog/brugeradmin, but rejected from server (different user on server and client)
                     System.out.println("Key matching unsuccessful");                   
                     jLabelInfo.setText("Wrong username or password..");
                     jTextUser.setText("");
