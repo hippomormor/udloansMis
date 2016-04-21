@@ -13,8 +13,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import security.TokenHandler;
 
@@ -188,11 +186,15 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     // Create tokenhandler with user + password
                     TokenHandler tokenhandler = new TokenHandler(user, new String(pass));
                     
+                    tokenhandler.setID(databaseRMI.getNewID());
+                    
+                    System.out.println(tokenhandler.getID());
+                    
                     // Send own token to server. Then generate key from server token
-                    tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken()));
+                    tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken(), tokenhandler.getID()));
                     
                     // Send own key and request key from server
-                    BigInteger serverKey = databaseRMI.exchangeKeys(tokenhandler.getKeyToken());
+                    BigInteger serverKey = databaseRMI.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID());
                     
                     // Check if server-key matches own key
                     if (tokenhandler.checkKey(serverKey)) {
