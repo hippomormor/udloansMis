@@ -24,7 +24,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private final TokenHandler tokenhandler;
     private final IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
                                                 //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
-                                                //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken())          
+                                                //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
     
     public UdloansMis_UdlånsMis(TokenHandler tokenhandler, IDatabaseRMI database) {       
         this.tokenhandler = tokenhandler;
