@@ -9,6 +9,7 @@ import RMI.IDatabaseRMI;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.math.BigInteger;
 import javax.swing.JOptionPane;
 import security.TokenHandler;
 
@@ -19,14 +20,15 @@ import security.TokenHandler;
 public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
-    private final UdloansMis_CheckForServer checkforserver;
+    private UdloansMis_CheckForServer checkforserver;
     private final TokenHandler tokenhandler;
-    private final IDatabaseRMI database;
-
-    public UdloansMis_UdlånsMis(TokenHandler tokenhandler, IDatabaseRMI database) {
-        checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database);
+    private final IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
+                                                //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
+                                                //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken())          
+    
+    public UdloansMis_UdlånsMis(TokenHandler tokenhandler, IDatabaseRMI database) {       
         this.tokenhandler = tokenhandler;
-        this.database = database;
+        this.database = database;       
         this.setResizable(false);
         this.setTitle("KomponentMis v1.0");       
     }
@@ -35,6 +37,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         initComponents();
         Thread dateThread = new Thread(dato);
         dateThread.start();
+        checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database);
         Thread checkForServerThread = new Thread(checkforserver);
         checkForServerThread.start();
         
