@@ -209,19 +209,19 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     } else {
                         // If credentials are accepted from javabog/brugeradmin, but rejected from server (different user on server and client)
                         System.out.println("Key matching unsuccessful");
-                        jLabelInfo.setText("Wrong username or password..");
+                        jLabelInfo.setText("Wrong username or password");
                         jTextUser.setText("");
                         jPasswordField.setText("");
                     }
                 }
             } catch (Exception ex) {
                 // If credentials are rejected from javabog/brugeradmin, then prompt user and clear text-/password-field
-                jLabelInfo.setText(" Wrong username or password..");
+                jLabelInfo.setText(" Wrong username or password");
                 jTextUser.setText("");
                 jPasswordField.setText("");
             }
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-                jLabelInfo.setText("  Unable to connect to server..");
+                jLabelInfo.setText("  Unable to connect to server");
         }
     }
 
