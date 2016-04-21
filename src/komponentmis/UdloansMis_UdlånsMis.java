@@ -5,18 +5,9 @@
  */
 package komponentmis;
 
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
-import java.awt.Color;
-import static java.awt.SystemColor.text;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,8 +16,8 @@ import javax.swing.JOptionPane;
  */
 public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
-    private UdloansMis_Dato dato = new UdloansMis_Dato(this);
-    private UdloansMis_CheckForServer checkforserver = new UdloansMis_CheckForServer(this);
+    private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
+    private final UdloansMis_CheckForServer checkforserver = new UdloansMis_CheckForServer(this);
 
     public UdloansMis_UdlånsMis() {
         this.setResizable(false);
