@@ -6,66 +6,75 @@
 package udloansmis;
 
 import RMI.IDatabaseRMI;
-import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import security.TokenHandler;
+
 /**
  *
  * @author Lenovo
  */
 public class UdloansMis_CheckForServer implements Runnable {
+
     public boolean isConnectedToServer = false;
+    private boolean isConnectionDropped = false;
 
     private final UdloansMis_UdlånsMis GUI;
     private final TokenHandler tokenhandler;
-    private final IDatabaseRMI database;
+    private IDatabaseRMI database;
 
     public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI, TokenHandler tokenhandler, IDatabaseRMI database) {
         this.GUI = GUI;
         this.tokenhandler = tokenhandler;
         this.database = database;
     }
-    
+
     @Override
     public void run() {
         while (true) {
-            isConnectedToServer = (!isConnectedToServer);
-            GUI.CheckServer(isConnectedToServer);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(UdloansMis_CheckForServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    
-    /////////////////////////////////////// FORSLAG TIL SERVER/KEY-CHECK //////////////////////////////////////////////// 
- /* @Override
-    public void run() {
-        while (true) {
 
             try {
-            
-                BigInteger serverKey = database.exchangeKeys(tokenhandler.getKeyToken());
+                // check if connection was dropped & re-init RMI and make DH key-exchange if true
+                if (!isConnectedToServer && isConnectionDropped) {
+                    
+                    // Restart RMI-connection
+                    database = (IDatabaseRMI) Naming.lookup("rmi://52.28.66.187/databaseRMI"); 
+                    
+                    // Send own token to server. Then generate key from server token
+                    tokenhandler.generateKey(database.exchangeTokens(tokenhandler.getPublicToken()));
 
-                isConnectedToServer = tokenhandler.checkKey(serverKey);
+                    // Send own key and request key from server
+                    isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken()));
+                    isConnectionDropped = false;
+                    
+                    // Update GUI-status
+                    GUI.CheckServer(isConnectedToServer);
 
-                GUI.CheckServer(isConnectedToServer);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(UdloansMis_CheckForServer.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    
+                    // Exchange keys with server
+                    isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken()));
+
+                    // Check server-key
+                    GUI.CheckServer(isConnectedToServer);
+                    
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(UdloansMis_CheckForServer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-            } catch (RemoteException ex) {
+                
+            // Catch exception when server is missing and set booleans
+            } catch (NotBoundException | MalformedURLException | RemoteException ex) {
                 isConnectedToServer = false;
+                isConnectionDropped = true;
                 GUI.CheckServer(isConnectedToServer);
             }
-
         }
     }
-    /////////////////////////////////////// FORSLAG TIL SERVER/KEY-CHECK ///////////////////////////////////////////////
- */
 }
