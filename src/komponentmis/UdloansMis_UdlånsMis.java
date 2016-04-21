@@ -5,10 +5,12 @@
  */
 package komponentmis;
 
+import RMI.IDatabaseRMI;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import javax.swing.JOptionPane;
+import security.TokenHandler;
 
 /**
  *
@@ -18,8 +20,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
     private final UdloansMis_CheckForServer checkforserver = new UdloansMis_CheckForServer(this);
+    private TokenHandler tokenhandler;
+    private IDatabaseRMI database;
 
-    public UdloansMis_UdlånsMis() {
+    public UdloansMis_UdlånsMis(TokenHandler tokenhandler, IDatabaseRMI database) {
+        this.tokenhandler = tokenhandler;
+        this.database = database;
         this.setResizable(false);
         this.setTitle("KomponentMis v1.0");
     }
