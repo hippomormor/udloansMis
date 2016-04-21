@@ -96,6 +96,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabelInfo.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabelInfo.setForeground(new java.awt.Color(255, 0, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
