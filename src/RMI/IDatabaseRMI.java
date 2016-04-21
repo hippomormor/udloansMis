@@ -5,10 +5,10 @@
  */
 package RMI;
 
-import RMI.DTO.ComponentDTO;
-import RMI.DTO.ComponentGroupDTO;
-import RMI.DTO.LoanDTO;
-import RMI.DTO.StudentDTO;
+import DTO.ComponentDTO;
+import DTO.ComponentGroupDTO;
+import DTO.LoanDTO;
+import DTO.StudentDTO;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 
