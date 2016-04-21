@@ -5,50 +5,21 @@
  */
 package komponentmis;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author Lenovo
  */
 public class UdloansMis_UdlånsMisMain {
-
-    public static void main(String[] args) {
-      /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        UdloansMis_UdlånsMis GUI = new UdloansMis_UdlånsMis();
-        GUI.init();
-        GUI.setVisible(true);
+    
+    public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
         
+        // Log-in (Din main bliver nu kørt fra "UdloansMis_LoginjPanel", under "jButtonOKActionPerformed()" efter log-in er accepteret af jacobs server);
         
-        
-        
-      
-        
+        UdloansMis_LoginPanelCreator loginhandler = new UdloansMis_LoginPanelCreator();
+        loginhandler.paintLogin();
     }
-    
-    
 }
