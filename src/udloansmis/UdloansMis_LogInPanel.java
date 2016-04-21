@@ -216,10 +216,11 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                 }
             } catch (Exception ex) {
                 // If credentials are rejected from javabog/brugeradmin, then prompt user and clear text-/password-field
-                jLabelInfo.setText(" Wrong username or password");
+                jLabelInfo.setText("Wrong username or password");
                 jTextUser.setText("");
                 jPasswordField.setText("");
             }
+        // If server is not responding prompt user
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
                 jLabelInfo.setText("  Unable to connect to server");
         }
