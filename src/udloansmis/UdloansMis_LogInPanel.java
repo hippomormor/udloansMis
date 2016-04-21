@@ -14,7 +14,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.SwingUtilities;
-import security.TokenHandler;
+import security.TokenHandlerClient;
 
 /**
  *
@@ -184,7 +184,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                 if (brugerAdmin.hentBruger(user, new String(pass)) != null) {
                     
                     // Create tokenhandler with user + password
-                    TokenHandler tokenhandler = new TokenHandler(user, new String(pass));
+                    TokenHandlerClient tokenhandler = new TokenHandlerClient(user, new String(pass));
                     
                     tokenhandler.setID(databaseRMI.getNewID());
                     
