@@ -84,6 +84,7 @@ public class UdloansMis_LogInJPanel extends javax.swing.JPanel {
             }
         });
 
+        jTextField1.setForeground(new java.awt.Color(69, 73, 74));
         jTextField1.setAutoscrolls(false);
         jTextField1.setBorder(null);
         jTextField1.setFocusable(false);
