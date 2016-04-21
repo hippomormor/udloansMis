@@ -40,7 +40,7 @@ public class UdloansMis_LoginPanelCreator {
         vindue.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         // Set window size:
-        vindue.setSize(245, 165);
+        vindue.setSize(250, 165);
         
         // Calculate centre:
         vindue.setLocation(((screenWidth / 2) - vindue.getWidth() / 2), ((screenHeight / 2) - vindue.getHeight() / 2));
