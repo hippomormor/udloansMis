@@ -71,6 +71,8 @@ public class UdloansMis_LogInJPanel extends javax.swing.JPanel {
         jLabel2.setText("Password");
 
         jButtonOK.setText("Ok");
+        jButtonOK.setFocusPainted(false);
+        jButtonOK.setFocusable(false);
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
@@ -78,6 +80,8 @@ public class UdloansMis_LogInJPanel extends javax.swing.JPanel {
         });
 
         jButtonCancel.setText("Cancel");
+        jButtonCancel.setFocusPainted(false);
+        jButtonCancel.setFocusable(false);
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
@@ -87,6 +91,7 @@ public class UdloansMis_LogInJPanel extends javax.swing.JPanel {
         jTextField1.setForeground(new java.awt.Color(69, 73, 74));
         jTextField1.setAutoscrolls(false);
         jTextField1.setBorder(null);
+        jTextField1.setCaretColor(new java.awt.Color(69, 73, 74));
         jTextField1.setFocusable(false);
         jTextField1.setRequestFocusEnabled(false);
         jTextField1.setVerifyInputWhenFocusTarget(false);
