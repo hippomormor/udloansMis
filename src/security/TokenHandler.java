@@ -46,7 +46,6 @@ public class TokenHandler {
 
     public boolean checkKey(BigInteger key) {
         if (key.toString().equals(keyToken.toString())) {
-            System.out.println("Key from server valid");
             return true;
         }
         System.out.println("Key from server invalid");
