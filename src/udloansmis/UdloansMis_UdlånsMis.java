@@ -116,7 +116,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel5.setText("Dato");
 
-        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setText("ServerCheck");
 
