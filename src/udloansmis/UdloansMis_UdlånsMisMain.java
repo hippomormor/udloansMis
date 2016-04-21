@@ -28,7 +28,8 @@ public class UdloansMis_UdlånsMisMain {
        e.printStackTrace();
     }
       
-        // Log-in (Din main bliver nu kørt fra "UdloansMis_LoginPanel", under "jButtonOKActionPerformed()" og "init()", efter log-in er accepteret af jacobs server og nøglerne er lavet og tjekket);       
+        // Log-in (Din main bliver nu kørt fra "UdloansMis_LoginPanel", under "jButtonOKActionPerformed()" og "init()". 
+        // Den starter efter log-in er accepteret af jacobs server og nøglerne er lavet og tjekket);       
         UdloansMis_LoginPanelCreator loginhandler = new UdloansMis_LoginPanelCreator();
         loginhandler.paintLogin();
     }
