@@ -188,8 +188,6 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     
                     tokenhandler.setID(databaseRMI.getNewID());
                     
-                    System.out.println(tokenhandler.getID());
-                    
                     // Send own token to server. Then generate key from server token
                     tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken(), tokenhandler.getID()));
                     
