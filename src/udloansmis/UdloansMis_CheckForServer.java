@@ -42,13 +42,15 @@ public class UdloansMis_CheckForServer implements Runnable {
                 if (!isConnectedToServer && isConnectionDropped) {
                     
                     // Restart RMI-connection
-                    database = (IDatabaseRMI) Naming.lookup("rmi://52.28.66.187/databaseRMI"); 
+                    database = (IDatabaseRMI) Naming.lookup("rmi://52.28.66.187/databaseRMI");
+                    
+                    tokenhandler.setID(database.getNewID());
                     
                     // Send own token to server. Then generate key from server token
-                    tokenhandler.generateKey(database.exchangeTokens(tokenhandler.getPublicToken()));
+                    tokenhandler.generateKey(database.exchangeTokens(tokenhandler.getPublicToken(), tokenhandler.getID()));
 
                     // Send own key and request key from server
-                    isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken()));
+                    isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID()));
                     isConnectionDropped = false;
                     
                     // Update GUI-status
@@ -57,7 +59,7 @@ public class UdloansMis_CheckForServer implements Runnable {
                 } else {
                     
                     // Exchange keys with server, set boolean & check server-key
-                    isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken()));
+                    isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID()));
                     
                     // Update GUI-status
                     GUI.CheckServer(isConnectedToServer);           
