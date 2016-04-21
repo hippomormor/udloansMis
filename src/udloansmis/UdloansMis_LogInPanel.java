@@ -25,7 +25,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
     private final Brugeradmin brugerAdmin;
 
     private final IDatabaseRMI databaseRMI;
-    
+
     private UdloansMis_UdlånsMis GUI;
 
     /**
@@ -37,12 +37,12 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
      */
     public UdloansMis_LogInPanel() throws NotBoundException, MalformedURLException, RemoteException {
         initComponents();
-        
+
         // Create brugeradmin RMI-interface
         brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-        
+
         // Create database RMI-interface
-        databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://52.28.66.187/databaseRMI");        
+        databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://52.28.66.187/databaseRMI");
     }
 
     /**
@@ -173,37 +173,38 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
 
     // Check password and do Diffie-Hellman key-exchange
     private void init() {
-        
+
         // Save username from text-field
         String user = jTextUser.getText();
-        
+
         // Save password from password-field
         char[] pass = jPasswordField.getPassword();
 
         try {
             // Check javabog-brugeradmin if user is OK
             if (brugerAdmin.hentBruger(user, new String(pass)) != null) {
-                
-                // Hide log-in panel
-                Window w = SwingUtilities.getWindowAncestor(this);
-                w.setVisible(false);
-                
+
                 // Create tokenhandler with user + password     
                 TokenHandler tokenhandler = new TokenHandler(user, new String(pass));
 
                 // Send own token to server. Then generate key from server token
                 tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken()));
-                
+
                 // Send own key and request key from server
                 BigInteger serverKey = databaseRMI.exchangeKeys(tokenhandler.getKeyToken());
 
                 // Check if server-key matches own key
                 if (tokenhandler.checkKey(serverKey)) {
                     System.out.println("Key matching successful");
+                    
+                    // Hide log-in panel
+                    Window w = SwingUtilities.getWindowAncestor(this);
+                    w.setVisible(false);
+                    
                     // Create GUI
                     GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI);      // <------------------------------------------------------------- HER ER DIN MAIN :)
                     GUI.init();
-                    GUI.setVisible(true);       
+                    GUI.setVisible(true);
                 } else {
                     System.out.println("Key matching unsuccessful");
                 }
