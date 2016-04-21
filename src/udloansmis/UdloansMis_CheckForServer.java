@@ -5,8 +5,10 @@
  */
 package udloansmis;
 
+import RMI.IDatabaseRMI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import security.TokenHandler;
 /**
  *
  * @author Lenovo
@@ -14,11 +16,14 @@ import java.util.logging.Logger;
 public class UdloansMis_CheckForServer implements Runnable {
     public boolean isConnectedToServer = false;
 
+    private final UdloansMis_UdlånsMis GUI;
+    private final TokenHandler tokenhandler;
+    private final IDatabaseRMI database;
 
-    private static UdloansMis_UdlånsMis GUI;
-
-    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI) {
+    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI, TokenHandler tokenhandler, IDatabaseRMI database) {
         this.GUI = GUI;
+        this.tokenhandler = tokenhandler;
+        this.database = database;
     }
     
     @Override

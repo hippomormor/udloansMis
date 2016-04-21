@@ -19,15 +19,16 @@ import security.TokenHandler;
 public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
-    private final UdloansMis_CheckForServer checkforserver = new UdloansMis_CheckForServer(this);
+    private final UdloansMis_CheckForServer checkforserver;
     private final TokenHandler tokenhandler;
     private final IDatabaseRMI database;
 
     public UdloansMis_UdlånsMis(TokenHandler tokenhandler, IDatabaseRMI database) {
+        checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database);
         this.tokenhandler = tokenhandler;
         this.database = database;
         this.setResizable(false);
-        this.setTitle("KomponentMis v1.0");
+        this.setTitle("KomponentMis v1.0");       
     }
 
     public void init() {
