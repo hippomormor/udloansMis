@@ -12,7 +12,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import security.TokenHandler;
+import security.TokenHandlerClient;
 
 /**
  *
@@ -24,10 +24,10 @@ public class UdloansMis_CheckForServer implements Runnable {
     private boolean isConnectionDropped = false;
 
     private final UdloansMis_UdlånsMis GUI;
-    private final TokenHandler tokenhandler;
+    private final TokenHandlerClient tokenhandler;
     private IDatabaseRMI database;
 
-    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI, TokenHandler tokenhandler, IDatabaseRMI database) {
+    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI, TokenHandlerClient tokenhandler, IDatabaseRMI database) {
         this.GUI = GUI;
         this.tokenhandler = tokenhandler;
         this.database = database;
