@@ -196,17 +196,21 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                 // Check if server-key matches own key
                 if (tokenhandler.checkKey(serverKey)) {
                     System.out.println("Key matching successful");
-                    
+
                     // Hide log-in panel
                     Window w = SwingUtilities.getWindowAncestor(this);
                     w.setVisible(false);
-                    
+
                     // Create GUI
                     GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI);      // <------------------------------------------------------------- HER ER DIN MAIN :)
                     GUI.init();
                     GUI.setVisible(true);
                 } else {
                     System.out.println("Key matching unsuccessful");
+                    // If credentials are acceptedfrom javabog/brugeradmin, but rejected from server (different user on server and client)
+                    jLabelInfo.setText("Wrong username or password..");
+                    jTextUser.setText("");
+                    jPasswordField.setText("");
                 }
             }
         } catch (Exception ex) {
