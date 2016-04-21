@@ -11,7 +11,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigInteger;
 import javax.swing.JOptionPane;
-import security.TokenHandler;
+import security.TokenHandlerClient;
 
 /**
  *
@@ -21,12 +21,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
     private UdloansMis_CheckForServer checkforserver;
-    private final TokenHandler tokenhandler;
+    private final TokenHandlerClient tokenhandler;
     private final IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
                                                 //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
                                                 //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
     
-    public UdloansMis_UdlånsMis(TokenHandler tokenhandler, IDatabaseRMI database) {       
+    public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database) {       
         this.tokenhandler = tokenhandler;
         this.database = database;       
         this.setResizable(false);
