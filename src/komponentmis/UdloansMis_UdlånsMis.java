@@ -20,8 +20,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
     private final UdloansMis_CheckForServer checkforserver = new UdloansMis_CheckForServer(this);
-    private TokenHandler tokenhandler;
-    private IDatabaseRMI database;
+    private final TokenHandler tokenhandler;
+    private final IDatabaseRMI database;
 
     public UdloansMis_UdlånsMis(TokenHandler tokenhandler, IDatabaseRMI database) {
         this.tokenhandler = tokenhandler;

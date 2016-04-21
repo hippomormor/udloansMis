@@ -1,4 +1,4 @@
-package DTO;
+package RMI.DTO;
 
 import java.io.Serializable;
 import java.text.DateFormat;
