@@ -6,6 +6,8 @@
 package udloansmis;
 
 import RMI.IDatabaseRMI;
+import java.math.BigInteger;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import security.TokenHandler;
@@ -36,12 +38,34 @@ public class UdloansMis_CheckForServer implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(UdloansMis_CheckForServer.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     }
     
-    public boolean CheckServer(){
-        
-        return isConnectedToServer;
+    
+    /////////////////////////////////////// FORSLAG TIL SERVER/KEY-CHECK //////////////////////////////////////////////// 
+ /* @Override
+    public void run() {
+        while (true) {
+
+            try {
+            
+                BigInteger serverKey = database.exchangeKeys(tokenhandler.getKeyToken());
+
+                isConnectedToServer = tokenhandler.checkKey(serverKey);
+
+                GUI.CheckServer(isConnectedToServer);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(UdloansMis_CheckForServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (RemoteException ex) {
+                isConnectedToServer = false;
+                GUI.CheckServer(isConnectedToServer);
+            }
+
+        }
     }
+    /////////////////////////////////////// FORSLAG TIL SERVER/KEY-CHECK ///////////////////////////////////////////////
+ */
 }
