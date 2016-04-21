@@ -56,11 +56,11 @@ public class UdloansMis_CheckForServer implements Runnable {
 
                 } else {
                     
-                    // Exchange keys with server
+                    // Exchange keys with server, set boolean & check server-key
                     isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken()));
-
-                    // Check server-key
-                    GUI.CheckServer(isConnectedToServer);
+                    
+                    // Update GUI-status
+                    GUI.CheckServer(isConnectedToServer);           
                     
                     try {
                         Thread.sleep(2000);
