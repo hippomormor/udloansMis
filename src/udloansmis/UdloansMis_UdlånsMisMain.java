@@ -17,7 +17,7 @@ public class UdloansMis_UdlånsMisMain {
     
     public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
         
-        // Log-in (Din main bliver nu kørt fra "UdloansMis_LoginjPanel", under "jButtonOKActionPerformed()" efter log-in er accepteret af jacobs server);
+        // Log-in (Din main bliver nu kørt fra "UdloansMis_LoginPanel", under "jButtonOKActionPerformed()" og "init()" efter log-in er accepteret af jacobs server);
         
         UdloansMis_LoginPanelCreator loginhandler = new UdloansMis_LoginPanelCreator();
         loginhandler.paintLogin();
