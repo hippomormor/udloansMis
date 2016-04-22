@@ -12,6 +12,11 @@ import java.awt.datatransfer.StringSelection;
 import java.math.BigInteger;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
+import java.time.LocalDate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JDialog;
 
 /**
  *
@@ -20,17 +25,19 @@ import security.TokenHandlerClient;
 public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
+    private final DateFormat dateLoanFormat = new SimpleDateFormat("dd/MM-yy");
+
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
     private final IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
-                                                //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
-                                                //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
-    
-    public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database) {       
+    //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
+    //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
+
+    public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database) {
         this.tokenhandler = tokenhandler;
-        this.database = database;       
+        this.database = database;
         this.setResizable(false);
-        this.setTitle("KomponentMis v1.0");       
+        this.setTitle("KomponentMis v1.0");
     }
 
     public void init() {
@@ -40,7 +47,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database);
         Thread checkForServerThread = new Thread(checkforserver);
         checkForServerThread.start();
-        
+
     }
 
     public void setDate(String date) {
@@ -83,6 +90,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,7 +124,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel5.setText("Dato");
 
-        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setText("ServerCheck");
 
@@ -158,10 +165,19 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jButton2.setText("Udlån komponenter");
+        jButton2.setText("Udlån");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton3.setText("Aflevering");
+        jButton3.setActionCommand("Aflever");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -175,10 +191,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(268, 268, 268))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
@@ -191,20 +203,26 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-                        .addGap(37, 37, 37)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(48, 48, 48)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                                .addGap(37, 37, 37)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(48, 48, 48)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 115, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(248, 248, 248)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(303, 303, 303)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -227,13 +245,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addGap(33, 33, 33)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(28, 28, 28)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35))
+                .addGap(34, 34, 34))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -289,7 +309,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 } else {
                     String st = "Scan stregkode, skriv navn eller studienummer, og klik på søg.";
                     JOptionPane.showMessageDialog(null, st);
-                    
+
                 }
 
             }
@@ -307,13 +327,64 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        System.out.print("Udlån");
+        java.util.Date udlånsDato = new java.util.Date();
+        String aflevDagString;
+        String aflevMånString;
+        String aflevÅrString;
+        double msPerDay = 86400 * 1000;
+        String stregkode = JOptionPane.showInputDialog(null, "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)");
+        System.out.print("Stregkode: " + stregkode);
+        String studieNummer = JOptionPane.showInputDialog(null, "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)");
+        System.out.print("Studienummer: " + studieNummer);
+        String afleveringsDato = JOptionPane.showInputDialog(null, "Skriv afleveringsdato, f.eks. " + udlånsDato);
+        System.out.print("Afleveringsdato: " + afleveringsDato);
+        setDate(dateLoanFormat.format(udlånsDato));
+        if (afleveringsDato.substring(1, 2).equals("/")) {        // Hvis datoen er 1-9
+            aflevDagString = afleveringsDato.substring(0, 1);
+
+            if (afleveringsDato.substring(3, 4).equals("-")) {    // Hvis måned er 1-9
+                aflevMånString = afleveringsDato.substring(2, 3);
+                aflevÅrString = afleveringsDato.substring(4, 6);
+            } else {                                               // Hvis måned er 10 - 12
+                aflevMånString = afleveringsDato.substring(2, 4);
+                aflevÅrString = afleveringsDato.substring(5, 7);
+
+            }
+        } else {                                                   // Hvis dag er 10 - 31
+            aflevDagString = afleveringsDato.substring(0, 2);
+
+            if (afleveringsDato.substring(4, 5).equals("-")) {    // Hvis måned er 1-9
+                aflevMånString = afleveringsDato.substring(3, 4);
+                aflevÅrString = afleveringsDato.substring(5,7);
+
+            } else {                                               // Hvis måned er 10 - 12
+                aflevMånString = afleveringsDato.substring(3, 5);
+                aflevÅrString = afleveringsDato.substring(6,8);
+
+            }
+
+        }
+
+        int aflevÅr = Integer.parseInt(aflevÅrString);
+        int aflevMån = Integer.parseInt(aflevMånString);
+        int aflevDag = Integer.parseInt(aflevDagString);
+        java.util.Date afleveringsDatoFinal = new java.util.Date(aflevÅr, aflevMån, aflevDag);
+        setDate(dateLoanFormat.format(afleveringsDato));
+        double dageTilAflevering = (afleveringsDatoFinal.getTime() - udlånsDato.getTime()) / msPerDay;
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
