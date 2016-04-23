@@ -10,22 +10,14 @@ import RMI.IDatabaseRMI;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.math.BigInteger;
 import java.rmi.RemoteException;
-import java.sql.DatabaseMetaData;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
-import java.time.LocalDate;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 
 /**
  *
@@ -34,6 +26,7 @@ import javax.swing.JDialog;
 public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato = new UdloansMis_Dato(this);
+    private final String serverIP;
 
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
@@ -41,9 +34,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
     //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
 
-    public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database) {
+    public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.tokenhandler = tokenhandler;
         this.database = database;
+        this.serverIP = serverIP;
         this.setResizable(false);
         this.setTitle("KomponentMis v1.0");
 
@@ -53,7 +47,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         initComponents();
         Thread dateThread = new Thread(dato);
         dateThread.start();
-        checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database);
+        checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database, serverIP);
         Thread checkForServerThread = new Thread(checkforserver);
         checkForServerThread.start();
     }
@@ -66,7 +60,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         if (isConnectedToServer == true) {
             jTextField3.setForeground(new java.awt.Color(255, 255, 255));
             jTextField3.setBackground(new java.awt.Color(0, 150, 0));
-            jTextField3.setText("Forbundet til komponentserver på 52.28.66.187");
+            jTextField3.setText("Forbundet til komponentserver på " + serverIP);
         } else {
             jTextField3.setForeground(new java.awt.Color(255, 255, 255));
             jTextField3.setBackground(new java.awt.Color(150, 0, 0));
