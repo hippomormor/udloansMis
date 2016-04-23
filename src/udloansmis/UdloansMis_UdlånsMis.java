@@ -332,114 +332,120 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       
-        
         // Dato skal være i dette format 
-        
         // ***** "24/2-2016" *******
-        
+
+        // **** Dags dato ****
         Date curDate = new Date();
         SimpleDateFormat format = new SimpleDateFormat();
         String DateToStr = format.format(curDate);
-        System.out.println("Default pattern222: " + DateToStr);
-        
+        System.out.println("1: Default pattern: " + DateToStr);
         format = new SimpleDateFormat("dd/MM-yy");
         DateToStr = format.format(curDate);
-        System.out.println("Dansk1 = "+DateToStr);
- 
-       
+        System.out.println("2: Dansk pattern = " + DateToStr);
         Date strToDate = null;
         try {
             strToDate = format.parse(DateToStr);
         } catch (ParseException ex) {
             Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
         }
-            System.out.println("1: "+ strToDate);
-        
-        
-        Date curDate2 = new Date();
+        System.out.println("3: " + strToDate);
+
+        // **** Afleveringsdato fra inputboks ****    
+        String aflevDagString;
+        String aflevMånString;
+        String aflevÅrString;
+        double msPerDay = 86400 * 1000;
+        String stregkode = JOptionPane.showInputDialog(null, "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)");
+        System.out.println("Stregkode: " + stregkode);
+        String studieNummer = JOptionPane.showInputDialog(null, "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)");
+        System.out.println("Studienummer: " + studieNummer);
+        String afleveringsDato = JOptionPane.showInputDialog(null, "Skriv afleveringsdato, i dette format " + DateToStr);
+        System.out.println("Afleveringsdato: " + afleveringsDato);
+
+        if (afleveringsDato.substring(1, 2).equals("/")) {        // Hvis datoen er 1-9
+            aflevDagString = afleveringsDato.substring(0, 1);
+
+            if (afleveringsDato.substring(3, 4).equals("-")) {    // Hvis måned er 1-9
+                aflevMånString = afleveringsDato.substring(2, 3);
+                aflevÅrString = afleveringsDato.substring(4, 6);
+            } else {                                               // Hvis måned er 10 - 12
+                aflevMånString = afleveringsDato.substring(2, 4);
+                aflevÅrString = afleveringsDato.substring(5, 7);
+
+            }
+        } else {                                                   // Hvis dag er 10 - 31
+            aflevDagString = afleveringsDato.substring(0, 2);
+
+            if (afleveringsDato.substring(4, 5).equals("-")) {     // Hvis måned er 1-9
+                aflevMånString = afleveringsDato.substring(3, 4);
+                aflevÅrString = afleveringsDato.substring(5, 7);
+
+            } else {                                               // Hvis måned er 10 - 12
+                aflevMånString = afleveringsDato.substring(3, 5);
+                aflevÅrString = afleveringsDato.substring(6, 8);
+            }
+        }
+
+        int aflevÅr = (Integer.parseInt(aflevÅrString) + 2000);
+        int aflevMån = Integer.parseInt(aflevMånString);
+        int aflevDag = Integer.parseInt(aflevDagString);
+        String afleveringsdatoString = "" + aflevDag + "/" + aflevMån + "-" + aflevÅr;
+
+        // **** Dato 2 ****
+        Date afleveringsDatoFinal = new Date();
         SimpleDateFormat format2 = new SimpleDateFormat();
-        String DateToStr2 = format2.format(curDate2);
-        System.out.println("Default pattern222: " + DateToStr);
-        
         format2 = new SimpleDateFormat("dd/MM-yy");
-        DateToStr = format2.format(curDate2);
-        System.out.println("Dansk2 = "+DateToStr);
- 
-       
+        try {
+            afleveringsDatoFinal = format2.parse(afleveringsdatoString);
+        } catch (ParseException ex) {
+            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String DateToStr2 = format2.format(afleveringsDatoFinal);
+        System.out.println("4: Default pattern2: " + DateToStr);
+
+        DateToStr2 = format2.format(afleveringsDatoFinal);
+        System.out.println("5: Dansk2 = " + DateToStr2);
         Date strToDate2 = null;
         try {
             strToDate2 = format2.parse(DateToStr2);
         } catch (ParseException ex) {
             Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
         }
-            System.out.println("2: "+strToDate2);
+        System.out.println("6_2: " + strToDate2);
+
+        // *** Beregn antal dage til aflevering. ****
+        int dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay)+1;
+        System.out.println("Dage til aflevering er beregnet til: " + dageTilAflevering);
+
+        String resumeTekstBoks = "Ønsker du at lave et udlån af følgende komponent?\n"
+                + "Stregkode: " + stregkode + ", til " + studieNummer + " i " + dageTilAflevering + " dage?";
+        Object[] options = {"Bekræft", "Afbryd"};
+        int n = JOptionPane.showOptionDialog(null,
+                resumeTekstBoks,
+                "Bekræft udlån",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]);
+        System.out.println("n er: "+n); 
+    // n er 0 ved Bekræft, og 1 ved Afbryd
+    
+    if(n == 0){
         
-        
-
-        String aflevDagString = "";
-        String aflevMånString = "";
-        String aflevÅrString = "";
-//        double msPerDay = 86400 * 1000;
-//        String stregkode = JOptionPane.showInputDialog(null, "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)");
-//        System.out.println("Stregkode: " + stregkode);
-//        String studieNummer = JOptionPane.showInputDialog(null, "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)");
-//        System.out.println("Studienummer: " + studieNummer);
-//        String afleveringsDato = JOptionPane.showInputDialog(null, "Skriv afleveringsdato, f.eks. " + udlånsDato);
-//        System.out.println("Afleveringsdato: " + afleveringsDato);
-//        setDate(dateLoanFormat.format2(udlånsDato));
-//        System.out.println("Done1");
-//        
-//        if (afleveringsDato.substring(1, 2).equals("/")) {        // Hvis datoen er 1-9
-//            aflevDagString = afleveringsDato.substring(0, 1);
-//
-//            if (afleveringsDato.substring(3, 4).equals("-")) {    // Hvis måned er 1-9
-//                aflevMånString = afleveringsDato.substring(2, 3);
-//                aflevÅrString = afleveringsDato.substring(4, 6);
-//            } else {                                               // Hvis måned er 10 - 12
-//                aflevMånString = afleveringsDato.substring(2, 4);
-//                aflevÅrString = afleveringsDato.substring(5, 7);
-//
-//            }
-//        } else {                                                   // Hvis dag er 10 - 31
-//            aflevDagString = afleveringsDato.substring(0, 2);
-//
-//            if (afleveringsDato.substring(4, 5).equals("-")) {    // Hvis måned er 1-9
-//                aflevMånString = afleveringsDato.substring(3, 4);
-//                aflevÅrString = afleveringsDato.substring(5,7);
-//
-//            } else {                                               // Hvis måned er 10 - 12
-//                aflevMånString = afleveringsDato.substring(3, 5);
-//                aflevÅrString = afleveringsDato.substring(6,8);
-//            }
-//        }
-//
-//
-        int aflevÅr = (Integer.parseInt(aflevÅrString)+2000);
-        int aflevMån = Integer.parseInt(aflevMånString);
-        int aflevDag = Integer.parseInt(aflevDagString);
-        Date afleveringsDatoFinal = new Date(aflevÅr, aflevMån, aflevDag);
-        //afleveringsDatoFinal = new SimpleDateFormat("dd/MM-yy");
-//        System.out.println(afleveringsDatoFinal);
-//        //setDate(dateLoanFormat.format2(afleveringsDato));
-//        System.out.println("Done4");
-//        double dageTilAflevering = (afleveringsDatoFinal.getTime() - udlånsDato.getTime()) / msPerDay;
-//        System.out.println("Done5");
-
-
-        Date aflDateTEST = new Date();
-        //SimpleDateFormat format2 = new SimpleDateFormat();
-        //String DateToStr = format2.format(curDate);
-        System.out.println("Default pattern: " + DateToStr);
-        
-        format2 = new SimpleDateFormat("dd/MM-yy");
-        DateToStr = format2.format(curDate);
-        System.out.println("Dansk = "+DateToStr);
-
-
-
-
-
+        // Send til RMI og vis nedenstående besked.
+        JOptionPane.showMessageDialog(null, "Udlånet er gennemført"); 
+    }
+    else{
+        //Send ikke noget til RMI
+        JOptionPane.showMessageDialog(null, "Udlånet er afbrudt", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    
+    
+    
+    
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
