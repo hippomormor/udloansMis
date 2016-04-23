@@ -21,7 +21,7 @@ import javax.swing.JFrame;
 public class UdloansMis_LoginPanelCreator {
 
     public UdloansMis_LogInPanel loginPanel;
-    public JFrame vindue = new JFrame("UdlånsMis v1.0");
+    public JFrame vindue = new JFrame();
 
     public void paintLogin() throws NotBoundException, MalformedURLException, RemoteException {
 
@@ -45,7 +45,7 @@ public class UdloansMis_LoginPanelCreator {
             
             // Set window size:
             //vindue.setSize(233, 170);
-            vindue.setSize(300, 200);
+            vindue.setSize(240, 220);
             //vindue.setSize((screenWidth / 10), (screenHeight / 10));
             
             // Calculate centre:
