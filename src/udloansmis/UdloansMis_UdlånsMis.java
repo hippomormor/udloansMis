@@ -339,48 +339,44 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         // ***** "24/2-2016" *******
         
         Date curDate = new Date();
-        SimpleDateFormat format2 = new SimpleDateFormat();
-        String DateToStr = format2.format(curDate);
+        SimpleDateFormat format = new SimpleDateFormat();
+        String DateToStr = format.format(curDate);
         System.out.println("Default pattern222: " + DateToStr);
         
-        format2 = new SimpleDateFormat("dd/MM-yy");
-        DateToStr = format2.format(curDate);
-        System.out.println("Dansk222 = "+DateToStr);
+        format = new SimpleDateFormat("dd/MM-yy");
+        DateToStr = format.format(curDate);
+        System.out.println("Dansk1 = "+DateToStr);
  
        
         Date strToDate = null;
         try {
-            strToDate = format2.parse(DateToStr);
+            strToDate = format.parse(DateToStr);
         } catch (ParseException ex) {
             Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
         }
-            System.out.println(strToDate);
+            System.out.println("1: "+ strToDate);
         
         
+        Date curDate2 = new Date();
+        SimpleDateFormat format2 = new SimpleDateFormat();
+        String DateToStr2 = format2.format(curDate2);
+        System.out.println("Default pattern222: " + DateToStr);
         
-        String string = "24/2-16"; 
-        DateFormat formatFraChristian = new SimpleDateFormat("dd/MM-yy", Locale.ENGLISH); 
-        Date dateChristian = null;
-        
+        format2 = new SimpleDateFormat("dd/MM-yy");
+        DateToStr = format2.format(curDate2);
+        System.out.println("Dansk2 = "+DateToStr);
+ 
+       
+        Date strToDate2 = null;
         try {
-            dateChristian = formatFraChristian.parse(string);
+            strToDate2 = format2.parse(DateToStr2);
         } catch (ParseException ex) {
             Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Dato Christian før formattering" + dateChristian);
-        formatFraChristian = new SimpleDateFormat("dd/MM-yy");
-        DateToStr = formatFraChristian.format(dateChristian);
-        System.out.println("Testdato fra Christian "+dateChristian); // Sat Jan 02 00:00:00 GMT 2010
+            System.out.println("2: "+strToDate2);
         
         
-        
-        
-        
-//        
-//        final DateFormat shortDateFormat222 = new SimpleDateFormat("dd-MM-yy");
-//        System.out.print("Udlån");
-//        Date udlånsDato = new Date();
-//        setDate(shortDateFormat222.format2(udlånsDato));
+
         String aflevDagString = "";
         String aflevMånString = "";
         String aflevÅrString = "";
