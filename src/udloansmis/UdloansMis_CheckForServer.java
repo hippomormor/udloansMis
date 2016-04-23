@@ -22,15 +22,17 @@ public class UdloansMis_CheckForServer implements Runnable {
 
     public boolean isConnectedToServer = false;
     private boolean isConnectionDropped = false;
+    private String serverIP;    
 
     private final UdloansMis_UdlånsMis GUI;
     private final TokenHandlerClient tokenhandler;
     private IDatabaseRMI database;
 
-    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI, TokenHandlerClient tokenhandler, IDatabaseRMI database) {
+    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.GUI = GUI;
         this.tokenhandler = tokenhandler;
         this.database = database;
+        this.serverIP = serverIP;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class UdloansMis_CheckForServer implements Runnable {
                 if (!isConnectedToServer && isConnectionDropped) {
                     
                     // Restart RMI-connection
-                    database = (IDatabaseRMI) Naming.lookup("rmi://52.28.66.187/databaseRMI");
+                    database = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
                     
                     tokenhandler.setID(database.getNewID());
                     
