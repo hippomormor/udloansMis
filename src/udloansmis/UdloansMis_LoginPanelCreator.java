@@ -28,8 +28,8 @@ public class UdloansMis_LoginPanelCreator {
     public JFrame vindue = new JFrame("UdlånsMis v1.0");
 
     public void paintLogin() throws NotBoundException, MalformedURLException, RemoteException {
-        try {
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+
+  
             // Create jPanel
             loginPanel = new UdloansMis_LogInPanel();
             
@@ -48,7 +48,7 @@ public class UdloansMis_LoginPanelCreator {
             vindue.setAlwaysOnTop(true);
             
             // Set window size:
-            vindue.setSize(233, 140);
+            vindue.setSize(233, 160);
             //vindue.setSize((screenWidth / 10), (screenHeight / 10));
             
             // Calculate centre:
@@ -70,8 +70,6 @@ public class UdloansMis_LoginPanelCreator {
                     System.exit(0);
                 }
             });
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(UdloansMis_LoginPanelCreator.class.getName()).log(Level.SEVERE, null, ex);
-        }
+  
     }
 }
