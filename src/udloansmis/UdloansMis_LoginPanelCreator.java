@@ -48,7 +48,7 @@ public class UdloansMis_LoginPanelCreator {
             vindue.setAlwaysOnTop(true);
             
             // Set window size:
-            vindue.setSize(233, 145);
+            vindue.setSize(233, 140);
             //vindue.setSize((screenWidth / 10), (screenHeight / 10));
             
             // Calculate centre:
