@@ -45,7 +45,7 @@ public class UdloansMis_LoginPanelCreator {
             vindue.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             
             // Remove frame & OS-specific theme
-            //vindue.setUndecorated(true);
+            vindue.setDefaultLookAndFeelDecorated(true);
             
             // Set allways on top
             vindue.setAlwaysOnTop(true);
