@@ -42,16 +42,13 @@ public class UdloansMis_LoginPanelCreator {
             int screenHeight = (int) screenSize.getHeight();
             
             // Make program quit if window is closed/removed, to avoid circumventing security
-            vindue.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            
-            // Remove frame & OS-specific theme
-            vindue.setDefaultLookAndFeelDecorated(true);
+            vindue.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);          
             
             // Set allways on top
             vindue.setAlwaysOnTop(true);
             
             // Set window size:
-            vindue.setSize(233, 132);
+            vindue.setSize(233, 145);
             //vindue.setSize((screenWidth / 10), (screenHeight / 10));
             
             // Calculate centre:
