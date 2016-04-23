@@ -132,9 +132,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel5.setText("Dato");
 
+        jTextField3.setEditable(false);
         jTextField3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setText("ServerCheck");
+        jTextField3.setFocusable(false);
+        jTextField3.setRequestFocusEnabled(false);
+        jTextField3.setVerifyInputWhenFocusTarget(false);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
