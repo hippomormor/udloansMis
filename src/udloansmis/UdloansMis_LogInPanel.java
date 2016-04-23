@@ -56,6 +56,8 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         jButtonCancel = new javax.swing.JButton();
         jLabelInfo = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(237, 150));
+
         jPasswordField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldActionPerformed(evt);

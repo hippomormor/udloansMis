@@ -5,11 +5,14 @@
  */
 package udloansmis;
 
+import DTO.LoanDTO;
 import RMI.IDatabaseRMI;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigInteger;
+import java.rmi.RemoteException;
+import java.sql.DatabaseMetaData;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
 import java.time.LocalDate;
@@ -43,6 +46,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         this.database = database;
         this.setResizable(false);
         this.setTitle("KomponentMis v1.0");
+
     }
 
     public void init() {
@@ -52,7 +56,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database);
         Thread checkForServerThread = new Thread(checkforserver);
         checkForServerThread.start();
-
     }
 
     public void setDate(String date) {
@@ -333,7 +336,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Dato skal være i dette format 
-        // ***** "24/2-2016" *******
+        // ***** "24/2-16" *******
 
         // **** Dags dato ****
         Date curDate = new Date();
@@ -358,9 +361,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         double msPerDay = 86400 * 1000;
         String stregkode = JOptionPane.showInputDialog(null, "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)");
         System.out.println("Stregkode: " + stregkode);
+        int stregkodeInt = Integer.parseInt(stregkode);
         String studieNummer = JOptionPane.showInputDialog(null, "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)");
         System.out.println("Studienummer: " + studieNummer);
-        String afleveringsDato = JOptionPane.showInputDialog(null, "Skriv afleveringsdato, i dette format " + DateToStr);
+        String afleveringsDato = JOptionPane.showInputDialog(null, "Indtast afleveringsdato, i dette format " + DateToStr);
         System.out.println("Afleveringsdato: " + afleveringsDato);
 
         if (afleveringsDato.substring(1, 2).equals("/")) {        // Hvis datoen er 1-9
@@ -415,12 +419,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         System.out.println("6_2: " + strToDate2);
 
         // *** Beregn antal dage til aflevering. ****
-        int dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay)+1;
+        int dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay) + 1;
         System.out.println("Dage til aflevering er beregnet til: " + dageTilAflevering);
 
         String resumeTekstBoks = "Ønsker du at lave et udlån af følgende komponent?\n"
                 + "Stregkode: " + stregkode + ", til " + studieNummer + " i " + dageTilAflevering + " dage?";
         Object[] options = {"Bekræft", "Afbryd"};
+
+        // Bekræftelse
         int n = JOptionPane.showOptionDialog(null,
                 resumeTekstBoks,
                 "Bekræft udlån",
@@ -429,25 +435,39 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 null,
                 options,
                 options[1]);
-        System.out.println("n er: "+n); 
-    // n er 0 ved Bekræft, og 1 ved Afbryd
-    
-    if(n == 0){
-        
-        // Send til RMI og vis nedenstående besked.
-        JOptionPane.showMessageDialog(null, "Udlånet er gennemført"); 
-    }
-    else{
-        //Send ikke noget til RMI
-        JOptionPane.showMessageDialog(null, "Udlånet er afbrudt", "Bemærk!", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    
-    
-    
-    
+        System.out.println("n er: " + n);
+        // n er 0 ved Bekræft, og 1 ved Afbryd
+
+        if (n == 0) {
+            opretUdlån(stregkodeInt, studieNummer, curDate, afleveringsDatoFinal);
+            // Send til RMI og vis nedenstående besked.
+
+        } else {
+            //Send ikke noget til RMI
+            JOptionPane.showMessageDialog(null, "Udlånet er afbrudt", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+        }
 
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
+        LoanDTO loan = new LoanDTO();
+        loan.setComponentId(componentId);
+        loan.setStudentId(studentId);
+        loan.setLoanDateFromDate(loanDate);
+        loan.setDueDateFromDate(dueDate);
+        try {
+            int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+            if (OK == 0) {
+                JOptionPane.showMessageDialog(null, "Udlånet er gennemført");
+            } else if (OK == -1) {
+                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation med !", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
