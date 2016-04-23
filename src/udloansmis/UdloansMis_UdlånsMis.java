@@ -66,12 +66,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         if (isConnectedToServer == true) {
             jTextField3.setForeground(new java.awt.Color(255, 255, 255));
             jTextField3.setBackground(new java.awt.Color(0, 150, 0));
-            jTextField3.setText("Forbundet til komponentserver");
+            jTextField3.setText("Forbundet til komponentserver på 52.28.66.187");
         } else {
             jTextField3.setForeground(new java.awt.Color(255, 255, 255));
             jTextField3.setBackground(new java.awt.Color(150, 0, 0));
 
-            jTextField3.setText("Ikke forbundet til komponentserver");
+            jTextField3.setText("Ikke forbundet til komponentserver, automatisk genoprettelse foregår");
         }
 
     }
@@ -132,6 +132,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel5.setText("Dato");
 
+        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setText("ServerCheck");
 
@@ -229,8 +230,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 115, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(303, 303, 303)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(196, 196, 196)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -259,8 +260,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
         );
 
@@ -470,7 +471,98 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+       /* // TODO add your handling code here:
+        // Dato skal være i dette format 
+        // ***** "24/2-16" *******
+
+        // **** Dags dato ****
+        Date curDate = new Date();
+        SimpleDateFormat format = new SimpleDateFormat();
+        String DateToStr = format.format(curDate);
+        System.out.println("1: Default pattern: " + DateToStr);
+        format = new SimpleDateFormat("dd/MM-yy");
+        DateToStr = format.format(curDate);
+        System.out.println("2: Dansk pattern = " + DateToStr);
+        Date strToDate = null;
+        try {
+            strToDate = format.parse(DateToStr);
+        } catch (ParseException ex) {
+            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("3: " + strToDate);
+
+        // **** Afleveringsdato fra inputboks ****    
+        String aflevDagString;
+        String aflevMånString;
+        String aflevÅrString;
+        double msPerDay = 86400 * 1000;
+        String stregkode = JOptionPane.showInputDialog(null, "Scan eller indtast stregkodenummer på komponent til aflevering. (Ex. 12345678)");
+        System.out.println("Stregkode: " + stregkode);
+        int stregkodeInt = Integer.parseInt(stregkode);
+        
+        LoanDTO loan = new LoanDTO();
+        loan.setComponentId(stregkodeInt);
+        
+        
+        
+        
+        
+        String afleveringsNavn = JOptionPane.showInputDialog(null, "Indtast navnet på den person der har taget imod komponenten");
+        System.out.println("Afleveringsavn: " + afleveringsNavn);
+
+        
+        // **** Dato 2 ****
+        Date afleveringsDatoFinal = new Date();
+        SimpleDateFormat format2 = new SimpleDateFormat();
+        format2 = new SimpleDateFormat("dd/MM-yy");
+        try {
+            afleveringsDatoFinal = format2.parse(afleveringsdatoString);
+        } catch (ParseException ex) {
+            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String DateToStr2 = format2.format(afleveringsDatoFinal);
+        System.out.println("4: Default pattern2: " + DateToStr);
+
+        DateToStr2 = format2.format(afleveringsDatoFinal);
+        System.out.println("5: Dansk2 = " + DateToStr2);
+        Date strToDate2 = null;
+        try {
+            strToDate2 = format2.parse(DateToStr2);
+        } catch (ParseException ex) {
+            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("6_2: " + strToDate2);
+
+        // *** Beregn antal dage til aflevering. ****
+        int dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay) + 1;
+        System.out.println("Dage til aflevering er beregnet til: " + dageTilAflevering);
+
+        String resumeTekstBoks = "Ønsker du at lave et udlån af følgende komponent?\n"
+                + "Stregkode: " + stregkode + ", til " + studieNummer + " i " + dageTilAflevering + " dage?";
+        Object[] options = {"Bekræft", "Afbryd"};
+
+        // Bekræftelse
+        int n = JOptionPane.showOptionDialog(null,
+                resumeTekstBoks,
+                "Bekræft udlån",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]);
+        System.out.println("n er: " + n);
+        // n er 0 ved Bekræft, og 1 ved Afbryd
+
+        if (n == 0) {
+            opretUdlån(stregkodeInt, studieNummer, curDate, afleveringsDatoFinal);
+            // Send til RMI og vis nedenstående besked.
+
+        } else {
+            //Send ikke noget til RMI
+            JOptionPane.showMessageDialog(null, "Udlånet er afbrudt", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+        }
+        
+*/        
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
