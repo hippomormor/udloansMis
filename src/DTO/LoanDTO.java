@@ -19,7 +19,7 @@ public class LoanDTO implements Serializable {
     private String dueDate;
     private String deliveryDate;
     private String deliveredTo;
-    private final DateFormat FORMAT = new SimpleDateFormat("dd/MM-yyyy");;
+    private final DateFormat FORMAT = new SimpleDateFormat("dd/MM/yyyy");;
     
     
     public LoanDTO(){
