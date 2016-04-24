@@ -476,7 +476,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         double msPerDay = 86400 * 1000;
         String stregkode = JOptionPane.showInputDialog(null, "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)");
         System.out.println("Stregkode: " + stregkode);
-        int stregkodeInt = Integer.parseInt(stregkode);
         String studieNummer = JOptionPane.showInputDialog(null, "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)");
         System.out.println("Studienummer: " + studieNummer);
         String afleveringsDato = JOptionPane.showInputDialog(null, "Indtast afleveringsdato, i dette format " + DateToStr);
@@ -554,7 +553,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         // n er 0 ved Bekræft, og 1 ved Afbryd
 
         if (n == 0) {
-            opretUdlån(stregkodeInt, studieNummer, curDate, afleveringsDatoFinal);
+            opretUdlån(stregkode, studieNummer, curDate, afleveringsDatoFinal);
             // Send til RMI og vis nedenstående besked.
 
         } else {
@@ -689,6 +688,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void søgUdlån(String keyword) throws RemoteException {
         try {
             LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+            
         } catch (NullPointerException ex) {
             logPanel.println("Fejl i indtastning");
         }
@@ -697,15 +697,18 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void søgStudieNr(String keyword) throws RemoteException {
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-            jTable.setValueAt(loans[0].getComponentId(), 0, 0);
+            for (int i = 0; i < loans.length; i++){
+                
+            }
+           // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
         } catch (NullPointerException ex) {
             logPanel.println("Der er ikke registreret lån under denne bruger");
         }
     }
 
-    private void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
+    private void opretUdlån(String barcode, String studentId, Date loanDate, Date dueDate) {
         LoanDTO loan = new LoanDTO();
-        loan.setComponentId(componentId);
+        loan.setBarcode(barcode);
         loan.setStudentId(studentId);
         loan.setLoanDateFromDate(loanDate);
         loan.setDueDateFromDate(dueDate);
