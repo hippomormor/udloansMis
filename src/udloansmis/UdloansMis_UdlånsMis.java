@@ -40,7 +40,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private boolean logEnabled = false;
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
-    private final IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
+    private IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
     //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
     //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
 
@@ -679,12 +679,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jLabel5.setText(date);
     }
 
-    void søgUdlån(String keyword) throws RemoteException {
+    private void søgUdlån(String keyword) throws RemoteException {
         LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
 
     }
 
-    void søgStudieNr(String keyword) throws RemoteException {
+    private void søgStudieNr(String keyword) throws RemoteException {
         try {
           LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
           jTable.setValueAt(loans[0].getComponentId(), 0, 0);
@@ -694,7 +694,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
     }
 
-    void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
+    private void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
         LoanDTO loan = new LoanDTO();
         loan.setComponentId(componentId);
         loan.setStudentId(studentId);
@@ -712,7 +712,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
     }
 
-    void startLog() {
+    private void startLog() {
 
         // Create jPanel
         logPanel = new UdloansMis_Log();
@@ -733,7 +733,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         });
     }
 
-    void setLog() {
+    private void setLog() {
         if (!logEnabled) {
             // Show window
             logFrame.setVisible(true);
@@ -742,6 +742,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             logFrame.setVisible(false);
             logEnabled = false;
         }
+    }
+    
+    public void setDatabase(IDatabaseRMI database) {
+        this.database = database;
     }
 
 

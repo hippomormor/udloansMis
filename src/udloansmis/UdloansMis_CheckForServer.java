@@ -46,6 +46,8 @@ public class UdloansMis_CheckForServer implements Runnable {
                     // Restart RMI-connection
                     database = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
                     
+                    GUI.setDatabase(database);
+                    
                     tokenhandler.setID(database.getNewID());
                     
                     // Send own token to server. Then generate key from server token
