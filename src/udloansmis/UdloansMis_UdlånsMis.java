@@ -545,7 +545,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     void søgUdlån(String keyword, BigInteger keyToken, int ID) throws RemoteException {
         LoanDTO[] searchLoans = database.searchLoans(keyword, keyToken, ID); 
-        
+      
     }
 
     void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
