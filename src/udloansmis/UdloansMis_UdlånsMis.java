@@ -667,9 +667,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     void søgStudieNr(String keyword) throws RemoteException {
-        LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-        jTable.setValueAt(loans[0].getComponentId(), 0, 0);
-
+        try {
+          LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+          jTable.setValueAt(loans[0].getComponentId(), 0, 0);
+        }
+        catch (NullPointerException ex) {
+            logPanel.println("Der er ikke registreret lån under denne bruger");
+        }
     }
 
     void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
