@@ -13,8 +13,8 @@ import java.util.logging.Logger;
  */
 public class LoanDTO implements Serializable {
     private int loanId;
-    private int componentId;
-    private String studentId;
+    private ComponentDTO component;
+    private StudentDTO student;
     private String loanDate;
     private String dueDate;
     private String deliveryDate;
@@ -30,20 +30,24 @@ public class LoanDTO implements Serializable {
         return this.FORMAT;
     }
     
-    public LoanDTO(int loanId, int componentId, String studentId, String loanDate, String dueDate, String deliveryDate, String deliveredTo) {
+    public LoanDTO(int loanId, String barcode,  String studentId, String loanDate, String dueDate, String deliveryDate, String deliveredTo) {
         this.loanId = loanId;
-        this.componentId = componentId;
-        this.studentId = studentId;
+        this.component = new ComponentDTO();
+        this.component.setBarcode(barcode);
+        this.student = new StudentDTO();
+        this.student.setStudentId(studentId);
         this.loanDate = loanDate;
         this.dueDate = dueDate;
         this.deliveryDate = deliveryDate;
         this.deliveredTo = deliveredTo;
     }
     
-    public LoanDTO(int loanId, int componentId, String studentId, Date loanDate, Date dueDate, Date deliveryDate, String deliveredTo) {
+    public LoanDTO(int loanId, String barcode, String studentId, Date loanDate, Date dueDate, Date deliveryDate, String deliveredTo) {
         this.loanId = loanId;
-        this.componentId = componentId;
-        this.studentId = studentId;
+        this.component = new ComponentDTO();
+        this.component.setBarcode(barcode);
+        this.student = new StudentDTO();
+        this.student.setStudentId(studentId);
         this.loanDate = FORMAT.format(loanDate);
         this.dueDate = FORMAT.format(dueDate);
         this.deliveryDate = (deliveryDate == null) ? null :  FORMAT.format(deliveryDate);
@@ -58,20 +62,24 @@ public class LoanDTO implements Serializable {
         this.loanId = loanId;
     }
 
-    public int getComponentId() {
-        return componentId;
+    public String getBarcode() {
+        return component.getBarcode();
     }
 
-    public void setComponentId(int componentId) {
-        this.componentId = componentId;
+    public void setBarcode(String barcode) {
+        if(component == null)
+           component = new ComponentDTO();
+        component.setBarcode(barcode);
     }
 
     public String getStudentId() {
-        return studentId;
+        return student.getStudentId();
     }
 
     public void setStudentId(String studentId) {
-        this.studentId = studentId;
+        if(student == null)
+            student = new StudentDTO();
+        student.setStudentId(studentId);
     }
 
     public String getLoanDate() {
