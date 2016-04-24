@@ -5,12 +5,16 @@
  */
 package udloansmis;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  *
  * @author hippomormor
  */
 public class UdloansMis_Log extends javax.swing.JPanel {
-
+    private final DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
+    private java.util.Date date;
     /**
      * Creates new form UdloansMis_Log
      */
@@ -56,8 +60,9 @@ public class UdloansMis_Log extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public void appendText(String text) {
-        jTextArea1.append(text);
+    public void println(String text) {
+        date = new java.util.Date();
+        jTextArea1.append(date + ": " + text + "\n");
     }
     
     public void setText(String text) {
