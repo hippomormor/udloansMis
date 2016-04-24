@@ -398,7 +398,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (checkforserver.isConnectedToServer) {
+        try {
+            søgStudieNr(jTextFieldStudieNr.getText());
+        } catch (RemoteException ex) {
+            logPanel.println("Wrong input");
+        }
+
+        /* if (checkforserver.isConnectedToServer) {
             String stregkode = jTextFieldStregkode.getText();
             String studienummer = jTextFieldStudieNr.getText();
             if (!stregkode.equals("Stregkode eller navn")) {
@@ -439,7 +445,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             jTable.setValueAt("19/6-2016", 3, 3);
             jTable.setValueAt("61", 3, 4);
             //jTable2.setBackground(Color.red);
-        }
+        }*/
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -682,15 +688,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
-              jTable.setValueAt(loans[i].getBarcode(), i, 0);
-              jTable.setValueAt(loans[i].getStudentId(), i, 1);
-              jTable.setValueAt(loans[i].getLoanDate(), i, 2);
-              jTable.setValueAt(loans[i].getDueDate(), i, 3);
-              Date curDate = new Date();
-              double msPerDay = 86400 * 1000;
-              int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
-              jTable.setValueAt(Integer.toString(dageTilAflevering), i, 4);              
-            }             
+                jTable.setValueAt(loans[i].getBarcode(), i, 0);
+                jTable.setValueAt(loans[i].getStudentId(), i, 1);
+                jTable.setValueAt(loans[i].getLoanDate(), i, 2);
+                jTable.setValueAt(loans[i].getDueDate(), i, 3);
+                Date curDate = new Date();
+                double msPerDay = 86400 * 1000;
+                int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
+                jTable.setValueAt(Integer.toString(dageTilAflevering), i, 4);
+            }
         } catch (NullPointerException ex) {
             logPanel.println("Fejl i indtastning");
         }
@@ -700,16 +706,16 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
-              jTable.setValueAt(loans[i].getBarcode(), i, 0);
-              jTable.setValueAt(loans[i].getStudentId(), i, 1);
-              jTable.setValueAt(loans[i].getLoanDate(), i, 2);
-              jTable.setValueAt(loans[i].getDueDate(), i, 3);
-              Date curDate = new Date();
-              double msPerDay = 86400 * 1000;
-              int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
-              jTable.setValueAt(Integer.toString(dageTilAflevering), i, 4);              
-            }           
-           // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
+                jTable.setValueAt(loans[i].getBarcode(), i, 0);
+                jTable.setValueAt(loans[i].getStudentId(), i, 1);
+                jTable.setValueAt(loans[i].getLoanDate(), i, 2);
+                jTable.setValueAt(loans[i].getDueDate(), i, 3);
+                Date curDate = new Date();
+                double msPerDay = 86400 * 1000;
+                int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
+                jTable.setValueAt(Integer.toString(dageTilAflevering), i, 4);
+            }
+            // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
         } catch (NullPointerException ex) {
             logPanel.println("Der er ikke registreret lån under denne bruger");
         }
@@ -748,8 +754,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 //            JOptionPane.showMessageDialog(null, "Der er desværre mere end 1 aktivt udlån af denne, du er på røven.");
 //        }
 //        //loans[0].getLoanId()
-        
-        
+
     }
 
     private void startLog() {
