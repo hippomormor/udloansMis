@@ -56,7 +56,14 @@ public class UdloansMis_Log extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+    public void appendText(String text) {
+        jTextArea1.append(text);
+    }
+    
+    public void setText(String text) {
+        jTextArea1.setText(text);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
