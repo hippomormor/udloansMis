@@ -10,6 +10,7 @@ import RMI.IDatabaseRMI;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
@@ -50,10 +51,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database, serverIP);
         Thread checkForServerThread = new Thread(checkforserver);
         checkForServerThread.start();
-    }
-
-    public void setDate(String date) {
-        jLabel5.setText(date);
     }
 
     public void CheckServer(boolean isConnectedToServer) {
@@ -447,28 +444,9 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
-        LoanDTO loan = new LoanDTO();
-        loan.setComponentId(componentId);
-        loan.setStudentId(studentId);
-        loan.setLoanDateFromDate(loanDate);
-        loan.setDueDateFromDate(dueDate);
-        try {
-            int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-            if (OK == 0) {
-                JOptionPane.showMessageDialog(null, "Udlånet er gennemført");
-            } else if (OK == -1) {
-                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation med !", "Bemærk!", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (RemoteException ex) {
-            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       /* // TODO add your handling code here:
+        /* // TODO add your handling code here:
         // Dato skal være i dette format 
         // ***** "24/2-16" *******
 
@@ -559,8 +537,35 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Udlånet er afbrudt", "Bemærk!", JOptionPane.ERROR_MESSAGE);
         }
         
-*/        
+         */
     }//GEN-LAST:event_jButton3ActionPerformed
+    public void setDate(String date) {
+        jLabel5.setText(date);
+    }
+
+    void søgUdlån(String keyword, BigInteger keyToken, int ID) throws RemoteException {
+        LoanDTO[] searchLoans = database.searchLoans(keyword, keyToken, ID); 
+        
+    }
+
+    void opretUdlån(int componentId, String studentId, Date loanDate, Date dueDate) {
+        LoanDTO loan = new LoanDTO();
+        loan.setComponentId(componentId);
+        loan.setStudentId(studentId);
+        loan.setLoanDateFromDate(loanDate);
+        loan.setDueDateFromDate(dueDate);
+        try {
+            int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+            if (OK == 0) {
+                JOptionPane.showMessageDialog(null, "Udlånet er gennemført");
+            } else if (OK == -1) {
+                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation med !", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
