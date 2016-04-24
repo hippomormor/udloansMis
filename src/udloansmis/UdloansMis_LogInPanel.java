@@ -282,6 +282,8 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                         // Create GUI
                         GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI, serverIP);
                         GUI.init();
+                        GUI.setResizable(false);
+                        GUI.setTitle("UdlånsMis v1.0");
                         GUI.setVisible(true);
                     } else {
                         // If credentials are accepted from javabog/brugeradmin, but rejected from server (different user on server and client)
@@ -301,6 +303,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             jLabelInfo.setText("Kan ikke forbinde til server");
         }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
