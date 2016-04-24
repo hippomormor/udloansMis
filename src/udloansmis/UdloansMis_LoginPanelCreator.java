@@ -48,7 +48,7 @@ public class UdloansMis_LoginPanelCreator {
             if (OS.contains("linux"))
                 vindue.setSize(240, 183);
             else if (OS.contains("mac"))
-               vindue.setSize(240, 210); 
+               vindue.setSize(240, 205); 
             else
                vindue.setSize(240, 220); 
             
