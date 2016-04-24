@@ -709,13 +709,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         loan.setDueDateFromDate(dueDate);
         try {
             int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-            if (OK == 0) {
+            if (OK == 1) {
                 JOptionPane.showMessageDialog(null, "Udlånet er gennemført");
-            } else if (OK == -1) {
+            } else if (OK == -1 && OK == 0) {
                 JOptionPane.showMessageDialog(null, "Fejl ved kommunikation med !", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+            logPanel.println("Fejl ved kommunikation");
         }
     }
 
