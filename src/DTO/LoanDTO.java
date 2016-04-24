@@ -25,7 +25,7 @@ public class LoanDTO implements Serializable {
     public LoanDTO(){
          
     }
-
+    
     public DateFormat getFORMAT(){
         return this.FORMAT;
     }

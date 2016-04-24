@@ -7,21 +7,21 @@ package udloansmis;
 
 import RMI.IDatabaseRMI;
 import brugerautorisation.transport.rmi.Brugeradmin;
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Window;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import java.rmi.registry.LocateRegistry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.swing.SwingUtilities;
 import security.TokenHandlerClient;
-
-
 
 /**
  *
@@ -44,7 +44,6 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
      */
     public UdloansMis_LogInPanel() throws NotBoundException, MalformedURLException, RemoteException {
         initComponents();
-
     }
 
     /**
@@ -63,34 +62,38 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         jButtonOK = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jLabelInfo = new javax.swing.JLabel();
-        jTextUser1 = new javax.swing.JTextField();
+        jTextServer = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(237, 150));
 
+        jPasswordField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jPasswordField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldActionPerformed(evt);
             }
         });
 
+        jTextUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextUserActionPerformed(evt);
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Username");
+        jLabel1.setText("Brugernavn");
         jLabel1.setToolTipText("");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Password");
+        jLabel2.setText("Adgangskode");
         jLabel2.setToolTipText("");
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jButtonOK.setText("Ok");
+        jButtonOK.setText("Forbind");
         jButtonOK.setFocusPainted(false);
         jButtonOK.setFocusable(false);
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
@@ -99,7 +102,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
             }
         });
 
-        jButtonCancel.setText("Cancel");
+        jButtonCancel.setText("Annuller");
         jButtonCancel.setFocusPainted(false);
         jButtonCancel.setFocusable(false);
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -112,14 +115,17 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         jLabelInfo.setForeground(new java.awt.Color(255, 0, 0));
         jLabelInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        jTextUser1.addActionListener(new java.awt.event.ActionListener() {
+        jTextServer.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextServer.setText("52.28.66.187");
+        jTextServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextUser1ActionPerformed(evt);
+                jTextServerActionPerformed(evt);
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 10)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Server");
+        jLabel3.setText("Server-IP");
         jLabel3.setToolTipText("");
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
@@ -129,59 +135,63 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextServer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextUser1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPasswordField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jTextUser, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(190, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                            .addComponent(jTextUser)))
+                    .addComponent(jLabelInfo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonCancel, jButtonOK});
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3});
 
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPasswordField, jTextServer, jTextUser});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextUser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jTextUser, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextServer, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(104, 104, 104))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButtonCancel, jButtonOK});
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jPasswordField, jTextUser, jTextUser1});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2, jPasswordField, jTextUser});
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel3, jTextServer});
 
     }// </editor-fold>//GEN-END:initComponents
 
@@ -205,68 +215,88 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         init();
     }//GEN-LAST:event_jPasswordFieldActionPerformed
 
-    private void jTextUser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextUser1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextUser1ActionPerformed
+    private void jTextServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextServerActionPerformed
+        // React to 'Enter'-button in server-ip-field
+        init();
+    }//GEN-LAST:event_jTextServerActionPerformed
 
     // Check password and do Diffie-Hellman key-exchange
     private void init() {
         try {
+            // Save server ip from server-ip-field
+            String serverIP = jTextServer.getText();
+       
+            // Check RMI-server state to avoid client hang
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Future<String> future = executor.submit(() -> {
+                IDatabaseRMI service = (IDatabaseRMI) LocateRegistry
+                        .getRegistry(serverIP, 1099).lookup("databaseRMI");
+                return null;
+            });
+
+            try {
+                future.get(3, TimeUnit.SECONDS);
+            } catch (InterruptedException | TimeoutException |
+                    ExecutionException e) {
+                throw new RemoteException();
+            }
+            
             // Create brugeradmin RMI-interface
             brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-            
+
             // Create database RMI-interface
-            databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://52.28.66.187/databaseRMI");
+            databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
+            
             // Save username from text-field
             String user = jTextUser.getText();
-            
+
             // Save password from password-field
             char[] pass = jPasswordField.getPassword();
-            
+
             try {
                 // Check javabog-brugeradmin if user is OK
                 if (brugerAdmin.hentBruger(user, new String(pass)) != null) {
-                    
+
                     // Create tokenhandler with user + password
                     TokenHandlerClient tokenhandler = new TokenHandlerClient(user, new String(pass));
-                    
+
                     tokenhandler.setID(databaseRMI.getNewID());
-                    
+
                     // Send own token to server. Then generate key from server token
                     tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken(), tokenhandler.getID()));
-                    
+
                     // Send own key and request key from server
                     BigInteger serverKey = databaseRMI.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID());
-                    
+
                     // Check if server-key matches own key
                     if (tokenhandler.checkKey(serverKey)) {
-                        System.out.println("Key matching successful");
-                        
+                        System.out.println("Nøgleudveksling godkendt");
+
                         // Hide log-in panel
                         Window w = SwingUtilities.getWindowAncestor(this);
                         w.setVisible(false);
-                        
+
                         // Create GUI
-                        GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI);      // <------------------------------------------------------------- HER ER DIN MAIN :)
+                        GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI, serverIP);
                         GUI.init();
                         GUI.setVisible(true);
                     } else {
                         // If credentials are accepted from javabog/brugeradmin, but rejected from server (different user on server and client)
-                        System.out.println("Key matching unsuccessful");
-                        jLabelInfo.setText("Wrong username or password");
+                        System.out.println("Nøgleudveksling fejlet");
+                        jLabelInfo.setText("Forkert brugernavn/adgangskode");
                         jTextUser.setText("");
                         jPasswordField.setText("");
                     }
                 }
             } catch (Exception ex) {
                 // If credentials are rejected from javabog/brugeradmin, then prompt user and clear text-/password-field
-                jLabelInfo.setText("Wrong username or password");
+                jLabelInfo.setText("Forkert brugernavn/adgangskode");
                 jTextUser.setText("");
                 jPasswordField.setText("");
             }
-        // If server is not responding prompt user
+            // If server is not responding prompt user
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-                jLabelInfo.setText("Unable to connect to server");
+            jLabelInfo.setText("Kan ikke forbinde til server");
         }
     }
 
@@ -278,7 +308,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelInfo;
     private javax.swing.JPasswordField jPasswordField;
+    private javax.swing.JTextField jTextServer;
     private javax.swing.JTextField jTextUser;
-    private javax.swing.JTextField jTextUser1;
     // End of variables declaration//GEN-END:variables
 }
