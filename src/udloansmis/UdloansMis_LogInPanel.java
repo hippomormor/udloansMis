@@ -14,7 +14,6 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -226,17 +225,12 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         try {
             // Save server ip from server-ip-field
             String serverIP = jTextServer.getText();
-
-            // Create brugeradmin RMI-interface
-            brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-        
+       
             // Check RMI-server state to avoid client hang
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<String> future = executor.submit(() -> {
-                String host = serverIP;
-                int port = 1099;
                 IDatabaseRMI service = (IDatabaseRMI) LocateRegistry
-                        .getRegistry(host, port).lookup("databaseRMI");
+                        .getRegistry(serverIP, 1099).lookup("databaseRMI");
                 return null;
             });
 
@@ -246,9 +240,13 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     ExecutionException e) {
                 throw new RemoteException();
             }
+            
+            // Create brugeradmin RMI-interface
+            brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
 
             // Create database RMI-interface
             databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
+            
             // Save username from text-field
             String user = jTextUser.getText();
 
