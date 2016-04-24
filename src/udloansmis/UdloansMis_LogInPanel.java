@@ -6,10 +6,10 @@
 package udloansmis;
 
 import RMI.IDatabaseRMI;
-import brugerautorisation.transport.rmi.Brugeradmin;
 import java.awt.Window;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -21,6 +21,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.swing.SwingUtilities;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 import security.TokenHandlerClient;
 
 /**
@@ -28,8 +30,6 @@ import security.TokenHandlerClient;
  * @author hippomormor
  */
 public class UdloansMis_LogInPanel extends javax.swing.JPanel {
-
-    private Brugeradmin brugerAdmin;
 
     private IDatabaseRMI databaseRMI;
 
@@ -225,7 +225,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         try {
             // Save server ip from server-ip-field
             String serverIP = jTextServer.getText();
-       
+
             // Check RMI-server state to avoid client hang
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<String> future = executor.submit(() -> {
@@ -240,13 +240,16 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     ExecutionException e) {
                 throw new RemoteException();
             }
-            
-            // Create brugeradmin RMI-interface
-            brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+
+            // Create brugeradmin SOAP-interface
+            URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
+            QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
+            Service service = Service.create(url, qname);
+            brugerautorisation.transport.soap.Brugeradmin brugerAdmin = service.getPort(brugerautorisation.transport.soap.Brugeradmin.class);
 
             // Create database RMI-interface
             databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
-            
+
             // Save username from text-field
             String user = jTextUser.getText();
 
