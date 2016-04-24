@@ -6,26 +6,19 @@
 package udloansmis;
 
 import DTO.LoanDTO;
-import DTO.StudentDTO;
 import RMI.IDatabaseRMI;
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigInteger;
 import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.control.TableCell;
 import javax.swing.JFrame;
-import javax.swing.table.TableCellEditor;
 
 /**
  *
@@ -465,7 +458,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             strToDate = format.parse(DateToStr);
         } catch (ParseException ex) {
-            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+            logPanel.println("Forkert dato-input");
         }
         System.out.println("3: " + strToDate);
 
@@ -517,7 +510,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             afleveringsDatoFinal = format2.parse(afleveringsdatoString);
         } catch (ParseException ex) {
-            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+            logPanel.println("Forkert dato-input");
         }
         String DateToStr2 = format2.format(afleveringsDatoFinal);
         System.out.println("4: Default pattern2: " + DateToStr);
@@ -528,7 +521,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             strToDate2 = format2.parse(DateToStr2);
         } catch (ParseException ex) {
-            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+            logPanel.println("Forkert dato-input");
         }
         System.out.println("6_2: " + strToDate2);
 
@@ -688,7 +681,16 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void søgUdlån(String keyword) throws RemoteException {
         try {
             LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-            
+            for (int i = 0; i < loans.length; i++) {
+              jTable.setValueAt(loans[i].getBarcode(), i, 0);
+              jTable.setValueAt(loans[i].getStudentId(), i, 1);
+              jTable.setValueAt(loans[i].getLoanDate(), i, 2);
+              jTable.setValueAt(loans[i].getDueDate(), i, 3);
+              Date curDate = new Date();
+              double msPerDay = 86400 * 1000;
+              int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
+              jTable.setValueAt(Integer.toString(dageTilAflevering), i, 4);              
+            }             
         } catch (NullPointerException ex) {
             logPanel.println("Fejl i indtastning");
         }
@@ -700,8 +702,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             for (int i = 0; i < loans.length; i++) {
               jTable.setValueAt(loans[i].getBarcode(), i, 0);
               jTable.setValueAt(loans[i].getStudentId(), i, 1);
-              logPanel.println("Barcode: " + loans[i].getBarcode());
-              logPanel.println("StudentID: " + loans[i].getStudentId());  
+              jTable.setValueAt(loans[i].getLoanDate(), i, 2);
+              jTable.setValueAt(loans[i].getDueDate(), i, 3);
+              Date curDate = new Date();
+              double msPerDay = 86400 * 1000;
+              int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
+              jTable.setValueAt(Integer.toString(dageTilAflevering), i, 4);              
             }           
            // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
         } catch (NullPointerException ex) {
