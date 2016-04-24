@@ -142,6 +142,7 @@
             <Property name="text" type="java.lang.String" value="Stregkode eller navn"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTextFieldStregkodeMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldStregkodeActionPerformed"/>
           </Events>
         </Component>
@@ -150,6 +151,7 @@
             <Property name="text" type="java.lang.String" value="Sxxxxxx"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTextFieldStudieNrMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldStudieNrActionPerformed"/>
           </Events>
         </Component>

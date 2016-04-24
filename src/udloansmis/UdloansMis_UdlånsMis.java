@@ -103,6 +103,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextFieldStregkode.setText("Stregkode eller navn");
+        jTextFieldStregkode.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldStregkodeMouseClicked(evt);
+            }
+        });
         jTextFieldStregkode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldStregkodeActionPerformed(evt);
@@ -110,6 +115,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         });
 
         jTextFieldStudieNr.setText("Sxxxxxx");
+        jTextFieldStudieNr.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldStudieNrMouseClicked(evt);
+            }
+        });
         jTextFieldStudieNr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldStudieNrActionPerformed(evt);
@@ -656,6 +666,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void jRadioButtonLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonLogActionPerformed
         setLog();
     }//GEN-LAST:event_jRadioButtonLogActionPerformed
+
+    private void jTextFieldStudieNrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldStudieNrMouseClicked
+        jTextFieldStudieNr.setText("");
+    }//GEN-LAST:event_jTextFieldStudieNrMouseClicked
+
+    private void jTextFieldStregkodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeMouseClicked
+        jTextFieldStregkode.setText("");
+    }//GEN-LAST:event_jTextFieldStregkodeMouseClicked
 
     public void setDate(String date) {
         jLabel5.setText(date);
