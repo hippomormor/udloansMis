@@ -688,7 +688,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void søgUdlån(String keyword) throws RemoteException {
         try {
             LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-
+            
         } catch (NullPointerException ex) {
             logPanel.println("Fejl i indtastning");
         }
@@ -698,9 +698,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
-
-            }
-            // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
+              jTable.setValueAt(loans[i].getBarcode(), i, 0);
+              jTable.setValueAt(loans[i].getStudentId(), i, 1);
+              logPanel.println("Barcode: " + loans[i].getBarcode());
+              logPanel.println("StudentID: " + loans[i].getStudentId());  
+            }           
+           // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
         } catch (NullPointerException ex) {
             logPanel.println("Der er ikke registreret lån under denne bruger");
         }
