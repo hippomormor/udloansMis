@@ -467,46 +467,62 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             logPanel.println("Forkert dato-input");
         }
         System.out.println("3: " + strToDate);
-
+        String text = "";
+        String stregkode = "";
+        String studieNummer = "";
+        String afleveringsDato = "";
         // **** Afleveringsdato fra inputboks ****    
-        String aflevDagString;
-        String aflevMånString;
-        String aflevÅrString;
+        int aflevÅr = 0;
+        int aflevMån = 0;
+        int aflevDag = 0;
         double msPerDay = 86400 * 1000;
-        String stregkode = JOptionPane.showInputDialog(null, "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)");
-        System.out.println("Stregkode: " + stregkode);
-        String studieNummer = JOptionPane.showInputDialog(null, "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)");
-        System.out.println("Studienummer: " + studieNummer);
-        String afleveringsDato = JOptionPane.showInputDialog(null, "Indtast afleveringsdato, i dette format " + DateToStr);
-        System.out.println("Afleveringsdato: " + afleveringsDato);
-
-        if (afleveringsDato.substring(1, 2).equals("/")) {        // Hvis datoen er 1-9
-            aflevDagString = afleveringsDato.substring(0, 1);
-
-            if (afleveringsDato.substring(3, 4).equals("-")) {    // Hvis måned er 1-9
-                aflevMånString = afleveringsDato.substring(2, 3);
-                aflevÅrString = afleveringsDato.substring(4, 6);
-            } else {                                               // Hvis måned er 10 - 12
-                aflevMånString = afleveringsDato.substring(2, 4);
-                aflevÅrString = afleveringsDato.substring(5, 7);
-
+        System.out.println("NEW TEST");
+        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+        while (true) {
+            stregkode = JOptionPane.showInputDialog(null, text);
+            System.out.println("Stregkode: " + stregkode);
+            if (stregkode.matches("^([0-9]{8})$")) {
+                break;
             }
-        } else {                                                   // Hvis dag er 10 - 31
-            aflevDagString = afleveringsDato.substring(0, 2);
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
 
-            if (afleveringsDato.substring(4, 5).equals("-")) {     // Hvis måned er 1-9
-                aflevMånString = afleveringsDato.substring(3, 4);
-                aflevÅrString = afleveringsDato.substring(5, 7);
-
-            } else {                                               // Hvis måned er 10 - 12
-                aflevMånString = afleveringsDato.substring(3, 5);
-                aflevÅrString = afleveringsDato.substring(6, 8);
-            }
         }
 
-        int aflevÅr = (Integer.parseInt(aflevÅrString) + 2000);
-        int aflevMån = Integer.parseInt(aflevMånString);
-        int aflevDag = Integer.parseInt(aflevDagString);
+        text = "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)";
+        while (true) {
+            studieNummer = JOptionPane.showInputDialog(null, text);
+            System.out.println("Studienummer: " + studieNummer);
+            if (studieNummer.matches("^([sS][0-9]{6})$")) {
+                break;
+            }
+            text = "Forkert studienummer-input. Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)";
+
+        }
+
+        text = "Indtast afleveringsdato, i dette format " + DateToStr;
+        while (true) {
+            afleveringsDato = JOptionPane.showInputDialog(null, text);
+            System.out.println("Afleveringsdato: " + afleveringsDato);
+            if (afleveringsDato.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
+                System.out.println(afleveringsDato.indexOf("-") + " " + afleveringsDato.indexOf("/"));
+                aflevDag = Integer.parseInt(afleveringsDato.substring(0, afleveringsDato.indexOf("/")));
+                aflevMån = Integer.parseInt(afleveringsDato.substring(afleveringsDato.indexOf("/") + 1, afleveringsDato.indexOf("-")));
+                aflevÅr = Integer.parseInt("20" + afleveringsDato.substring(afleveringsDato.length() - 2));
+                System.out.println("aflevDag/aflevMån-aflevÅr = " + aflevDag + "/" + aflevMån + "-" + aflevÅr);
+                if (aflevDag == 31 && (aflevMån == 4 || aflevMån == 6 || aflevMån == 9 || aflevMån == 11)) // aflevMåns with 31 aflevDags
+                {
+                } else if (aflevDag >= 30 && aflevMån == 2) // feb must be <= 28
+                {
+                } else if (aflevMån == 2 && aflevDag == 29 && !(aflevÅr % 4 == 0 && (aflevÅr % 100 != 0 || aflevÅr % 400 == 0))) // feb must only be 29 if it's a leap aflevÅr
+                {
+                } else {
+
+                    break;
+                }
+            }
+            text = "Forkert dato-input. Indtast afleveringsdato, i dette format " + DateToStr;
+        }
+
         String afleveringsdatoString = "" + aflevDag + "/" + aflevMån + "-" + aflevÅr;
 
         // **** Dato 2 ****
