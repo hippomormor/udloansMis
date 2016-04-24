@@ -566,6 +566,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String stregkode = JOptionPane.showInputDialog("Scan stregkode eller skriv nummer\npå komponent der skal afleveres.");
+        opretAflevering(stregkode);
         /* // TODO add your handling code here:
             // Dato skal være i dette format
             // ***** "24/2-16" *******
@@ -717,6 +719,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             logPanel.println("Fejl ved kommunikation");
         }
+    }
+    
+    private void opretAflevering(String stregkode){
+        int stregkodeInt = Integer.parseInt(stregkode);
+        LoanDTO searchLoan = new LoanDTO();
+        searchLoan.setComponentId(stregkodeInt);
+        
     }
 
     private void startLog() {
