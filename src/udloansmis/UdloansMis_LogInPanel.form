@@ -26,8 +26,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="jLabel3" linkSize="13" min="-2" pref="72" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextServer" linkSize="11" min="-2" pref="119" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jTextServer" linkSize="15" min="-2" pref="113" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jLabelInfo" alignment="0" min="-2" pref="197" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
@@ -39,16 +39,16 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel1" linkSize="13" min="-2" pref="72" max="-2" attributes="0"/>
-                          <Component id="jLabel2" linkSize="13" min="-2" pref="72" max="-2" attributes="0"/>
+                          <Component id="jLabel2" linkSize="13" min="-2" pref="78" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jPasswordField" linkSize="11" alignment="1" max="32767" attributes="0"/>
-                          <Component id="jTextUser" linkSize="11" min="-2" pref="119" max="-2" attributes="0"/>
+                          <Component id="jPasswordField" linkSize="15" pref="125" max="32767" attributes="0"/>
+                          <Component id="jTextUser" linkSize="15" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="619" max="32767" attributes="0"/>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -102,7 +102,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Username"/>
+        <Property name="text" type="java.lang.String" value="Brugernavn"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="horizontalTextPosition" type="int" value="0"/>
       </Properties>
@@ -110,14 +110,14 @@
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Password"/>
+        <Property name="text" type="java.lang.String" value="Adgangskode"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="horizontalTextPosition" type="int" value="0"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonOK">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ok"/>
+        <Property name="text" type="java.lang.String" value="Forbind"/>
         <Property name="focusPainted" type="boolean" value="false"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
@@ -127,7 +127,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButtonCancel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cancel"/>
+        <Property name="text" type="java.lang.String" value="Annuller"/>
         <Property name="focusPainted" type="boolean" value="false"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>

@@ -7,21 +7,22 @@ package udloansmis;
 
 import RMI.IDatabaseRMI;
 import brugerautorisation.transport.rmi.Brugeradmin;
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Window;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import java.rmi.registry.LocateRegistry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.swing.SwingUtilities;
 import security.TokenHandlerClient;
-
-
 
 /**
  *
@@ -82,16 +83,16 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         });
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Username");
+        jLabel1.setText("Brugernavn");
         jLabel1.setToolTipText("");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Password");
+        jLabel2.setText("Adgangskode");
         jLabel2.setToolTipText("");
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jButtonOK.setText("Ok");
+        jButtonOK.setText("Forbind");
         jButtonOK.setFocusPainted(false);
         jButtonOK.setFocusable(false);
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
@@ -100,7 +101,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
             }
         });
 
-        jButtonCancel.setText("Cancel");
+        jButtonCancel.setText("Annuller");
         jButtonCancel.setFocusPainted(false);
         jButtonCancel.setFocusable(false);
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -136,7 +137,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextServer, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextServer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
@@ -146,19 +147,19 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPasswordField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextUser, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(619, Short.MAX_VALUE))
+                            .addComponent(jPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                            .addComponent(jTextUser))))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonCancel, jButtonOK});
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPasswordField, jTextServer, jTextUser});
-
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3});
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPasswordField, jTextServer, jTextUser});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,62 +223,79 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         try {
             // Save server ip from server-ip-field
             String serverIP = jTextServer.getText();
-            
+
             // Create brugeradmin RMI-interface
             brugerAdmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-            
+        
+            // Check RMI-server state to avoid client hang
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Future<String> future = executor.submit(() -> {
+                String host = serverIP;
+                int port = 1099;
+                IDatabaseRMI service = (IDatabaseRMI) LocateRegistry
+                        .getRegistry(host, port).lookup("databaseRMI");
+                return null;
+            });
+
+            try {
+                future.get(3, TimeUnit.SECONDS);
+            } catch (InterruptedException | TimeoutException |
+                    ExecutionException e) {
+                throw new RemoteException();
+            }
+
             // Create database RMI-interface
             databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
             // Save username from text-field
             String user = jTextUser.getText();
-            
+
             // Save password from password-field
             char[] pass = jPasswordField.getPassword();
-            
+
             try {
                 // Check javabog-brugeradmin if user is OK
                 if (brugerAdmin.hentBruger(user, new String(pass)) != null) {
-                    
+
                     // Create tokenhandler with user + password
                     TokenHandlerClient tokenhandler = new TokenHandlerClient(user, new String(pass));
-                    
+
                     tokenhandler.setID(databaseRMI.getNewID());
-                    
+
                     // Send own token to server. Then generate key from server token
                     tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken(), tokenhandler.getID()));
-                    
+
                     // Send own key and request key from server
                     BigInteger serverKey = databaseRMI.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID());
-                    
+
                     // Check if server-key matches own key
                     if (tokenhandler.checkKey(serverKey)) {
-                        System.out.println("Key matching successful");
-                        
+                        System.out.println("Nøgleudveksling godkendt");
+
                         // Hide log-in panel
                         Window w = SwingUtilities.getWindowAncestor(this);
                         w.setVisible(false);
-                        
+
                         // Create GUI
                         GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI, serverIP);
                         GUI.init();
                         GUI.setVisible(true);
                     } else {
                         // If credentials are accepted from javabog/brugeradmin, but rejected from server (different user on server and client)
-                        System.out.println("Key matching unsuccessful");
-                        jLabelInfo.setText("Wrong username or password");
+                        System.out.println("Nøgleudveksling fejlet");
+                        jLabelInfo.setText("Forkert brugernavn/adgangskode");
                         jTextUser.setText("");
                         jPasswordField.setText("");
                     }
                 }
             } catch (Exception ex) {
                 // If credentials are rejected from javabog/brugeradmin, then prompt user and clear text-/password-field
-                jLabelInfo.setText("Wrong username or password");
+                jLabelInfo.setText("Forkert brugernavn/adgangskode");
                 jTextUser.setText("");
                 jPasswordField.setText("");
             }
-        // If server is not responding prompt user
+            // If server is not responding prompt user
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-                jLabelInfo.setText("Unable to connect to server");
+            jLabelInfo.setText("Kan ikke forbinde til server");
         }
     }
 
