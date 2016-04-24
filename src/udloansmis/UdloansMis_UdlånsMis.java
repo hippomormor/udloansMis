@@ -401,7 +401,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgStudieNr(jTextFieldStudieNr.getText());
         } catch (RemoteException ex) {
-
+            logPanel.println("Wrong input");
         }
 
         /* if (checkforserver.isConnectedToServer) {
