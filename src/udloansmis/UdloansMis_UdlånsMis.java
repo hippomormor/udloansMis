@@ -5,6 +5,7 @@
  */
 package udloansmis;
 
+import DTO.ComponentDTO;
 import DTO.LoanDTO;
 import RMI.IDatabaseRMI;
 import java.awt.Toolkit;
@@ -18,6 +19,8 @@ import security.TokenHandlerClient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -455,18 +458,18 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         // **** Dags dato ****
         Date curDate = new Date();
         SimpleDateFormat format = new SimpleDateFormat();
-        String DateToStr = format.format(curDate);
-        System.out.println("1: Default pattern: " + DateToStr);
+        String dateToStr = format.format(curDate);
+//        System.out.println("1: Default pattern: " + dateToStr);
         format = new SimpleDateFormat("dd/MM-yy");
-        DateToStr = format.format(curDate);
-        System.out.println("2: Dansk pattern = " + DateToStr);
+        dateToStr = format.format(curDate);
+//        System.out.println("2: Dansk pattern = " + dateToStr);
         Date strToDate = null;
         try {
-            strToDate = format.parse(DateToStr);
+            strToDate = format.parse(dateToStr);
         } catch (ParseException ex) {
             logPanel.println("Forkert dato-input");
         }
-        System.out.println("3: " + strToDate);
+//        System.out.println("3: " + strToDate);
         String text = "";
         String stregkode = "";
         String studieNummer = "";
@@ -475,40 +478,62 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         int aflevÅr = 0;
         int aflevMån = 0;
         int aflevDag = 0;
+        int dageTilAflevering = 0;
+        Date afleveringsDatoFinal = new Date();
         double msPerDay = 86400 * 1000;
-        System.out.println("NEW TEST");
         text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
-            System.out.println("Stregkode: " + stregkode);
-            if (stregkode.matches("^([0-9]{8})$")) {
-                break;
-            }
             text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+            logPanel.println("Indtastet stregkode: " + stregkode);
+            if (stregkode.matches("^([0-9]{6,10})$")) {
+                try {
+                    ComponentDTO component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                    if (component != null) {
+                        System.out.println(component.getStatus());
+                    }
+                    if (component == null) {
+                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                    } else if (component.getStatus() != 1) {
+                        text = "Komponenten er allerede lånet ud, eller inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                    } else {
+                        break;
+                    }
+                } catch (RemoteException ex) {
+                    logPanel.println("Fejl ved kommunikation.");
+                }
+            }
 
         }
 
-        text = "Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)";
+        text = "Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
         while (true) {
             studieNummer = JOptionPane.showInputDialog(null, text);
-            System.out.println("Studienummer: " + studieNummer);
+            text = "Forkert studienummer-input. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
+            logPanel.println("Indtastet studienummer: " + studieNummer);
             if (studieNummer.matches("^([sS][0-9]{6})$")) {
-                break;
+                try {
+                    if (database.getStudent(studieNummer, tokenhandler.getKeyToken(), tokenhandler.getID()) == null) {
+                        text = "Studienumeret findes ikke, eller er inaktiv. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
+                    } else {
+                        break;
+                    }
+                } catch (RemoteException ex) {
+                    Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            text = "Forkert studienummer-input. Læg studiekortet på RFID læser, eller indtast studienummer (Ex. s123456)";
 
         }
 
-        text = "Indtast afleveringsdato, i dette format " + DateToStr;
+        text = "Indtast afleveringsdato i dette format dd/MM-YYYY. (Ex. 01/01-2000)";
         while (true) {
             afleveringsDato = JOptionPane.showInputDialog(null, text);
-            System.out.println("Afleveringsdato: " + afleveringsDato);
+            text = "Forkert dato-input. Indtast afleveringsdato i dette format dd/MM-YYYY. (Ex. 01/01-2000)";
+            logPanel.println("Indtastet dato: " + afleveringsDato);
             if (afleveringsDato.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
-                System.out.println(afleveringsDato.indexOf("-") + " " + afleveringsDato.indexOf("/"));
                 aflevDag = Integer.parseInt(afleveringsDato.substring(0, afleveringsDato.indexOf("/")));
                 aflevMån = Integer.parseInt(afleveringsDato.substring(afleveringsDato.indexOf("/") + 1, afleveringsDato.indexOf("-")));
                 aflevÅr = Integer.parseInt("20" + afleveringsDato.substring(afleveringsDato.length() - 2));
-                System.out.println("aflevDag/aflevMån-aflevÅr = " + aflevDag + "/" + aflevMån + "-" + aflevÅr);
                 if (aflevDag == 31 && (aflevMån == 4 || aflevMån == 6 || aflevMån == 9 || aflevMån == 11)) // aflevMåns with 31 aflevDags
                 {
                 } else if (aflevDag >= 30 && aflevMån == 2) // feb must be <= 28
@@ -516,40 +541,25 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 } else if (aflevMån == 2 && aflevDag == 29 && !(aflevÅr % 4 == 0 && (aflevÅr % 100 != 0 || aflevÅr % 400 == 0))) // feb must only be 29 if it's a leap aflevÅr
                 {
                 } else {
-
-                    break;
+                    String afleveringsdatoString = "" + aflevDag + "/" + aflevMån + "-" + aflevÅr;
+                    // **** Dato 2 ****
+                    SimpleDateFormat format2 = new SimpleDateFormat();
+                    format2 = new SimpleDateFormat("dd/MM-yy");
+                    try {
+                        afleveringsDatoFinal = format2.parse(afleveringsdatoString);
+                        // *** Beregn antal dage til aflevering. ****
+                        dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay) + 1;
+                        if (dageTilAflevering < 0) {
+                            text = "Forældet dato. Indtast afleveringsdato i dette format dd/MM-YYYY. (Ex. 01/01-2000)";
+                        } else {
+                            break;
+                        }
+                    } catch (ParseException ex) {
+                        logPanel.println("Forkert dato-input");
+                    }
                 }
             }
-            text = "Forkert dato-input. Indtast afleveringsdato, i dette format " + DateToStr;
         }
-
-        String afleveringsdatoString = "" + aflevDag + "/" + aflevMån + "-" + aflevÅr;
-
-        // **** Dato 2 ****
-        Date afleveringsDatoFinal = new Date();
-        SimpleDateFormat format2 = new SimpleDateFormat();
-        format2 = new SimpleDateFormat("dd/MM-yy");
-        try {
-            afleveringsDatoFinal = format2.parse(afleveringsdatoString);
-        } catch (ParseException ex) {
-            logPanel.println("Forkert dato-input");
-        }
-        String DateToStr2 = format2.format(afleveringsDatoFinal);
-        System.out.println("4: Default pattern2: " + DateToStr);
-
-        DateToStr2 = format2.format(afleveringsDatoFinal);
-        System.out.println("5: Dansk2 = " + DateToStr2);
-        Date strToDate2 = null;
-        try {
-            strToDate2 = format2.parse(DateToStr2);
-        } catch (ParseException ex) {
-            logPanel.println("Forkert dato-input");
-        }
-        System.out.println("6_2: " + strToDate2);
-
-        // *** Beregn antal dage til aflevering. ****
-        int dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay) + 1;
-        System.out.println("Dage til aflevering er beregnet til: " + dageTilAflevering);
 
         String resumeTekstBoks = "Ønsker du at lave et udlån af følgende komponent?\n"
                 + "Stregkode: " + stregkode + ", til " + studieNummer + " i " + dageTilAflevering + " dage?";
@@ -564,16 +574,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 null,
                 options,
                 options[1]);
-        System.out.println("n er: " + n);
         // n er 0 ved Bekræft, og 1 ved Afbryd
-
         if (n == 0) {
             opretUdlån(stregkode, studieNummer, curDate, afleveringsDatoFinal);
             // Send til RMI og vis nedenstående besked.
-
         } else {
             //Send ikke noget til RMI
-            JOptionPane.showMessageDialog(null, "Udlånet er afbrudt", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -714,7 +721,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 jTable.setValueAt(Integer.toString(dageTilAflevering), i, 4);
             }
         } catch (NullPointerException ex) {
-            logPanel.println("Fejl i indtastning");
+            logPanel.println("Fejl i indtastning.");
         }
     }
 
@@ -745,9 +752,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         loan.setDueDateFromDate(dueDate);
         try {
             int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+            System.out.println("OK = " + OK);
             if (OK == 1) {
+                logPanel.println("Udlånet er gennemført");
                 JOptionPane.showMessageDialog(null, "Udlånet er gennemført");
-            } else if (OK == -1 && OK == 0) {
+            } else if (OK == -1 || OK == 0) {
+                logPanel.println("Fejl ved kommunikation med !");
                 JOptionPane.showMessageDialog(null, "Fejl ved kommunikation med !", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
