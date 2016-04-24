@@ -680,16 +680,18 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     private void søgUdlån(String keyword) throws RemoteException {
-        LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-
+        try {
+            LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+        } catch (NullPointerException ex) {
+            logPanel.println("Fejl i indtastning");
+        }
     }
 
     private void søgStudieNr(String keyword) throws RemoteException {
         try {
-          LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-          jTable.setValueAt(loans[0].getComponentId(), 0, 0);
-        }
-        catch (NullPointerException ex) {
+            LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+            jTable.setValueAt(loans[0].getComponentId(), 0, 0);
+        } catch (NullPointerException ex) {
             logPanel.println("Der er ikke registreret lån under denne bruger");
         }
     }
@@ -743,7 +745,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             logEnabled = false;
         }
     }
-    
+
     public void setDatabase(IDatabaseRMI database) {
         this.database = database;
     }
