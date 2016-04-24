@@ -688,7 +688,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void søgUdlån(String keyword) throws RemoteException {
         try {
             LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-            
+
         } catch (NullPointerException ex) {
             logPanel.println("Fejl i indtastning");
         }
@@ -697,10 +697,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void søgStudieNr(String keyword) throws RemoteException {
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-            for (int i = 0; i < loans.length; i++){
-                
+            for (int i = 0; i < loans.length; i++) {
+
             }
-           // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
+            // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
         } catch (NullPointerException ex) {
             logPanel.println("Der er ikke registreret lån under denne bruger");
         }
@@ -723,11 +723,23 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             logPanel.println("Fejl ved kommunikation");
         }
     }
-    
-    private void opretAflevering(String stregkode){
-        int stregkodeInt = Integer.parseInt(stregkode);
-        LoanDTO searchLoan = new LoanDTO();
-        searchLoan.setComponentId(stregkodeInt);
+
+    private void opretAflevering(String stregkode) {
+//        int stregkodeInt = Integer.parseInt(stregkode);
+//        LoanDTO searchLoan = new LoanDTO();
+//        searchLoan.setBarcode(stregkode);
+//        LoanDTO[] loans = null;
+//        try {
+//            loans = database.searchLoans(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+//        } catch (RemoteException ex) {
+//            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        int antalUdlån = loans.length;
+//        if (antalUdlån >= 2) {
+//            JOptionPane.showMessageDialog(null, "Der er desværre mere end 1 aktivt udlån af denne, du er på røven.");
+//        }
+//        //loans[0].getLoanId()
+        
         
     }
 
