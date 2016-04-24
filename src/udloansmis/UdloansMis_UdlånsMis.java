@@ -396,7 +396,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldStregkodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeActionPerformed
-        // TODO add your handling code here:
+
+        try {
+            søgUdlån(jTextFieldStregkode.getText());
+        } catch (RemoteException ex) {
+            logPanel.println("Wrong input");
+        }
     }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
