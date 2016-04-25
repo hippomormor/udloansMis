@@ -707,7 +707,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         loan.setLoanDateFromDate(loanDate);
         loan.setDueDateFromDate(dueDate);
         try {
-            ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
+//            ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
 //            if (component.getStatus() != 1) {
 //                logPanel.println("Komponenten er allerede udlånt.");
 //                JOptionPane.showMessageDialog(null, "Komponenten er allerede udlånt.");
@@ -717,8 +717,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 //            System.out.println(component.getStatus());
 //            component.setStatus(0);
 //            System.out.println(component.getStatus());
-            int OK1 = database.updateComponent(component, tokenhandler.getKeyToken(), tokenhandler.getID());
-//            int OK1 = 1;
+//            int OK1 = database.updateComponent(component, tokenhandler.getKeyToken(), tokenhandler.getID());
+            int OK1 = 1;
             int OK2 = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
             logPanel.println("OK1: " + OK1 + " OK2: " + OK2);
             if (OK1 == 1 && OK2 == 1) {
@@ -748,7 +748,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             }
             if (loan == null) {
                 logPanel.println("Lån med stregkode: " + stregkode + " kan ikke findes.");
-                JOptionPane.showMessageDialog(null, "Aflevereringen er gennemført.");
+                JOptionPane.showMessageDialog(null, "Lån med stregkode: " + stregkode + " kan ikke findes.");
                 return;
             }
             loanid = loan.getLoanId();
