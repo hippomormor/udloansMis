@@ -482,6 +482,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         int aflevDag = 0;
         int dageTilAflevering = 0;
         Date afleveringsDatoFinal = new Date();
+
+        try {
+            LoanDTO[] test = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+        } catch (RemoteException ex) {
+            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
@@ -490,19 +497,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 return;
             }
             text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-            logPanel.println("Indtastet stregkode: " + stregkode);
-            LoanDTO[] loans;
-            try {
-                loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                System.out.println("WORKS");
-            } catch (RemoteException ex) {
-                System.out.println("DOESNT WORK");
-            }
+
             if (stregkode.matches("^([0-9]{6,10})$")) {
                 try {
+                    logPanel.println("Indtastet stregkode: " + stregkode);
                     ComponentDTO component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-
+                    LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                    logPanel.println("Loans object: " + loans);
                     if (component != null) {
                         System.out.println(component.getStatus());
                     }
@@ -516,7 +517,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         break;
                     }
                 } catch (RemoteException ex) {
-                    logPanel.println("Fejl ved kommunikation.");
+                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
                 }
             }
 
@@ -644,7 +645,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         break;
                     }
                 } catch (RemoteException ex) {
-                    logPanel.println("Fejl ved kommunikation.");
+                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
                 }
             }
         }
@@ -740,64 +741,34 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         loan.setLoanDateFromDate(loanDate);
         loan.setDueDateFromDate(dueDate);
         try {
-//            ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
-//            if (component.getStatus() != 1) {
-//                logPanel.println("Komponenten er allerede udlånt.");
-//                JOptionPane.showMessageDialog(null, "Komponenten er allerede udlånt.");
-//                return;
-//            }
-//            System.out.println(component.getBarcode());
-//            System.out.println(component.getStatus());
-//            component.setStatus(0);
-//            System.out.println(component.getStatus());
-//            int OK1 = database.updateComponent(component, tokenhandler.getKeyToken(), tokenhandler.getID());
-            int OK1 = 1;
-            int OK2 = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-            logPanel.println("OK1: " + OK1 + " OK2: " + OK2);
-            if (OK1 == 1 && OK2 == 1) {
-                logPanel.println("Udlånet er gennemført.");
+            int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+            if (OK == 1) {
+                logPanel.println("Udlånet er gennemført. OK:" + OK);
                 JOptionPane.showMessageDialog(null, "Udlånet er gennemført.");
-            } else if (OK2 == -2 || OK2 == -1 || OK2 == 0 || OK1 == -2 || OK1 == -1 || OK1 == 0) {
-                logPanel.println("Fejl ved kommunikation.");
-                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            } else if (OK == -2 || OK == -1 || OK == 0) {
+                logPanel.println(" Fejl ved kommunikation. OK:" + OK);
+                JOptionPane.showMessageDialog(null, " Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation.");
+            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
         }
     }
 
     private void opretAflevering(String stregkode) {
-        int loanid = 0;
-        LoanDTO loan = null;
         try {
             LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-            //            for (LoanDTO picked_loan : loans) {
-            //                System.out.println("picked loan id: " + picked_loan.getLoanId());
-            //                System.out.println("picked loan barcode: " + picked_loan.getBarcode());
-            //                if (picked_loan.getBarcode().equals(stregkode)) {
-            //                    loan = picked_loan;
-            //                    break;
-            //                }
-            //            }
-            loan = loans[0];
+            if (loans == null) {
+                logPanel.println("Lån med stregkode: " + stregkode + " kan ikke findes.");
+                JOptionPane.showMessageDialog(null, "Lån med stregkode: " + stregkode + " kan ikke findes.");
+                return;
+            }
+            LoanDTO loan = loans[0];
             if (loan == null) {
                 logPanel.println("Lån med stregkode: " + stregkode + " kan ikke findes.");
                 JOptionPane.showMessageDialog(null, "Lån med stregkode: " + stregkode + " kan ikke findes.");
                 return;
             }
-            loanid = loan.getLoanId();
-            //            ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
-            //            if (component.getStatus() != 0) {
-            //                logPanel.println("Komponenten er allerede aflevereret.");
-            //                JOptionPane.showMessageDialog(null, "Komponenten er allerede aflevereret.");
-            //                return;
-            //            }
-            //            System.out.println(component.getBarcode());
-            //            System.out.println(component.getStatus());
-            //            component.setStatus(0);
-            //            System.out.println(component.getStatus());
-            //            int OK1 = database.updateComponent(component, tokenhandler.getKeyToken(), tokenhandler.getID());
-            int OK1 = 1;
+            int loanid = loan.getLoanId();
 
 //            // **** Dags dato ****
 //            Date curDate = new Date();
@@ -809,21 +780,20 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 //            loan.setDeliveryDate(curDateString);
 //            loan.setDeliveryDateFromDate(curDate);
 //            loan.setDeliveredTo("TEST");
-            int OK2 = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+            int OK = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
 //            int OK2 = database.deleteLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
             logPanel.println("Loan object: " + loan);
             logPanel.println("Loan ID: " + loanid);
             logPanel.println("Loan linked barcode: " + stregkode);
-            logPanel.println("OK1: " + OK1 + " OK2: " + OK2);
-            if (OK1 == 1 && OK2 == 1) {
-                logPanel.println("Aflevereringen er gennemført.");
+            if (OK == 1) {
+                logPanel.println("Aflevereringen er gennemført. OK: " + OK);
                 JOptionPane.showMessageDialog(null, "Aflevereringen er gennemført.");
-            } else if (OK2 == -2 || OK2 == -1 || OK2 == 0 || OK1 == -2 || OK1 == -1 || OK1 == 0) {
-                logPanel.println("Fejl ved kommunikation.");
-                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            } else if (OK == -2 || OK == -1 || OK == 0) {
+                logPanel.println(" Fejl ved kommunikation. OK: " + OK);
+                JOptionPane.showMessageDialog(null, " Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation.");
+            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
         }
 
     }
