@@ -34,9 +34,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private boolean logEnabled = false;
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
-    private IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
-    //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
-    //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
+    private IDatabaseRMI database; 
+     
 
     public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis v1.0 Log");
@@ -394,7 +393,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgUdlån(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
 
@@ -402,7 +401,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgUdlån(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
 
         /* if (checkforserver.isConnectedToServer) {
@@ -482,17 +481,17 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             LoanDTO[] test = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
         } catch (RemoteException ex) {
-            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+            logPanel.println("Ingen lån fundet");
         }
 
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
             if (stregkode == null) {
                 JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
 
             if (stregkode.matches("^([0-9]{6,10})$")) {
                 try {
@@ -504,16 +503,16 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         System.out.println(component.getStatus());
                     }
                     if (component == null) {
-                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                     } else if (loans != null) {
-                        text = "Komponenten er allerede lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er allerede lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                     } else if (component.getStatus() != 1) {
-                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                     } else {
                         break;
                     }
                 } catch (RemoteException ex) {
-                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
                 }
             }
 
@@ -540,7 +539,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         break;
                     }
                 } catch (RemoteException ex) {
-                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
                 }
             }
 
@@ -610,7 +609,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             //Send ikke noget til RMI
             JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -641,7 +639,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         break;
                     }
                 } catch (RemoteException ex) {
-                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
                 }
             }
         }
@@ -672,7 +670,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgStudieNr(jTextFieldStudieNr.getText());
         } catch (RemoteException ex) {
-            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }//GEN-LAST:event_jTextFieldStudieNrActionPerformed
 
@@ -735,7 +733,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
                 jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
             }
-            // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
         } catch (NullPointerException ex) {
             logPanel.println("Der er ikke registreret lån under denne bruger");
         }
@@ -754,11 +751,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 logPanel.println("Udlånet er gennemført. OK:" + OK);
                 JOptionPane.showMessageDialog(null, "Udlånet er gennemført.");
             } else if (OK == -2 || OK == -1 || OK == 0) {
-                logPanel.println(" Fejl ved kommunikation. OK:" + OK);
-                JOptionPane.showMessageDialog(null, " Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                logPanel.println("Fejl ved kommunikation. OK:" + OK);
+                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }
 
@@ -797,11 +794,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 logPanel.println("Aflevereringen er gennemført. OK: " + OK);
                 JOptionPane.showMessageDialog(null, "Aflevereringen er gennemført.");
             } else if (OK == -2 || OK == -1 || OK == 0) {
-                logPanel.println(" Fejl ved kommunikation. OK: " + OK);
-                JOptionPane.showMessageDialog(null, " Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                logPanel.println("Fejl ved kommunikation. OK: " + OK);
+                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }
 
