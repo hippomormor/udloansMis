@@ -751,17 +751,25 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         loan.setLoanDateFromDate(loanDate);
         loan.setDueDateFromDate(dueDate);
         try {
-            int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-            System.out.println("OK = " + OK);
-            if (OK == 1) {
-                logPanel.println("Udlånet er gennemført");
-                JOptionPane.showMessageDialog(null, "Udlånet er gennemført");
-            } else if (OK == -1 || OK == 0) {
-                logPanel.println("Fejl ved kommunikation med !");
-                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation med !", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
+            if (component.getStatus() != 1) {
+                logPanel.println("Komponenten er allerede udlånt.");
+                JOptionPane.showMessageDialog(null, "Komponenten er allerede udlånt.");
+                return;
+            }
+            component.setStatus(0);
+            int OK1 = database.updateComponent(component, tokenhandler.getKeyToken(), tokenhandler.getID());
+            int OK2 = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+            logPanel.println("OK1: " + OK1 + " OK2: " + OK2);
+            if (OK1 == 1 && OK2 == 1) {
+                logPanel.println("Udlånet er gennemført.");
+                JOptionPane.showMessageDialog(null, "Udlånet er gennemført.");
+            } else if (OK2 == -1 || OK2 == 0 || OK1 == -1 || OK1 == 0) {
+                logPanel.println("Fejl ved kommunikation.");
+                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation");
+            logPanel.println("Fejl ved kommunikation.");
         }
     }
 
