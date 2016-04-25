@@ -394,15 +394,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgUdlån(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            logPanel.println("Wrong input");
+            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
         }
     }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            søgStudieNr(jTextFieldStudieNr.getText());
+            søgUdlån(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            logPanel.println("Wrong input");
+            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
         }
 
         /* if (checkforserver.isConnectedToServer) {
@@ -506,7 +506,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     if (component == null) {
                         text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
                     } else if (loans != null) {
-                        text = "Komponenten er allerede lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er allerede lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
                     } else if (component.getStatus() != 1) {
                         text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
                     } else {
@@ -540,7 +540,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         break;
                     }
                 } catch (RemoteException ex) {
-                    Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
                 }
             }
 
@@ -636,7 +636,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     if (component == null) {
                         text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
                     } else if (component.getStatus() != 1) {
-                        text = "Komponenten er allerede lånet ud, eller inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er allerede lånt ud, eller inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
                     } else {
                         break;
                     }
@@ -648,7 +648,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
         // Bekræftelse
         String resumeTekstBoks = "Ønsker du at aflevere følgende komponent?\n"
-                + "Stregkode: " + stregkode + ", komponent namn: " + component.getComponentGroup().getName() + "?";
+                + "Stregkode: " + stregkode + ", komponent navn: " + component.getComponentGroup().getName() + "?";
         Object[] options = {"Bekræft", "Afbryd"};
         int n = JOptionPane.showOptionDialog(null,
                 resumeTekstBoks,
@@ -672,7 +672,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgStudieNr(jTextFieldStudieNr.getText());
         } catch (RemoteException ex) {
-
+            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
         }
     }//GEN-LAST:event_jTextFieldStudieNrActionPerformed
 
@@ -803,7 +803,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
         }
-
     }
 
     private void startLog() {
