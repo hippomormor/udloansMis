@@ -716,7 +716,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
                 jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
-                jTable.setValueAt(loans[i].getBarcode(), i, 0);
                 jTable.setValueAt(loans[i].getBarcode(), i, 1);
                 jTable.setValueAt(loans[i].getStudentId(), i, 2);
                 jTable.setValueAt(loans[i].getLoanDate(), i, 3);
