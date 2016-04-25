@@ -460,14 +460,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         // **** Dags dato ****
         Date curDate = new Date();
         SimpleDateFormat format = new SimpleDateFormat();
-        String dateToStr = format.format(curDate);
+        String curDateString = format.format(curDate);
 //        System.out.println("1: Default pattern: " + dateToStr);
         format = new SimpleDateFormat("dd/MM-yy");
-        dateToStr = format.format(curDate);
+        curDateString = format.format(curDate);
 //        System.out.println("2: Dansk pattern = " + dateToStr);
         Date strToDate = null;
         try {
-            strToDate = format.parse(dateToStr);
+            strToDate = format.parse(curDateString);
         } catch (ParseException ex) {
             logPanel.println("Forkert dato-input");
         }
@@ -527,10 +527,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
         }
 
-        text = "Indtast afleveringsdato i dette format dd/MM-YYYY. (Ex. 01/01-2000)";
+        text = "Indtast afleveringsdato i dette format dd/MM-YY. (Ex. " + curDateString + ")";
         while (true) {
             afleveringsDato = JOptionPane.showInputDialog(null, text);
-            text = "Forkert dato-input. Indtast afleveringsdato i dette format dd/MM-YYYY. (Ex. 01/01-2000)";
+            text = "Forkert dato-input. Indtast afleveringsdato i dette format dd/MM-YY. (Ex. " + curDateString + ")";
             logPanel.println("Indtastet dato: " + afleveringsDato);
             if (afleveringsDato.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
                 aflevDag = Integer.parseInt(afleveringsDato.substring(0, afleveringsDato.indexOf("/")));
@@ -552,7 +552,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         // *** Beregn antal dage til aflevering. ****
                         dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay) + 1;
                         if (dageTilAflevering < 0) {
-                            text = "Forældet dato. Indtast afleveringsdato i dette format dd/MM-YYYY. (Ex. 01/01-2000)";
+                            text = "Forældet dato. Indtast afleveringsdato i dette format dd/MM-YY. (Ex. " + curDateString + ")";
                         } else {
                             break;
                         }
