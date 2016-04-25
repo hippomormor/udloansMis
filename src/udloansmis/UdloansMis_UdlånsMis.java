@@ -521,9 +521,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             text = "Forkert studienummer-input. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
             logPanel.println("Indtastet studienummer: " + studieNummer);
             if (studieNummer.matches("^([sS][0-9]{6})$")) {
+                StudentDTO student = null;
                 try {
-                    if (database.getStudent(studieNummer, tokenhandler.getKeyToken(), tokenhandler.getID()) == null) {
-                        text = "Studienumeret findes ikke, eller er inaktiv. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
+                    student = database.getStudent(studieNummer, tokenhandler.getKeyToken(), tokenhandler.getID());
+                    if (student == null) {
+                        text = "Studienumeret findes ikke. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
+                    } else if (student.getStatus() != 1) {
+                        text = "Studienumeret er inaktiv. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
                     } else {
                         break;
                     }
