@@ -491,16 +491,27 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             }
             text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
             logPanel.println("Indtastet stregkode: " + stregkode);
+            LoanDTO[] loans;
+            try {
+                loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                System.out.println("WORKS");
+            } catch (RemoteException ex) {
+                System.out.println("DOESNT WORK");
+            }
             if (stregkode.matches("^([0-9]{6,10})$")) {
                 try {
                     ComponentDTO component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                    loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+
                     if (component != null) {
                         System.out.println(component.getStatus());
                     }
                     if (component == null) {
                         text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                    } else if (loans != null) {
+                        text = "Komponenten er allerede lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
                     } else if (component.getStatus() != 1) {
-                        text = "Komponenten er allerede lånet ud, eller inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
                     } else {
                         break;
                     }
@@ -759,15 +770,16 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         int loanid = 0;
         LoanDTO loan = null;
         try {
-            LoanDTO[] loans = database.getLoans(tokenhandler.getKeyToken(), tokenhandler.getID());
-            for (LoanDTO picked_loan : loans) {
-                System.out.println("picked loan id: " + picked_loan.getLoanId());
-                System.out.println("picked loan barcode: " + picked_loan.getBarcode());
-                if (picked_loan.getBarcode().equals(stregkode)) {
-                    loan = picked_loan;
-                    break;
-                }
-            }
+            LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+            //            for (LoanDTO picked_loan : loans) {
+            //                System.out.println("picked loan id: " + picked_loan.getLoanId());
+            //                System.out.println("picked loan barcode: " + picked_loan.getBarcode());
+            //                if (picked_loan.getBarcode().equals(stregkode)) {
+            //                    loan = picked_loan;
+            //                    break;
+            //                }
+            //            }
+            loan = loans[0];
             if (loan == null) {
                 logPanel.println("Lån med stregkode: " + stregkode + " kan ikke findes.");
                 JOptionPane.showMessageDialog(null, "Lån med stregkode: " + stregkode + " kan ikke findes.");
