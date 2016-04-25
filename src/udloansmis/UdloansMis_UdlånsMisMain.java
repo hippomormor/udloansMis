@@ -40,7 +40,7 @@ public class UdloansMis_UdlånsMisMain {
                 Logger.getLogger(UdloansMis_UdlånsMisMain.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        
         // Log-in (Din main bliver nu kørt fra "UdloansMis_LoginPanel", under "jButtonOKActionPerformed()" og "init()". 
         // Den starter efter log-in er accepteret af jacobs server og nøglerne er lavet og tjekket);       
         UdloansMis_LoginPanelCreator loginhandler = new UdloansMis_LoginPanelCreator();
