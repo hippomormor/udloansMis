@@ -481,7 +481,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             LoanDTO[] test = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
         } catch (RemoteException ex) {
-            logPanel.println("Ingen lån fundet");
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
 
         text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
@@ -723,7 +723,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
-                jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
+                //jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
                 jTable.setValueAt(loans[i].getBarcode(), i, 1);
                 jTable.setValueAt(loans[i].getStudentId(), i, 2);
                 jTable.setValueAt(loans[i].getLoanDate(), i, 3);
