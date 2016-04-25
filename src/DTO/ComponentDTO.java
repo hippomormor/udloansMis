@@ -7,12 +7,15 @@ import java.io.Serializable;
  */
 public class ComponentDTO implements Serializable {
     private ComponentGroupDTO componentGroup;
+    private int componentGroupId;
     private int componentNumber;
     private String barcode;
     private int status;
 
     public ComponentDTO() {
-
+        componentGroupId = -1;
+        componentNumber = -1;
+        status = -1;
     }
 
     public ComponentDTO(int componentGroupId, int componentNumber, String barcode, int status) {
@@ -25,7 +28,7 @@ public class ComponentDTO implements Serializable {
 
     public int getComponentGroupId() {
         if (componentGroup == null)
-            return 0;
+            return -1;
         return componentGroup.getComponentGroupId();
     }
 
@@ -33,6 +36,7 @@ public class ComponentDTO implements Serializable {
         if(componentGroup == null)
             componentGroup = new ComponentGroupDTO();
         componentGroup.setComponentGroupId(componentGroupId);
+        componentGroupId = componentGroupId;
     }
 
     public int getComponentNumber() {
