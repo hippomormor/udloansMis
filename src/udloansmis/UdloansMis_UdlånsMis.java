@@ -693,6 +693,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     private void søgUdlån(String keyword) throws RemoteException {
+        for (int i = 0; i < jTable.getRowCount(); i++) {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                jTable.setValueAt("", i, j);
+            }
+        }
         try {
             LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
@@ -712,6 +717,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     private void søgStudieNr(String keyword) throws RemoteException {
+        for (int i = 0; i < jTable.getRowCount(); i++) {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                jTable.setValueAt("", i, j);
+            }
+        }        
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
