@@ -482,10 +482,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         int aflevDag = 0;
         int dageTilAflevering = 0;
         Date afleveringsDatoFinal = new Date();
-        double msPerDay = 86400 * 1000;
         text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
+            if (stregkode == null) {
+                JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
             logPanel.println("Indtastet stregkode: " + stregkode);
             if (stregkode.matches("^([0-9]{6,10})$")) {
@@ -511,6 +514,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         text = "Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
         while (true) {
             studieNummer = JOptionPane.showInputDialog(null, text);
+            if (studieNummer == null) {
+                JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             text = "Forkert studienummer-input. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
             logPanel.println("Indtastet studienummer: " + studieNummer);
             if (studieNummer.matches("^([sS][0-9]{6})$")) {
@@ -527,10 +534,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
         }
 
-        text = "Indtast afleveringsdato i dette format dd/MM-YY. (Ex. " + curDateString + ")";
+        text = "Indtast afleveringsdato i dette format dd/MM-yy. (Ex. " + curDateString + ")";
         while (true) {
             afleveringsDato = JOptionPane.showInputDialog(null, text);
-            text = "Forkert dato-input. Indtast afleveringsdato i dette format dd/MM-YY. (Ex. " + curDateString + ")";
+            if (afleveringsDato == null) {
+                JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            text = "Forkert dato-input. Indtast afleveringsdato i dette format dd/MM-yy. (Ex. " + curDateString + ")";
             logPanel.println("Indtastet dato: " + afleveringsDato);
             if (afleveringsDato.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
                 aflevDag = Integer.parseInt(afleveringsDato.substring(0, afleveringsDato.indexOf("/")));
@@ -549,10 +560,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     format2 = new SimpleDateFormat("dd/MM-yy");
                     try {
                         afleveringsDatoFinal = format2.parse(afleveringsdatoString);
+                        afleveringsDatoFinal.setTime(afleveringsDatoFinal.getTime() + 86400000); // add 12 hours
+                        System.out.println(afleveringsdatoString);
+                        System.out.println(afleveringsDatoFinal);
                         // *** Beregn antal dage til aflevering. ****
-                        dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / msPerDay) + 1;
+                        dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / 86400000) + 1;
                         if (dageTilAflevering < 0) {
-                            text = "Forældet dato. Indtast afleveringsdato i dette format dd/MM-YY. (Ex. " + curDateString + ")";
+                            text = "Forældet dato. Indtast afleveringsdato i dette format dd/MM-yy. (Ex. " + curDateString + ")";
                         } else {
                             break;
                         }
@@ -595,6 +609,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
+            if (stregkode == null) {
+                JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
             logPanel.println("Indtastet stregkode: " + stregkode);
             if (stregkode.matches("^([0-9]{6,10})$")) {
