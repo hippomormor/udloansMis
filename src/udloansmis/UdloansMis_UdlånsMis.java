@@ -769,16 +769,16 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             }
             int loanid = loan.getLoanId();
 
-//            // **** Dags dato ****
-//            Date curDate = new Date();
-//            SimpleDateFormat format = new SimpleDateFormat();
-//            format = new SimpleDateFormat("dd/MM-yy");
-//            String curDateString = format.format(curDate);
-//
-//            loan = database.getLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
-//            loan.setDeliveryDate(curDateString);
-//            loan.setDeliveryDateFromDate(curDate);
-//            loan.setDeliveredTo("TEST");
+            // **** Dags dato ****
+            Date curDate = new Date();
+            SimpleDateFormat format = new SimpleDateFormat();
+            format = new SimpleDateFormat("dd/MM-yy");
+            String curDateString = format.format(curDate);
+
+            loan = database.getLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
+            loan.setDeliveryDate(curDateString);
+            loan.setDeliveryDateFromDate(curDate);
+            loan.setDeliveredTo("TEST");
             int OK = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
 //            int OK2 = database.deleteLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
             logPanel.println("Loan object: " + loan);
