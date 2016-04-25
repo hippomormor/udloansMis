@@ -11,6 +11,7 @@ import DTO.StudentDTO;
 import RMI.IDatabaseRMI;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
@@ -34,8 +35,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private boolean logEnabled = false;
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
-    private IDatabaseRMI database; 
-     
+    private IDatabaseRMI database;
 
     public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis v1.0 Log");
@@ -616,14 +616,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         String text = "";
         String stregkode = "";
         ComponentDTO component;
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
             if (stregkode == null) {
                 JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
             logPanel.println("Indtastet stregkode: " + stregkode);
             if (stregkode.matches("^([0-9]{6,10})$")) {
                 try {
@@ -632,9 +632,9 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         System.out.println(component.getStatus());
                     }
                     if (component == null) {
-                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                     } else if (component.getStatus() != 1) {
-                        text = "Komponenten er allerede lånt ud, eller inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er allerede lånt ud, eller inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                     } else {
                         break;
                     }
@@ -719,7 +719,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 jTable.setValueAt("", i, j);
             }
-        }        
+        }
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
@@ -739,13 +739,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     private void opretUdlån(String barcode, String studentId, Date loanDate, Date dueDate) {
-
-        LoanDTO loan = new LoanDTO();
-        loan.setBarcode(barcode);
-        loan.setStudentId(studentId);
-        loan.setLoanDateFromDate(loanDate);
-        loan.setDueDateFromDate(dueDate);
         try {
+            LoanDTO loan = new LoanDTO();
+            loan.setComponent(database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID()));
+            loan.setBarcode(barcode);
+            loan.setStudentId(studentId);
+            loan.setLoanDateFromDate(loanDate);
+            loan.setDueDateFromDate(dueDate);
+
             int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
             if (OK == 1) {
                 logPanel.println("Udlånet er gennemført. OK:" + OK);
