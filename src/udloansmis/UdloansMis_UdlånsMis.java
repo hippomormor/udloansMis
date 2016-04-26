@@ -656,7 +656,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         while (true) {
             String resumeTekstBoks = String.format(errorText + dialogText, barcode, studentNumber, daysUntilDelivery);
             Object[] options = {buttonText, CANCEL};
-            // Bekræftelse
             int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
             if (n != 0) {
                 JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -754,7 +753,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         while (true) {
             String resumeTekstBoks = String.format(errorText + dialogText, barcode, component.getComponentGroup().getName(), component.getComponentNumber());
             Object[] options = {buttonText, CANCEL};
-            // Bekræftelse
             int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
             if (n != 0) {
                 JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
