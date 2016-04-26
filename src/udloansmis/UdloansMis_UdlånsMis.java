@@ -439,7 +439,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         } else {
             String st = "Ikke forbundet til serveren. Check kabler, forbindelsen genoprettes automatisk";
             JOptionPane.showMessageDialog(null, st);
-            jTable.setValueAt("12345678", 3, 0);
+            jTable.setValueAt("123456789", 3, 0);
             jTable.setValueAt("Zybo kit #16", 3, 1);
             jTable.setValueAt("19/4-2016", 3, 2);
             jTable.setValueAt("19/6-2016", 3, 3);
@@ -484,14 +484,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
 
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
+        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 1234567899)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
             if (stregkode == null) {
                 JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 1234567899)";
 
             if (stregkode.matches("^([0-9]{6,10})$")) {
                 try {
@@ -499,11 +499,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     ComponentDTO component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
                     LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
                     if (component == null) {
-                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                         continue;
                     }
                     if (component.getStatus() != 1) {
-                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                         continue;
                     }
                     if (loans != null) { // first time loaned check
@@ -515,7 +515,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                             }
                         }
                         if (isLoaned) { // check if any loan currently active
-                            text = "Komponenten er allerede lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                            text = "Komponenten er allerede lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                             continue;
                         }
                     }
@@ -627,25 +627,25 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         String stregkode = "";
         String credentials = "";
         ComponentDTO component;
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
+        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 1234567899)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
             if (stregkode == null) {
                 JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
             if (stregkode.matches("^([0-9]{6,10})$")) {
                 logPanel.println("Indtastet stregkode: " + stregkode);
                 try {
                     component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
                     if (component == null) {
-                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                         continue;
                     }
                     LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
                     if (loans == null) { // first time loaned check
-                        text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                         continue;
                     } else {
                         boolean isLoaned = false;
@@ -656,7 +656,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                             }
                         }
                         if (!isLoaned) { // check if any loan currently active
-                            text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                            text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                             continue;
                         }
                     }
@@ -676,7 +676,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
             if (credentials.matches("^([0-9]{6,10})$")) {
                 logPanel.println("Indtastet stregkode: " + credentials);
                
