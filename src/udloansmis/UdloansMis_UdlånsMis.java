@@ -645,7 +645,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     }
                     LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
                     if (loans == null) { // first time loaned check
-                        text = "Komponenten er ikke allerede lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
+                        text = "Komponenten er ikke lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                         continue;
                     } else {
                         boolean isLoaned = false;
@@ -656,7 +656,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                             }
                         }
                         if (!isLoaned) { // check if any loan currently active
-                            text = "Komponenten er ikke allerede lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
+                            text = "Komponenten er ikke lånt ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
                             continue;
                         }
                     }
