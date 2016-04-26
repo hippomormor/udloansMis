@@ -11,6 +11,7 @@ import DTO.StudentDTO;
 import RMI.IDatabaseRMI;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
@@ -34,9 +35,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private boolean logEnabled = false;
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
-    private IDatabaseRMI database;        // <------------------- DET HER ER RMI-INTERFACET (database). Eksempelvis, hvis du ønsker et component-objekt via stregkode:
-    //     Med ord:             modtaget objekt = database.getComponent(stregkodenummer, min nøgle)
-    //     Eksempel:            ComponentDTO recievedComponentObjekt = database.getComponent(barcodeNumber, tokenhandler.getKeyToken(), tokenhandler.getID());          
+    private IDatabaseRMI database;
 
     public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis v1.0 Log");
@@ -394,15 +393,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgUdlån(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            logPanel.println("Wrong input");
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            søgStudieNr(jTextFieldStudieNr.getText());
+            søgUdlån(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            logPanel.println("Wrong input");
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
 
         /* if (checkforserver.isConnectedToServer) {
@@ -482,17 +481,17 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             LoanDTO[] test = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
         } catch (RemoteException ex) {
-            Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
 
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
             if (stregkode == null) {
                 JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
 
             if (stregkode.matches("^([0-9]{6,10})$")) {
                 try {
@@ -523,7 +522,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     break;
 
                 } catch (RemoteException ex) {
-                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
                 }
             }
 
@@ -550,7 +549,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         break;
                     }
                 } catch (RemoteException ex) {
-                    Logger.getLogger(UdloansMis_UdlånsMis.class.getName()).log(Level.SEVERE, null, ex);
+                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
                 }
             }
 
@@ -620,7 +619,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             //Send ikke noget til RMI
             JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -629,7 +627,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         String stregkode = "";
         String credentials = "";
         ComponentDTO component;
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
         while (true) {
             stregkode = JOptionPane.showInputDialog(null, text);
             if (stregkode == null) {
@@ -666,7 +664,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     break;
 
                 } catch (RemoteException ex) {
-                    logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
                 }
             }
         }
@@ -687,7 +685,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
         // Bekræftelse
         String resumeTekstBoks = "Ønsker du at aflevere følgende komponent?\n"
-                + "Stregkode: " + stregkode + ", komponent namn: " + component.getComponentGroup().getName() + "?";
+                + "Stregkode: " + stregkode + ", komponent navn: " + component.getComponentGroup().getName() + "?";
         Object[] options = {"Bekræft", "Afbryd"};
         int n = JOptionPane.showOptionDialog(null,
                 resumeTekstBoks,
@@ -711,7 +709,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         try {
             søgStudieNr(jTextFieldStudieNr.getText());
         } catch (RemoteException ex) {
-
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }//GEN-LAST:event_jTextFieldStudieNrActionPerformed
 
@@ -732,6 +730,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     private void søgUdlån(String keyword) throws RemoteException {
+        for (int i = 0; i < jTable.getRowCount(); i++) {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                jTable.setValueAt("", i, j);
+            }
+        }
         try {
             LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
@@ -751,11 +754,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     private void søgStudieNr(String keyword) throws RemoteException {
+        for (int i = 0; i < jTable.getRowCount(); i++) {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                jTable.setValueAt("", i, j);
+            }
+        }
         try {
             LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
-                jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
-                jTable.setValueAt(loans[i].getBarcode(), i, 0);
+                //jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
                 jTable.setValueAt(loans[i].getBarcode(), i, 1);
                 jTable.setValueAt(loans[i].getStudentId(), i, 2);
                 jTable.setValueAt(loans[i].getLoanDate(), i, 3);
@@ -765,30 +772,30 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
                 jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
             }
-            // jTable.setValueAt(loans[0].getComponentId(), 0, 0);
         } catch (NullPointerException ex) {
             logPanel.println("Der er ikke registreret lån under denne bruger");
         }
     }
 
     private void opretUdlån(String barcode, String studentId, Date loanDate, Date dueDate) {
-
-        LoanDTO loan = new LoanDTO();
-        loan.setBarcode(barcode);
-        loan.setStudentId(studentId);
-        loan.setLoanDateFromDate(loanDate);
-        loan.setDueDateFromDate(dueDate);
         try {
+            LoanDTO loan = new LoanDTO();
+            loan.setComponent(database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID()));
+            loan.setBarcode(barcode);
+            loan.setStudentId(studentId);
+            loan.setLoanDateFromDate(loanDate);
+            loan.setDueDateFromDate(dueDate);
+
             int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
             if (OK == 1) {
                 logPanel.println("Udlånet er gennemført. OK:" + OK);
                 JOptionPane.showMessageDialog(null, "Udlånet er gennemført.");
             } else if (OK == -2 || OK == -1 || OK == 0) {
-                logPanel.println(" Fejl ved kommunikation. OK:" + OK);
-                JOptionPane.showMessageDialog(null, " Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                logPanel.println("Fejl ved kommunikation. OK:" + OK);
+                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }
 
@@ -827,13 +834,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 logPanel.println("Aflevereringen er gennemført. OK: " + OK);
                 JOptionPane.showMessageDialog(null, "Aflevereringen er gennemført.");
             } else if (OK == -2 || OK == -1 || OK == 0) {
-                logPanel.println(" Fejl ved kommunikation. OK: " + OK);
-                JOptionPane.showMessageDialog(null, " Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                logPanel.println("Fejl ved kommunikation. OK: " + OK);
+                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RemoteException ex) {
-            logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
-
     }
 
     private void startLog() {
