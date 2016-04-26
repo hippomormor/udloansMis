@@ -670,7 +670,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
 
         text = "Returneret til: (Indtast navn)";
-        while (true) {
+       
             credentials = JOptionPane.showInputDialog(null, text);
             if (credentials == null) {
                 JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
@@ -679,9 +679,9 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
             if (credentials.matches("^([0-9]{6,10})$")) {
                 logPanel.println("Indtastet stregkode: " + credentials);
-                break;
+               
             }
-        }
+        
 
         // Bekræftelse
         String resumeTekstBoks = "Ønsker du at aflevere følgende komponent?\n"
@@ -697,7 +697,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 options[1]);
         // n er 0 ved Bekræft, og 1 ved Afbryd
         if (n == 0) {
-            opretAflevering(stregkode);
+            opretAflevering(stregkode, credentials);
             // Send til RMI og vis nedenstående besked.
         } else {
             //Send ikke noget til RMI
@@ -785,6 +785,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             loan.setStudentId(studentId);
             loan.setLoanDateFromDate(loanDate);
             loan.setDueDateFromDate(dueDate);
+            loan.setDeliveryDate("");
 
             int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
             if (OK == 1) {
@@ -793,13 +794,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             } else if (OK == -2 || OK == -1 || OK == 0) {
                 logPanel.println("Fejl ved kommunikation. OK:" + OK);
                 JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
-            }
+            } else if (OK == -5)
+                JOptionPane.showMessageDialog(null, "Komponenten er allerede udlånt!", "Bemærk!", JOptionPane.ERROR_MESSAGE);
         } catch (RemoteException ex) {
             logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
     }
 
-    private void opretAflevering(String stregkode) {
+    private void opretAflevering(String stregkode, String afleveretAf) {
         try {
             LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
             if (loans == null) {
@@ -824,7 +826,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             loan = database.getLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
             loan.setDeliveryDate(curDateString);
             loan.setDeliveryDateFromDate(curDate);
-            loan.setDeliveredTo("TEST");
+            loan.setDeliveredTo(afleveretAf);
             int OK = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
 //            int OK2 = database.deleteLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
             logPanel.println("Loan object: " + loan);
@@ -836,7 +838,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             } else if (OK == -2 || OK == -1 || OK == 0) {
                 logPanel.println("Fejl ved kommunikation. OK: " + OK);
                 JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
-            }
+            } else if (OK == -5)
+                JOptionPane.showMessageDialog(null, "Komponenten er allerede afleveret!", "Bemærk!", JOptionPane.ERROR_MESSAGE);
         } catch (RemoteException ex) {
             logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
