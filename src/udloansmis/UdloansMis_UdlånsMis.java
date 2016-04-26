@@ -499,19 +499,29 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     logPanel.println("Indtastet stregkode: " + stregkode);
                     ComponentDTO component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
                     LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    logPanel.println("Loans object: " + loans);
-                    if (component != null) {
-                        System.out.println(component.getStatus());
-                    }
                     if (component == null) {
                         text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                    } else if (loans != null) {
-                        text = "Komponenten er allerede lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                    } else if (component.getStatus() != 1) {
-                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                    } else {
-                        break;
+                        continue;
                     }
+                    if (component.getStatus() != 1) {
+                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        continue;
+                    }
+                    if (loans != null) { // first time loaned check
+                        boolean isLoaned = false;
+                        for (LoanDTO loan : loans) {
+                            if (loan.getDeliveryDate() == null) {
+                                isLoaned = true;
+                                break;
+                            }
+                        }
+                        if (isLoaned) { // check if any loan currently active
+                            text = "Komponenten er allerede lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                            continue;
+                        }
+                    }
+                    break;
+
                 } catch (RemoteException ex) {
                     logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
                 }
@@ -617,6 +627,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String text = "";
         String stregkode = "";
+        String credentials = "";
         ComponentDTO component;
         text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
         while (true) {
@@ -626,23 +637,51 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 return;
             }
             text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-            logPanel.println("Indtastet stregkode: " + stregkode);
             if (stregkode.matches("^([0-9]{6,10})$")) {
+                logPanel.println("Indtastet stregkode: " + stregkode);
                 try {
                     component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    if (component != null) {
-                        System.out.println(component.getStatus());
-                    }
                     if (component == null) {
                         text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                    } else if (component.getStatus() != 1) {
-                        text = "Komponenten er allerede lånet ud, eller inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                    } else {
-                        break;
+                        continue;
                     }
+                    LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                    if (loans == null) { // first time loaned check
+                        text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                        continue;
+                    } else {
+                        boolean isLoaned = false;
+                        for (LoanDTO loan : loans) {
+                            if (loan.getDeliveryDate() == null) {
+                                isLoaned = true;
+                                break;
+                            }
+                        }
+                        if (!isLoaned) { // check if any loan currently active
+                            text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+                            continue;
+                        }
+                    }
+
+                    break;
+
                 } catch (RemoteException ex) {
                     logPanel.println(" Fejl ved kommunikation." + ex.getMessage());
                 }
+            }
+        }
+
+        text = "Returneret til: (Indtast navn)";
+        while (true) {
+            credentials = JOptionPane.showInputDialog(null, text);
+            if (credentials == null) {
+                JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
+            if (credentials.matches("^([0-9]{6,10})$")) {
+                logPanel.println("Indtastet stregkode: " + credentials);
+                break;
             }
         }
 
