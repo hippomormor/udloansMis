@@ -61,8 +61,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
         menuItemUdl = new JCheckBoxMenuItem("Vis udlånte komponenter");
         menuItemNotUdl = new JCheckBoxMenuItem("Vis ikke-udlånte komponenter");
-        menuItemBarcode = new JCheckBoxMenuItem("Søg kun på stregkode komponenter");
-        menuItemStudent = new JCheckBoxMenuItem("Søg kun på studienummer komponenter");
+        menuItemBarcode = new JCheckBoxMenuItem("Søg kun på stregkode");
+        menuItemStudent = new JCheckBoxMenuItem("Søg kun på studienummer");
         popupMenu.add(menuItemAlle);
         popupMenu.add(menuItemUdl);
         popupMenu.add(menuItemNotUdl);
