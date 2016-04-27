@@ -449,7 +449,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         } else {
             String st = "Ikke forbundet til serveren. Check kabler, forbindelsen genoprettes automatisk";
             JOptionPane.showMessageDialog(null, st);
-            jTable.setValueAt("12345678", 3, 0);
+            jTable.setValueAt("123456789", 3, 0);
             jTable.setValueAt("Zybo kit #16", 3, 1);
             jTable.setValueAt("19/4-2016", 3, 2);
             jTable.setValueAt("19/6-2016", 3, 3);
@@ -458,261 +458,341 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }*/
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    public void setLanguage() {
+        dialogTexts = new String[]{
+            "Scan or type in the barcode on the component.\n(Fx. 12345678)",
+            "Put the studentcard on the RFID læser, or type it in manually.\n(Fx. s123456)",
+            "Returned to: (Type name or initials)",
+            "Type in the due date, with the following format dd/MM-yy. (Fx. %s)",
+            "Do you wish to create a loan for the following component?\n Barcode: %s, to %s, for %s days?",
+            "Do you wish to deliver the following component?\nBarcode: %s, component type: %s (#%s)?",
+            "The loan process has been cancelled.",
+            "The delivering process has been cancelled.",
+            "Confirm delivery",
+            "Confirm loan",
+            "Confirm",
+            "Cancel",
+            "Try again",
+            "Observe!!",
+            "The loan is registered.",
+            "The delivery is completed.",
+            "Incorrect barcode format!\n",
+            "Incorrect studentnumber format!\n",
+            "Incorrect credentials format!\n",
+            "Incorrect date format!\n",
+            "The component doesn't exist!\n",
+            "The studentnumber doesn't exist!\n",
+            "The component is inactive!\n",
+            "The studentnumber is inactive!\n",
+            "The component is already lent out!\n",
+            "The component isn't lent out!\n",
+            "Outdated date!\n",
+            "Communication error!\n"
+        };
+    }
+
+    String[] dialogTexts = new String[]{
+        "Scan eller indtast stregkodenummer på udlånskomponent.\n(Ex. 12345678)",
+        "Læg studiekortet på RFID læser, eller indtast studienummer.\n(Ex. s123456)",
+        "Returneret til: (Indtast navn)",
+        "Indtast afleveringsdato i dette format dd/MM-yy. (Ex. %s)",
+        "Ønsker du at lave et udlån af følgende komponent?\nStregkode: %s, til %s i %s dage?",
+        "Ønsker du at aflevere følgende komponent?\nStregkode: %s, komponent navn: %s?",
+        "Udlånet er afbrudt.",
+        "Aflevereringen er afbrudt.",
+        "Bekræft afleverering",
+        "Bekræft udlån",
+        "Bekræft",
+        "Afbryd",
+        "Prøv igen",
+        "Bemærk!",
+        "Udlånet er gennemført.",
+        "Aflevereringen er gennemført.",
+        "Forkert stregkode format!\n",
+        "Forkert studienummer format!\n",
+        "Forkert credentials format!\n",
+        "Forkert dato format!\n",
+        "Komponenten findes ikke!\n",
+        "Studienumeret findes ikke!\n",
+        "Komponenten er inaktiv!\n",
+        "Studienumeret er inaktiv!\n",
+        "Komponenten er allerede lånet ud!\n",
+        "Komponenten er ikke lånet ud!\n",
+        "Forældet dato!\n",
+        "Kommunikations fejl!\n"
+    };
+
+    final String SCAN_BARCODE = dialogTexts[0];
+    final String SCAN_STUDENTNR = dialogTexts[1];
+    final String INPUT_CREDENTIALS = dialogTexts[2];
+    final String INPUT_DELIVERY_DATE = dialogTexts[3];
+    final String DOUBLE_CHECK_LOAN = dialogTexts[4];
+    final String DOUBLE_CHECK_DELIVERY = dialogTexts[5];
+    final String LOAN_CANCELLED = dialogTexts[6];
+    final String DELIVERY_CANCELLED = dialogTexts[7];
+    final String CONFIRM_DELIVERY = dialogTexts[8];
+    final String CONFIRM_LOAN = dialogTexts[9];
+    final String CONFIRM = dialogTexts[10];
+    final String CANCEL = dialogTexts[11];
+    final String TRY_AGAIN = dialogTexts[12];
+    final String NOTE = dialogTexts[13];
+    final String LOAN_SUCCESSFUL = dialogTexts[14];
+    final String DELIVERY_SUCCESSFUL = dialogTexts[15];
+
+    final String INCORRECT_BARCODE_FORMAT = dialogTexts[16];
+    final String INCORRECT_STUDENTNR_FORMAT = dialogTexts[17];
+    final String INCORRECT_CREDENTIALS_FORMAT = dialogTexts[18];
+    final String INCORRECT_DATE_FORMAT = dialogTexts[19];
+    final String COMPONENT_DOESNT_EXIST = dialogTexts[20];
+    final String STUDENTNR_DOESNT_EXIST = dialogTexts[21];
+    final String COMPONENT_INACTIVE = dialogTexts[22];
+    final String STUDENT_IS_INACTIVE = dialogTexts[23];
+    final String COMPONENT_IS_LOANED = dialogTexts[24];
+    final String COMPONENT_IS_NOT_LOANED = dialogTexts[25];
+    final String DATE_IS_OUTDATED = dialogTexts[26];
+    final String COMMUNICATION_ERROR = dialogTexts[27];
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // Dato skal være i dette format 
-        // ***** "24/2-16" *******
+        String dialogText = "";
+        String errorText = "";
+        String buttonText = "";
+        String barcode = "";
+        String studentNumber = "";
+        String deliveryDateString = "";
+        int daysUntilDelivery = 0;
+        Date deliveryDate = null;
+        Date currentDate = null;
 
-        // **** Dags dato ****
-        Date curDate = new Date();
-        SimpleDateFormat format = new SimpleDateFormat();
-        String curDateString = format.format(curDate);
-//        System.out.println("1: Default pattern: " + dateToStr);
-        format = new SimpleDateFormat("dd/MM-yy");
-        curDateString = format.format(curDate);
-//        System.out.println("2: Dansk pattern = " + dateToStr);
-        Date strToDate = null;
-        try {
-            strToDate = format.parse(curDateString);
-        } catch (ParseException ex) {
-            logPanel.println("Forkert dato-input");
-        }
-//        System.out.println("3: " + strToDate);
-        String text = "";
-        String stregkode = "";
-        String studieNummer = "";
-        String afleveringsDato = "";
-        // **** Afleveringsdato fra inputboks ****    
-        int aflevÅr = 0;
-        int aflevMån = 0;
-        int aflevDag = 0;
-        int dageTilAflevering = 0;
-        Date afleveringsDatoFinal = new Date();
-
-        try {
-            LoanDTO[] test = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-        } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
-        }
-
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
+// *****************************************************************************
+// ***************************** SCAN THE BARCODE ******************************
+// *****************************************************************************
+        errorText = "";
+        dialogText = SCAN_BARCODE;
         while (true) {
-            stregkode = JOptionPane.showInputDialog(null, text);
-            if (stregkode == null) {
-                JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
+            if (barcode == null) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
-
-            if (stregkode.matches("^([0-9]{6,10})$")) {
-                try {
-                    logPanel.println("Indtastet stregkode: " + stregkode);
-                    ComponentDTO component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    if (component == null) {
-                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                        continue;
-                    }
-                    if (component.getStatus() != 1) {
-                        text = "Komponenten er inaktiv. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                        continue;
-                    }
-                    if (loans != null) { // first time loaned check
-                        boolean isLoaned = false;
-                        for (LoanDTO loan : loans) {
-                            if (loan.getDeliveryDate() == null) {
-                                isLoaned = true;
-                                break;
-                            }
-                        }
-                        if (isLoaned) { // check if any loan currently active
-                            text = "Komponenten er allerede lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                            continue;
-                        }
-                    }
-                    break;
-
-                } catch (RemoteException ex) {
-                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
-                }
+            if (!barcode.matches("^([0-9]{6,10})$")) {
+                errorText = INCORRECT_BARCODE_FORMAT;
+                continue;
             }
-
+            try {
+                ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (component == null) {
+                    errorText = COMPONENT_DOESNT_EXIST;
+                    continue;
+                }
+                if (component.getStatus() != 1) {
+                    errorText = COMPONENT_INACTIVE;
+                    continue;
+                }
+                if (isLoaned(barcode)) {
+                    errorText = COMPONENT_IS_LOANED;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                continue;
+            }
+            break;
         }
 
-        text = "Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
+// *****************************************************************************
+// ************************* SCAN THE STUDENT NUMBER ***************************
+// *****************************************************************************
+        errorText = "";
+        dialogText = SCAN_STUDENTNR;
         while (true) {
-            studieNummer = JOptionPane.showInputDialog(null, text);
-            if (studieNummer == null) {
-                JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            studentNumber = JOptionPane.showInputDialog(null, errorText + dialogText);
+            if (studentNumber == null) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert studienummer-input. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
-            logPanel.println("Indtastet studienummer: " + studieNummer);
-            if (studieNummer.matches("^([sS][0-9]{6})$")) {
-                StudentDTO student = null;
-                try {
-                    student = database.getStudent(studieNummer, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    if (student == null) {
-                        text = "Studienumeret findes ikke. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
-                    } else if (student.getStatus() != 1) {
-                        text = "Studienumeret er inaktiv. Læg studiekortet på RFID læser, eller indtast studienummer. (Ex. s123456)";
-                    } else {
-                        break;
-                    }
-                } catch (RemoteException ex) {
-                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
-                }
+            if (!studentNumber.matches("^([sS][0-9]{6})$")) {
+                errorText = INCORRECT_STUDENTNR_FORMAT;
+                continue;
             }
+            try {
+                StudentDTO student = database.getStudent(studentNumber, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (student == null) {
+                    errorText = STUDENTNR_DOESNT_EXIST;
+                    continue;
+                }
+                if (student.getStatus() != 1) {
+                    errorText = STUDENT_IS_INACTIVE;
+                    continue;
+                }
 
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                continue;
+            }
+            break;
         }
 
-        text = "Indtast afleveringsdato i dette format dd/MM-yy. (Ex. " + curDateString + ")";
+// *****************************************************************************
+// ************************** TYPE THE DELIVERY DATE ***************************
+// *****************************************************************************
+        errorText = "";
+        dialogText = INPUT_DELIVERY_DATE;
         while (true) {
-            afleveringsDato = JOptionPane.showInputDialog(null, text);
-            if (afleveringsDato == null) {
-                JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            deliveryDateString = JOptionPane.showInputDialog(null, String.format(errorText + dialogText, dateToString(new Date())));
+            if (deliveryDateString == null) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert dato-input. Indtast afleveringsdato i dette format dd/MM-yy. (Ex. " + curDateString + ")";
-            logPanel.println("Indtastet dato: " + afleveringsDato);
-            if (afleveringsDato.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
-                aflevDag = Integer.parseInt(afleveringsDato.substring(0, afleveringsDato.indexOf("/")));
-                aflevMån = Integer.parseInt(afleveringsDato.substring(afleveringsDato.indexOf("/") + 1, afleveringsDato.indexOf("-")));
-                aflevÅr = Integer.parseInt("20" + afleveringsDato.substring(afleveringsDato.length() - 2));
-                if (aflevDag == 31 && (aflevMån == 4 || aflevMån == 6 || aflevMån == 9 || aflevMån == 11)) // aflevMåns with 31 aflevDags
-                {
-                } else if (aflevDag >= 30 && aflevMån == 2) // feb must be <= 28
-                {
-                } else if (aflevMån == 2 && aflevDag == 29 && !(aflevÅr % 4 == 0 && (aflevÅr % 100 != 0 || aflevÅr % 400 == 0))) // feb must only be 29 if it's a leap aflevÅr
-                {
-                } else {
-                    String afleveringsdatoString = "" + aflevDag + "/" + aflevMån + "-" + aflevÅr;
-                    // **** Dato 2 ****
-                    SimpleDateFormat format2 = new SimpleDateFormat();
-                    format2 = new SimpleDateFormat("dd/MM-yy");
-                    try {
-                        afleveringsDatoFinal = format2.parse(afleveringsdatoString);
-                        afleveringsDatoFinal.setTime(afleveringsDatoFinal.getTime() + 86400000); // add 12 hours
-                        System.out.println(afleveringsdatoString);
-                        System.out.println(afleveringsDatoFinal);
-                        // *** Beregn antal dage til aflevering. ****
-                        dageTilAflevering = (int) ((afleveringsDatoFinal.getTime() - curDate.getTime()) / 86400000) + 1;
-                        if (dageTilAflevering < 0) {
-                            text = "Forældet dato. Indtast afleveringsdato i dette format dd/MM-yy. (Ex. " + curDateString + ")";
-                        } else {
-                            break;
-                        }
-                    } catch (ParseException ex) {
-                        logPanel.println("Forkert dato-input");
-                    }
-                }
+            if (!deliveryDateString.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
+                errorText = INCORRECT_DATE_FORMAT;
+                continue;
             }
+            currentDate = new Date();
+            deliveryDate = getDateFromString(deliveryDateString);
+            daysUntilDelivery = (int) ((deliveryDate.getTime() - currentDate.getTime()) / 86400000) + 1;
+            if (daysUntilDelivery < 0) {
+                errorText = DATE_IS_OUTDATED;
+                continue;
+            }
+            break;
         }
 
-        String resumeTekstBoks = "Ønsker du at lave et udlån af følgende komponent?\n"
-                + "Stregkode: " + stregkode + ", til " + studieNummer + " i " + dageTilAflevering + " dage?";
-        Object[] options = {"Bekræft", "Afbryd"};
-
-        // Bekræftelse
-        int n = JOptionPane.showOptionDialog(null,
-                resumeTekstBoks,
-                "Bekræft udlån",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[1]);
-        // n er 0 ved Bekræft, og 1 ved Afbryd
-        if (n == 0) {
-            opretUdlån(stregkode, studieNummer, curDate, afleveringsDatoFinal);
-            // Send til RMI og vis nedenstående besked.
-        } else {
-            //Send ikke noget til RMI
-            JOptionPane.showMessageDialog(null, "Udlånet er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+// *****************************************************************************
+// ******************************* CONFIRM LOAN ********************************
+// *****************************************************************************
+        buttonText = CONFIRM;
+        errorText = "";
+        dialogText = DOUBLE_CHECK_LOAN;
+        while (true) {
+            String resumeTekstBoks = String.format(errorText + dialogText, barcode, studentNumber, daysUntilDelivery);
+            Object[] options = {buttonText, CANCEL};
+            int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+            if (n != 0) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                LoanDTO loan = new LoanDTO();
+                loan.setComponent(database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID()));
+                loan.setBarcode(barcode);
+                loan.setStudentId(studentNumber);
+                loan.setLoanDateFromDate(currentDate);
+                loan.setDueDateFromDate(deliveryDate);
+                int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (OK < 1) {
+                    errorText = COMMUNICATION_ERROR;
+                    buttonText = TRY_AGAIN;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                buttonText = TRY_AGAIN;
+                continue;
+            }
+            break;
         }
+        JOptionPane.showMessageDialog(null, LOAN_SUCCESSFUL);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String text = "";
-        String stregkode = "";
+        String dialogText = "";
+        String errorText = "";
+        String buttonText = "";
+        String barcode = "";
         String credentials = "";
-        ComponentDTO component;
-        text = "Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 123456789)";
+        ComponentDTO component = null;
+
+// *****************************************************************************
+// ***************************** SCAN THE BARCODE ******************************
+// *****************************************************************************
+        errorText = "";
+        dialogText = SCAN_BARCODE;
         while (true) {
-            stregkode = JOptionPane.showInputDialog(null, text);
-            if (stregkode == null) {
-                JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+            barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
+            if (barcode == null) {
+                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-            if (stregkode.matches("^([0-9]{6,10})$")) {
-                logPanel.println("Indtastet stregkode: " + stregkode);
-                try {
-                    component = database.getComponent(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    if (component == null) {
-                        text = "Komponenten findes ikke. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                        continue;
-                    }
-                    LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                    if (loans == null) { // first time loaned check
-                        text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                        continue;
-                    } else {
-                        boolean isLoaned = false;
-                        for (LoanDTO loan : loans) {
-                            if (loan.getDeliveryDate() == null) {
-                                isLoaned = true;
-                                break;
-                            }
-                        }
-                        if (!isLoaned) { // check if any loan currently active
-                            text = "Komponenten er ikke lånet ud. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-                            continue;
-                        }
-                    }
-
-                    break;
-
-                } catch (RemoteException ex) {
-                    logPanel.println("Fejl ved kommunikation." + ex.getMessage());
+            if (!barcode.matches("^([0-9]{6,10})$")) {
+                errorText = INCORRECT_BARCODE_FORMAT;
+                continue;
+            }
+            try {
+                component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (component == null) {
+                    errorText = INCORRECT_BARCODE_FORMAT;
+                    continue;
                 }
+                if (!isLoaned(barcode)) {
+                    errorText = COMPONENT_IS_NOT_LOANED;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                continue;
             }
+            break;
+
         }
 
-        text = "Returneret til: (Indtast navn)";
+// *****************************************************************************
+// **************************** INPUT CREDENTIALS ******************************
+// *****************************************************************************
+        errorText = "";
+        dialogText = INPUT_CREDENTIALS;
         while (true) {
-            credentials = JOptionPane.showInputDialog(null, text);
+            credentials = JOptionPane.showInputDialog(null, errorText + dialogText);
             if (credentials == null) {
-                JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            text = "Forkert stregkode-input. Scan eller indtast stregkodenummer på udlånskomponent. (Ex. 12345678)";
-            if (credentials.matches("^([0-9]{6,10})$")) {
-                logPanel.println("Indtastet stregkode: " + credentials);
-                break;
+            if (credentials.length() < 2 || credentials.length() > 30) {
+                errorText = INCORRECT_CREDENTIALS_FORMAT;
+                continue;
             }
+            break;
         }
 
-        // Bekræftelse
-        String resumeTekstBoks = "Ønsker du at aflevere følgende komponent?\n"
-                + "Stregkode: " + stregkode + ", komponent navn: " + component.getComponentGroup().getName() + "?";
-        Object[] options = {"Bekræft", "Afbryd"};
-        int n = JOptionPane.showOptionDialog(null,
-                resumeTekstBoks,
-                "Bekræft udlån",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[1]);
-        // n er 0 ved Bekræft, og 1 ved Afbryd
-        if (n == 0) {
-            opretAflevering(stregkode);
-            // Send til RMI og vis nedenstående besked.
-        } else {
-            //Send ikke noget til RMI
-            JOptionPane.showMessageDialog(null, "Aflevereringen er afbrudt.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
+// *****************************************************************************
+// ***************************** CONFIRM DELIVERY ******************************
+// *****************************************************************************
+        buttonText = CONFIRM;
+        errorText = "";
+        dialogText = DOUBLE_CHECK_DELIVERY;
+        while (true) {
+            String resumeTekstBoks = String.format(errorText + dialogText, barcode, component.getComponentGroup().getName(), component.getComponentNumber());
+            Object[] options = {buttonText, CANCEL};
+            int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+            if (n != 0) {
+                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                LoanDTO loan = findLoaned(barcode);
+                if (loan == null) {
+                    JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Date currentDate = new Date();
+                loan.setDeliveryDate(dateToString(currentDate));
+                loan.setDeliveryDateFromDate(currentDate);
+                loan.setDeliveredTo(credentials);
+                int OK = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (OK < 1) {
+                    errorText = COMMUNICATION_ERROR;
+                    buttonText = TRY_AGAIN;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                buttonText = TRY_AGAIN;
+                continue;
+            }
+            break;
         }
+        JOptionPane.showMessageDialog(null, DELIVERY_SUCCESSFUL);
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextFieldStudieNrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStudieNrActionPerformed
@@ -850,69 +930,43 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
     }
 
-    private void opretUdlån(String barcode, String studentId, Date loanDate, Date dueDate) {
-        try {
-            LoanDTO loan = new LoanDTO();
-            loan.setComponent(database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID()));
-            loan.setBarcode(barcode);
-            loan.setStudentId(studentId);
-            loan.setLoanDateFromDate(loanDate);
-            loan.setDueDateFromDate(dueDate);
-
-            int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-            if (OK == 1) {
-                logPanel.println("Udlånet er gennemført. OK:" + OK);
-                JOptionPane.showMessageDialog(null, "Udlånet er gennemført.");
-            } else if (OK == -2 || OK == -1 || OK == 0) {
-                logPanel.println("Fejl ved kommunikation. OK:" + OK);
-                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
-        }
+    private boolean isLoaned(String barcode) throws RemoteException {
+        return findLoaned(barcode) != null;
     }
 
-    private void opretAflevering(String stregkode) {
-        try {
-            LoanDTO[] loans = database.getLoansForBarcode(stregkode, tokenhandler.getKeyToken(), tokenhandler.getID());
-            if (loans == null) {
-                logPanel.println("Lån med stregkode: " + stregkode + " kan ikke findes.");
-                JOptionPane.showMessageDialog(null, "Lån med stregkode: " + stregkode + " kan ikke findes.");
-                return;
-            }
-            LoanDTO loan = loans[0];
-            if (loan == null) {
-                logPanel.println("Lån med stregkode: " + stregkode + " kan ikke findes.");
-                JOptionPane.showMessageDialog(null, "Lån med stregkode: " + stregkode + " kan ikke findes.");
-                return;
-            }
-            int loanid = loan.getLoanId();
-
-            // **** Dags dato ****
-            Date curDate = new Date();
-            SimpleDateFormat format = new SimpleDateFormat();
-            format = new SimpleDateFormat("dd/MM-yy");
-            String curDateString = format.format(curDate);
-
-            loan = database.getLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
-            loan.setDeliveryDate(curDateString);
-            loan.setDeliveryDateFromDate(curDate);
-            loan.setDeliveredTo("TEST");
-            int OK = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-//            int OK2 = database.deleteLoan(loanid, tokenhandler.getKeyToken(), tokenhandler.getID());
-            logPanel.println("Loan object: " + loan);
-            logPanel.println("Loan ID: " + loanid);
-            logPanel.println("Loan linked barcode: " + stregkode);
-            if (OK == 1) {
-                logPanel.println("Aflevereringen er gennemført. OK: " + OK);
-                JOptionPane.showMessageDialog(null, "Aflevereringen er gennemført.");
-            } else if (OK == -2 || OK == -1 || OK == 0) {
-                logPanel.println("Fejl ved kommunikation. OK: " + OK);
-                JOptionPane.showMessageDialog(null, "Fejl ved kommunikation.", "Bemærk!", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
+    private LoanDTO findLoaned(String barcode) throws RemoteException {
+        LoanDTO[] loans = database.getLoansForBarcode(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
+        if (loans == null) { // first time loaned check
+            return null;
         }
+        for (LoanDTO picked_loan : loans) {
+            if (picked_loan.getDeliveryDate() == null) {
+                return picked_loan;
+            }
+        }
+        return null;
+    }
+
+    private String dateToString(Date currentDate) {
+        return format.format(currentDate);
+    }
+
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM-yy");
+
+    private Date getDateFromString(String dateString) {
+        String first = dateString.substring(0, dateString.indexOf("-") + 1);
+        String last = dateString.substring(dateString.indexOf("-") + 1, dateString.length());
+        if (last.length() < 4) {
+            dateString = first + "20" + last;
+        }
+        Date date = null;
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException ex) {
+            return null;
+        }
+
+        return date;
     }
 
     private void startLog() {
