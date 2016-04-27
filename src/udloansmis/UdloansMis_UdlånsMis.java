@@ -835,14 +835,28 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         menuItemUdl.setEnabled(true);
                         menuItemNotUdl.setEnabled(false);
                     }
-                } 
-
+                } else if (event.getSource() == menuItemBarcode) {
+                    if(!searchBarcode)
+                        searchStudent = false;
+                    searchBarcode = !searchBarcode;
+                    menuItemBarcode.setState(searchBarcode);
+                    menuItemStudent.setState(searchStudent);
+                }
+                else if (event.getSource() == menuItemStudent) {
+                    if(!searchStudent)
+                        searchBarcode = false;
+                    searchStudent = !searchStudent;
+                    menuItemBarcode.setState(searchBarcode);
+                    menuItemStudent.setState(searchStudent);
+                }
             }
         };
 
         menuItemAlle.addActionListener(menuListener);
         menuItemUdl.addActionListener(menuListener);
         menuItemNotUdl.addActionListener(menuListener);
+        menuItemBarcode.addActionListener(menuListener);
+        menuItemStudent.addActionListener(menuListener);
 
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
             popupMenu.setVisible(true);
@@ -861,11 +875,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
         LoanDTO[] loans;
         if (searchStudent) {
-            loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+            loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());           
         } else if (searchBarcode) {
             loans = database.getLoansForBarcode(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         } else {
-            loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());           
+            loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         }
         try {
             for (int i = 0; i < loans.length; i++) {
