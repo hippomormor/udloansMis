@@ -9,13 +9,8 @@ import DTO.ComponentDTO;
 import DTO.LoanDTO;
 import DTO.StudentDTO;
 import RMI.IDatabaseRMI;
-import java.awt.Button;
-import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
@@ -24,10 +19,10 @@ import security.TokenHandlerClient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.event.MouseInputAdapter;
 
 /**
  *
@@ -43,6 +38,9 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
     private IDatabaseRMI database;
+    private boolean searchAll = true;
+    private boolean searchLoaned = false;
+    private boolean searchUnLoaned = false;
 
     public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis v1.0 Log");
@@ -819,45 +817,60 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem menuItemUdl = new JMenuItem("Vis kun udlånte komponenter");
-        JMenuItem menuItemAlle = new JMenuItem("Vis alle komponenter");
-        popupMenu.add(menuItemUdl);
+        JCheckBoxMenuItem menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
+        JCheckBoxMenuItem menuItemUdl = new JCheckBoxMenuItem("Vis udlånte komponenter");
+        JCheckBoxMenuItem menuItemNotUdl = new JCheckBoxMenuItem("Vis ikke-udlånte komponenter");
+
         popupMenu.add(menuItemAlle);
+        popupMenu.add(menuItemUdl);
+        popupMenu.add(menuItemNotUdl);
+
         jTable.setComponentPopupMenu(popupMenu);
         popupMenu.show(jTable, evt.getX(), evt.getY());
+
         ActionListener menuListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                System.out.println(event.getActionCommand());
-                if (event.getSource() == menuItemUdl) {
-                    showOnlyLoanedComponents();
-                } else if (event.getSource() == menuItemAlle) {
-                    showAllComponents();
+
+                if (event.getSource() == menuItemAlle) {
+                    if (!searchAll) {
+                        searchAll = true;
+                        searchLoaned = false;
+                        searchUnLoaned = false;
+                        menuItemAlle.setState(true);
+                        menuItemUdl.setState(false);
+                        menuItemNotUdl.setState(false);
+                    }
+                } else if (event.getSource() == menuItemUdl) {
+                    if (!searchLoaned) {
+                        searchAll = false;
+                        searchLoaned = true;
+                        searchUnLoaned =false;
+                        menuItemAlle.setState(false);
+                        menuItemUdl.setState(true);
+                        menuItemNotUdl.setState(false);
+                    }
+                } else if (event.getSource() == menuItemNotUdl) {
+                    if (!searchUnLoaned) {
+                        searchAll = false;
+                        searchLoaned = false;                        
+                        searchUnLoaned = true;
+                        menuItemAlle.setState(false);
+                        menuItemUdl.setState(false);
+                        menuItemNotUdl.setState(true);
+                    }
                 }
             }
         };
 
         menuItemUdl.addActionListener(menuListener);
         menuItemAlle.addActionListener(menuListener);
-        
 
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+ 
             popupMenu.setVisible(true);
         }
     }//GEN-LAST:event_jTableMouseClicked
-
-    private void showOnlyLoanedComponents() {
-        System.out.println("showLoaned");
-    }
-
-    private void showAllComponents() {
-        System.out.println("showAll");
-        try {
-            søgUdlån(jTextFieldStregkode.getText());
-        } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
-        }
-    }
 
     public void setDate(String date) {
         jLabel5.setText(date);
