@@ -9,23 +9,25 @@ import DTO.ComponentDTO;
 import DTO.LoanDTO;
 import DTO.StudentDTO;
 import RMI.IDatabaseRMI;
-import java.awt.Component;
+import java.awt.Button;
+import java.awt.MenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigInteger;
 import java.rmi.RemoteException;
 import javax.swing.JOptionPane;
 import security.TokenHandlerClient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JTable;
-import javax.swing.table.JTableHeader;
+import javax.swing.event.MouseInputAdapter;
 
 /**
  *
@@ -821,27 +823,35 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         JMenuItem menuItemAlle = new JMenuItem("Vis alle komponenter");
         popupMenu.add(menuItemUdl);
         popupMenu.add(menuItemAlle);
-       jTable.setComponentPopupMenu(popupMenu);
-        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
-            System.out.println("Right Click");
-            popupMenu.show(jTable, evt.getX(), evt.getY());
-        }
-        
-        //if(popupMenu.)
-        JMenuItem menu = (JMenuItem) evt.getSource() ;
-        if (menu == menuItemUdl) {
-            showOnlyLoanedComponents();
-        } else if (menu == menuItemAlle) {
-            showAllComponents();
-        }
+        jTable.setComponentPopupMenu(popupMenu);
+        popupMenu.show(jTable, evt.getX(), evt.getY());
+        ActionListener menuListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                System.out.println(event.getActionCommand());
+                if (event.getSource() == menuItemUdl) {
+                    showOnlyLoanedComponents();
+                } else if (event.getSource() == menuItemAlle) {
+                    showAllComponents();
+                }
+            }
+        };
 
+        menuItemUdl.addActionListener(menuListener);
+        menuItemAlle.addActionListener(menuListener);
+        
+
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            popupMenu.setVisible(true);
+        }
     }//GEN-LAST:event_jTableMouseClicked
 
     private void showOnlyLoanedComponents() {
-
+        System.out.println("showLoaned");
     }
 
     private void showAllComponents() {
+        System.out.println("showAll");
         try {
             søgUdlån(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
