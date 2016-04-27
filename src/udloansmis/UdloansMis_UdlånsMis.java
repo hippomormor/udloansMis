@@ -38,9 +38,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private UdloansMis_CheckForServer checkforserver;
     private final TokenHandlerClient tokenhandler;
     private IDatabaseRMI database;
-    private boolean searchAll = true;
-    private boolean searchLoaned = false;
-    private boolean searchUnLoaned = false;
+    JPopupMenu popupMenu;
+    JCheckBoxMenuItem menuItemAlle;
+    JCheckBoxMenuItem menuItemUdl;
+    JCheckBoxMenuItem menuItemNotUdl;
+    JCheckBoxMenuItem menuItemStudent;
+    JCheckBoxMenuItem menuItemBarcode;
+    private boolean searchStudent = false;
+    private boolean searchBarcode = false;
+    private int searchState = 0;        // 0 == All, 1 == Loaned, 2 == Unloaned
 
     public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis v1.0 Log");
@@ -51,6 +57,20 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     public void init() {
         initComponents();
+        popupMenu = new JPopupMenu();
+        menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
+        menuItemUdl = new JCheckBoxMenuItem("Vis udlånte komponenter");
+        menuItemNotUdl = new JCheckBoxMenuItem("Vis ikke-udlånte komponenter");
+        menuItemBarcode = new JCheckBoxMenuItem("Søg kun på stregkode komponenter");
+        menuItemStudent = new JCheckBoxMenuItem("Søg kun på studienummer komponenter");
+        popupMenu.add(menuItemAlle);
+        popupMenu.add(menuItemUdl);
+        popupMenu.add(menuItemNotUdl);
+        popupMenu.addSeparator();
+        popupMenu.add(menuItemBarcode);
+        popupMenu.add(menuItemStudent);
+        menuItemAlle.setState(true);
+        menuItemAlle.setEnabled(false);
         Thread dateThread = new Thread(dato);
         dateThread.start();
         checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database, serverIP);
@@ -84,9 +104,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jTextFieldStregkode = new javax.swing.JTextField();
-        jTextFieldStudieNr = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -112,23 +130,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             }
         });
 
-        jTextFieldStudieNr.setText("Sxxxxxx");
-        jTextFieldStudieNr.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTextFieldStudieNrMouseClicked(evt);
-            }
-        });
-        jTextFieldStudieNr.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldStudieNrActionPerformed(evt);
-            }
-        });
-
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Scan eller søg efter komponent");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Studienummer");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 2, 36)); // NOI18N
         jLabel3.setText("UdlånsMis v1.0");
@@ -315,22 +318,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextFieldStregkode, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-                        .addGap(37, 37, 37)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 388, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextFieldStudieNr, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -352,13 +348,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldStregkode, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldStudieNr, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel4))
                 .addGap(33, 33, 33)
@@ -375,7 +368,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton2, jButton3});
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton1, jTextFieldStregkode, jTextFieldStudieNr});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton1, jTextFieldStregkode});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -401,7 +394,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void jTextFieldStregkodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeActionPerformed
 
         try {
-            søgUdlån(jTextFieldStregkode.getText());
+            search(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
             logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
@@ -409,7 +402,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            søgUdlån(jTextFieldStregkode.getText());
+            search(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
             logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
@@ -795,35 +788,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jTextFieldStudieNrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStudieNrActionPerformed
-        try {
-            søgStudieNr(jTextFieldStudieNr.getText());
-        } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
-        }
-    }//GEN-LAST:event_jTextFieldStudieNrActionPerformed
-
     private void jRadioButtonLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonLogActionPerformed
         setLog();
     }//GEN-LAST:event_jRadioButtonLogActionPerformed
-
-    private void jTextFieldStudieNrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldStudieNrMouseClicked
-        jTextFieldStudieNr.setText("");
-    }//GEN-LAST:event_jTextFieldStudieNrMouseClicked
 
     private void jTextFieldStregkodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeMouseClicked
         jTextFieldStregkode.setText("");
     }//GEN-LAST:event_jTextFieldStregkodeMouseClicked
 
     private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
-        JPopupMenu popupMenu = new JPopupMenu();
-        JCheckBoxMenuItem menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
-        JCheckBoxMenuItem menuItemUdl = new JCheckBoxMenuItem("Vis udlånte komponenter");
-        JCheckBoxMenuItem menuItemNotUdl = new JCheckBoxMenuItem("Vis ikke-udlånte komponenter");
-
-        popupMenu.add(menuItemAlle);
-        popupMenu.add(menuItemUdl);
-        popupMenu.add(menuItemNotUdl);
 
         jTable.setComponentPopupMenu(popupMenu);
         popupMenu.show(jTable, evt.getX(), evt.getY());
@@ -833,41 +806,45 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent event) {
 
                 if (event.getSource() == menuItemAlle) {
-                    if (!searchAll) {
-                        searchAll = true;
-                        searchLoaned = false;
-                        searchUnLoaned = false;
+                    if (searchState != 0) {
+                        searchState = 0;
                         menuItemAlle.setState(true);
                         menuItemUdl.setState(false);
                         menuItemNotUdl.setState(false);
+                        menuItemAlle.setEnabled(false);
+                        menuItemUdl.setEnabled(true);
+                        menuItemNotUdl.setEnabled(true);
                     }
                 } else if (event.getSource() == menuItemUdl) {
-                    if (!searchLoaned) {
-                        searchAll = false;
-                        searchLoaned = true;
-                        searchUnLoaned =false;
+                    if (searchState != 1) {
+                        searchState = 1;
                         menuItemAlle.setState(false);
                         menuItemUdl.setState(true);
                         menuItemNotUdl.setState(false);
+                        menuItemAlle.setEnabled(true);
+                        menuItemUdl.setEnabled(false);
+                        menuItemNotUdl.setEnabled(true);
                     }
                 } else if (event.getSource() == menuItemNotUdl) {
-                    if (!searchUnLoaned) {
-                        searchAll = false;
-                        searchLoaned = false;                        
-                        searchUnLoaned = true;
+                    if (searchState != 2) {
+                        searchState = 2;
                         menuItemAlle.setState(false);
                         menuItemUdl.setState(false);
                         menuItemNotUdl.setState(true);
+                        menuItemAlle.setEnabled(true);
+                        menuItemUdl.setEnabled(true);
+                        menuItemNotUdl.setEnabled(false);
                     }
-                }
+                } 
+
             }
         };
 
-        menuItemUdl.addActionListener(menuListener);
         menuItemAlle.addActionListener(menuListener);
+        menuItemUdl.addActionListener(menuListener);
+        menuItemNotUdl.addActionListener(menuListener);
 
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
- 
             popupMenu.setVisible(true);
         }
     }//GEN-LAST:event_jTableMouseClicked
@@ -876,81 +853,45 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jLabel5.setText(date);
     }
 
-    private void søgUdlån(String keyword) throws RemoteException {
+    private void search(String keyword) throws RemoteException {
         for (int i = 0; i < jTable.getRowCount(); i++) {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 jTable.setValueAt("", i, j);
             }
         }
-        try {
-            LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-            for (int i = 0; i < loans.length; i++) {
-                jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
-                jTable.setValueAt(loans[i].getBarcode(), i, 1);
-                jTable.setValueAt(loans[i].getStudentId(), i, 2);
-                jTable.setValueAt(loans[i].getLoanDate(), i, 3);
-                jTable.setValueAt(loans[i].getDueDate(), i, 4);
-                Date curDate = new Date();
-                double msPerDay = 86400 * 1000;
-                int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
-                jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
-            }
-        } catch (NullPointerException ex) {
-            logPanel.println("Fejl i indtastning.");
-        }
-    }
-
-    private void søgKunUdlånteKomponenter(String keyword) throws RemoteException {
-        for (int i = 0; i < jTable.getRowCount(); i++) {
-            for (int j = 0; j < jTable.getColumnCount(); j++) {
-                jTable.setValueAt("", i, j);
-            }
+        LoanDTO[] loans;
+        if (searchStudent) {
+            loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+        } else if (searchBarcode) {
+            loans = database.getLoansForBarcode(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+        } else {
+            loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());           
         }
         try {
-            LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
             for (int i = 0; i < loans.length; i++) {
-                logPanel.println(loans[i].getDeliveryDate());
-                // Vis kun udlånte komponenter i jTable.
-                if (loans[i].getDeliveryDateAsDate() == null) {
-                    jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
-                    jTable.setValueAt(loans[i].getBarcode(), i, 1);
-                    jTable.setValueAt(loans[i].getStudentId(), i, 2);
-                    jTable.setValueAt(loans[i].getLoanDate(), i, 3);
-                    jTable.setValueAt(loans[i].getDueDate(), i, 4);
-                    Date curDate = new Date();
-                    double msPerDay = 86400 * 1000;
-                    int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
-                    jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
+                if (searchState == 0) {
+                    paintTable(loans[i], i);
+                } else if (searchState == 1 && loans[i].getDeliveryDateAsDate() == null) {
+                    paintTable(loans[i], i);
+                } else if (searchState == 2 && loans[i].getDeliveryDateAsDate() != null) {
+                    paintTable(loans[i], i);
                 }
-
             }
         } catch (NullPointerException ex) {
-            logPanel.println("Fejl i indtastning.");
+            logPanel.println("Intet resultat");
         }
     }
 
-    private void søgStudieNr(String keyword) throws RemoteException {
-        for (int i = 0; i < jTable.getRowCount(); i++) {
-            for (int j = 0; j < jTable.getColumnCount(); j++) {
-                jTable.setValueAt("", i, j);
-            }
-        }
-        try {
-            LoanDTO[] loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-            for (int i = 0; i < loans.length; i++) {
-                jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
-                jTable.setValueAt(loans[i].getBarcode(), i, 1);
-                jTable.setValueAt(loans[i].getStudentId(), i, 2);
-                jTable.setValueAt(loans[i].getLoanDateAsDate(), i, 3);
-                jTable.setValueAt(loans[i].getDueDate(), i, 4);
-                Date curDate = new Date();
-                double msPerDay = 86400 * 1000;
-                int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
-                jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
-            }
-        } catch (NullPointerException ex) {
-            logPanel.println("Der er ikke registreret lån under denne bruger");
-        }
+    private void paintTable(LoanDTO loan, int i) throws NullPointerException {
+        jTable.setValueAt(loan.getComponent().getComponentGroup().getName(), i, 0);
+        jTable.setValueAt(loan.getBarcode(), i, 1);
+        jTable.setValueAt(loan.getStudentId(), i, 2);
+        jTable.setValueAt(loan.getLoanDate(), i, 3);
+        jTable.setValueAt(loan.getDueDate(), i, 4);
+        Date curDate = new Date();
+        double msPerDay = 86400 * 1000;
+        int dageTilAflevering = (int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
+        jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
     }
 
     private boolean isLoaned(String barcode) throws RemoteException {
@@ -1034,7 +975,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1044,7 +984,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private javax.swing.JTable jTable;
     private javax.swing.JTextField jTextFieldServerCheck;
     private javax.swing.JTextField jTextFieldStregkode;
-    private javax.swing.JTextField jTextFieldStudieNr;
     // End of variables declaration//GEN-END:variables
 
 }
