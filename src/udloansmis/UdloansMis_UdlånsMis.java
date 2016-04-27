@@ -9,6 +9,7 @@ import DTO.ComponentDTO;
 import DTO.LoanDTO;
 import DTO.StudentDTO;
 import RMI.IDatabaseRMI;
+import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigInteger;
@@ -21,6 +22,10 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -265,6 +270,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         });
         jTable.setFocusable(false);
         jTable.setRowSelectionAllowed(false);
+        jTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable);
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -805,6 +815,40 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jTextFieldStregkode.setText("");
     }//GEN-LAST:event_jTextFieldStregkodeMouseClicked
 
+    private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem menuItemUdl = new JMenuItem("Vis kun udlånte komponenter");
+        JMenuItem menuItemAlle = new JMenuItem("Vis alle komponenter");
+        popupMenu.add(menuItemUdl);
+        popupMenu.add(menuItemAlle);
+       jTable.setComponentPopupMenu(popupMenu);
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            System.out.println("Right Click");
+            popupMenu.show(jTable, evt.getX(), evt.getY());
+        }
+        
+        //if(popupMenu.)
+        JMenuItem menu = (JMenuItem) evt.getSource() ;
+        if (menu == menuItemUdl) {
+            showOnlyLoanedComponents();
+        } else if (menu == menuItemAlle) {
+            showAllComponents();
+        }
+
+    }//GEN-LAST:event_jTableMouseClicked
+
+    private void showOnlyLoanedComponents() {
+
+    }
+
+    private void showAllComponents() {
+        try {
+            søgUdlån(jTextFieldStregkode.getText());
+        } catch (RemoteException ex) {
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
+        }
+    }
+
     public void setDate(String date) {
         jLabel5.setText(date);
     }
@@ -833,6 +877,35 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
     }
 
+    private void søgKunUdlånteKomponenter(String keyword) throws RemoteException {
+        for (int i = 0; i < jTable.getRowCount(); i++) {
+            for (int j = 0; j < jTable.getColumnCount(); j++) {
+                jTable.setValueAt("", i, j);
+            }
+        }
+        try {
+            LoanDTO[] loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
+            for (int i = 0; i < loans.length; i++) {
+                logPanel.println(loans[i].getDeliveryDate());
+                // Vis kun udlånte komponenter i jTable.
+                if (loans[i].getDeliveryDateAsDate() == null) {
+                    jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
+                    jTable.setValueAt(loans[i].getBarcode(), i, 1);
+                    jTable.setValueAt(loans[i].getStudentId(), i, 2);
+                    jTable.setValueAt(loans[i].getLoanDate(), i, 3);
+                    jTable.setValueAt(loans[i].getDueDate(), i, 4);
+                    Date curDate = new Date();
+                    double msPerDay = 86400 * 1000;
+                    int dageTilAflevering = (int) ((loans[i].getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
+                    jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
+                }
+
+            }
+        } catch (NullPointerException ex) {
+            logPanel.println("Fejl i indtastning.");
+        }
+    }
+
     private void søgStudieNr(String keyword) throws RemoteException {
         for (int i = 0; i < jTable.getRowCount(); i++) {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
@@ -845,7 +918,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 jTable.setValueAt(loans[i].getComponent().getComponentGroup().getName(), i, 0);
                 jTable.setValueAt(loans[i].getBarcode(), i, 1);
                 jTable.setValueAt(loans[i].getStudentId(), i, 2);
-                jTable.setValueAt(loans[i].getLoanDate(), i, 3);
+                jTable.setValueAt(loans[i].getLoanDateAsDate(), i, 3);
                 jTable.setValueAt(loans[i].getDueDate(), i, 4);
                 Date curDate = new Date();
                 double msPerDay = 86400 * 1000;
