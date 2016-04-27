@@ -827,13 +827,13 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             popupMenu.show(jTable, evt.getX(), evt.getY());
         }
         
-        if(popupMenu.)
-        //JMenuItem menu = (JMenuItem) evt.getSource() ;
-        //if (menu == menuItemUdl) {
-       //     showOnlyLoanedComponents();
-        //} else if (menu == menuItemAlle) {
-        //    showAllComponents();
-        //}
+        //if(popupMenu.)
+        JMenuItem menu = (JMenuItem) evt.getSource() ;
+        if (menu == menuItemUdl) {
+            showOnlyLoanedComponents();
+        } else if (menu == menuItemAlle) {
+            showAllComponents();
+        }
 
     }//GEN-LAST:event_jTableMouseClicked
 
