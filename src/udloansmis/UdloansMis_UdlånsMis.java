@@ -19,11 +19,8 @@ import security.TokenHandlerClient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 /**
@@ -899,14 +896,15 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         }
         try {
+            int rowCount = 0;
             for (int i = 0; i < loans.length; i++) {
                 if (searchState == 0) {
-                    paintTable(loans[i], i);
+                    paintTable(loans[i], rowCount++);
                 } else if (searchState == 1 && loans[i].getDeliveryDate() == null) {
-                    paintTable(loans[i], i);
+                    paintTable(loans[i], rowCount++);
                     //System.out.println("test");
                 } else if (searchState == 2 && loans[i].getDeliveryDate() != null) {
-                    paintTable(loans[i], i);
+                    paintTable(loans[i], rowCount++);
                 }
             }
         } catch (NullPointerException ex) {
@@ -914,17 +912,17 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
     }
 
-    private void paintTable(LoanDTO loan, int i) throws NullPointerException {
-        jTable.setValueAt(loan.getComponent().getComponentGroup().getName(), i, 0);
-        jTable.setValueAt(loan.getBarcode(), i, 1);
-        jTable.setValueAt(loan.getStudentId(), i, 2);
-        jTable.setValueAt(loan.getLoanDate(), i, 3);
-        jTable.setValueAt(loan.getDueDate(), i, 4);
+    private void paintTable(LoanDTO loan, int rowCount) throws NullPointerException {
+        jTable.setValueAt(loan.getComponent().getComponentGroup().getName(), rowCount, 0);
+        jTable.setValueAt(loan.getBarcode(), rowCount, 1);
+        jTable.setValueAt(loan.getStudentId(), rowCount, 2);
+        jTable.setValueAt(loan.getLoanDate(), rowCount, 3);
+        jTable.setValueAt(loan.getDueDate(), rowCount, 4);
         Date curDate = new Date();
         double msPerDay = 86400 * 1000;
         int dageTilAflevering = (int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
-        jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
-        jTable.setValueAt(loan.getDeliveryDate(), i, 6);
+        jTable.setValueAt(Integer.toString(dageTilAflevering), rowCount, 5);
+        jTable.setValueAt(loan.getDeliveryDate(), rowCount, 6);
     }
 
     private boolean isLoaned(String barcode) throws RemoteException {
