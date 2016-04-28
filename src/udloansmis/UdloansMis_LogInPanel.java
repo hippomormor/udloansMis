@@ -116,7 +116,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         jLabelInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         jTextServer.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextServer.setText("52.28.66.187");
+        jTextServer.setText("54.93.171.44");
         jTextServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextServerActionPerformed(evt);
