@@ -19,6 +19,8 @@ import security.TokenHandlerClient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -46,7 +48,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     JCheckBoxMenuItem menuItemBarcode;
     private boolean searchStudent = false;
     private boolean searchBarcode = false;
-    private int searchState = 0;        // 0 == All, 1 == Loaned, 2 == Unloaned
+    private int searchState = 1;        // 0 == All, 1 == Loaned, 2 == Unloaned
+    private String searchText = "";
 
     public UdloansMis_UdlånsMis(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis v1.0 Log");
@@ -69,8 +72,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         popupMenu.addSeparator();
         popupMenu.add(menuItemBarcode);
         popupMenu.add(menuItemStudent);
-        menuItemAlle.setState(true);
-        menuItemAlle.setEnabled(false);
+        menuItemUdl.setState(true);
+        menuItemUdl.setEnabled(false);
         Thread dateThread = new Thread(dato);
         dateThread.start();
         checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database, serverIP);
@@ -158,121 +161,121 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jTable.setAutoCreateRowSorter(true);
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Navn", "Stregkodenummer", "Studienummer", "Udlånsdato", "Afleveringsdato", "Dage til aflevering"
+                "Navn", "Stregkodenummer", "Studienummer", "Udlånsdato", "Afleveringsdato", "Dage til aflevering", "Afleveret"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
+        jTable.setEnabled(false);
         jTable.setFocusable(false);
-        jTable.setRowSelectionAllowed(false);
         jTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableMouseClicked(evt);
@@ -314,22 +317,20 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextFieldStregkode, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextFieldStregkode, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -797,14 +798,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldStregkodeMouseClicked
 
     private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
-
-        jTable.setComponentPopupMenu(popupMenu);
-        popupMenu.show(jTable, evt.getX(), evt.getY());
-
-        ActionListener menuListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-
+        searchText = jTextFieldStregkode.getText();
+        
+        ActionListener menuListener = (ActionEvent event) -> {
+            try {
                 if (event.getSource() == menuItemAlle) {
                     if (searchState != 0) {
                         searchState = 0;
@@ -814,6 +811,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         menuItemAlle.setEnabled(false);
                         menuItemUdl.setEnabled(true);
                         menuItemNotUdl.setEnabled(true);
+                        if (!searchText.equals("Stregkode eller navn"))
+                            search(searchText);
                     }
                 } else if (event.getSource() == menuItemUdl) {
                     if (searchState != 1) {
@@ -824,6 +823,9 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         menuItemAlle.setEnabled(true);
                         menuItemUdl.setEnabled(false);
                         menuItemNotUdl.setEnabled(true);
+                        if (!searchText.equals("Stregkode eller navn")) {
+                            search(searchText);
+                        }
                     }
                 } else if (event.getSource() == menuItemNotUdl) {
                     if (searchState != 2) {
@@ -834,21 +836,33 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                         menuItemAlle.setEnabled(true);
                         menuItemUdl.setEnabled(true);
                         menuItemNotUdl.setEnabled(false);
+                        if (!searchText.equals("Stregkode eller navn")) {
+                            search(searchText);
+                        }
                     }
                 } else if (event.getSource() == menuItemBarcode) {
-                    if(!searchBarcode)
+                    if (!searchBarcode) {
                         searchStudent = false;
+                    }
                     searchBarcode = !searchBarcode;
                     menuItemBarcode.setState(searchBarcode);
                     menuItemStudent.setState(searchStudent);
-                }
-                else if (event.getSource() == menuItemStudent) {
-                    if(!searchStudent)
+                    if (!searchText.equals("Stregkode eller navn")) {
+                        search(searchText);
+                    }
+                } else if (event.getSource() == menuItemStudent) {
+                    if (!searchStudent) {
                         searchBarcode = false;
+                    }
                     searchStudent = !searchStudent;
                     menuItemBarcode.setState(searchBarcode);
                     menuItemStudent.setState(searchStudent);
+                    if (!searchText.equals("Stregkode eller navn")) {
+                        search(searchText);
+                    }
                 }
+            } catch (RemoteException e) {
+                logPanel.println("Fejl ved kommunikation." + e.getMessage());
             }
         };
 
@@ -859,6 +873,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         menuItemStudent.addActionListener(menuListener);
 
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            jTable.setComponentPopupMenu(popupMenu);
+            popupMenu.show(jTable, evt.getX(), evt.getY());
             popupMenu.setVisible(true);
         }
     }//GEN-LAST:event_jTableMouseClicked
@@ -868,6 +884,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     private void search(String keyword) throws RemoteException {
+        searchText = keyword;
         for (int i = 0; i < jTable.getRowCount(); i++) {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 jTable.setValueAt("", i, j);
@@ -875,7 +892,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
         LoanDTO[] loans;
         if (searchStudent) {
-            loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());           
+            loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         } else if (searchBarcode) {
             loans = database.getLoansForBarcode(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         } else {
@@ -885,9 +902,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             for (int i = 0; i < loans.length; i++) {
                 if (searchState == 0) {
                     paintTable(loans[i], i);
-                } else if (searchState == 1 && loans[i].getDeliveryDateAsDate() == null) {
+                } else if (searchState == 1 && loans[i].getDeliveryDate() == null) {
                     paintTable(loans[i], i);
-                } else if (searchState == 2 && loans[i].getDeliveryDateAsDate() != null) {
+                    //System.out.println("test");
+                } else if (searchState == 2 && loans[i].getDeliveryDate() != null) {
                     paintTable(loans[i], i);
                 }
             }
@@ -906,6 +924,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         double msPerDay = 86400 * 1000;
         int dageTilAflevering = (int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
         jTable.setValueAt(Integer.toString(dageTilAflevering), i, 5);
+        jTable.setValueAt(loan.getDeliveryDate(), i, 6);
     }
 
     private boolean isLoaned(String barcode) throws RemoteException {
