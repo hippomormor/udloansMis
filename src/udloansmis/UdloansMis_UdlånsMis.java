@@ -155,7 +155,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jTextFieldServerCheck.setRequestFocusEnabled(false);
         jTextFieldServerCheck.setVerifyInputWhenFocusTarget(false);
 
-        jTable.setAutoCreateRowSorter(true);
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -266,19 +265,28 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jTable.setEnabled(false);
-        jTable.setFocusable(false);
         jTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTable);
+        if (jTable.getColumnModel().getColumnCount() > 0) {
+            jTable.getColumnModel().getColumn(6).setMinWidth(30);
+            jTable.getColumnModel().getColumn(6).setPreferredWidth(30);
+        }
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jButton2.setText("Udlån");
@@ -902,7 +910,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                     paintTable(loans[i], rowCount++);
                 } else if (searchState == 1 && loans[i].getDeliveryDate() == null) {
                     paintTable(loans[i], rowCount++);
-                    //System.out.println("test");
                 } else if (searchState == 2 && loans[i].getDeliveryDate() != null) {
                     paintTable(loans[i], rowCount++);
                 }
