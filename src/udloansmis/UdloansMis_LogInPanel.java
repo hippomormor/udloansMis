@@ -282,7 +282,8 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                         // Create GUI
                         GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI, serverIP);
                         GUI.init();
-                        GUI.setResizable(false);
+                        GUI.setResizable(true);
+                        GUI.setSize(896, 743);
                         GUI.setTitle("UdlånsMis v1.0");
                         GUI.setVisible(true);
                     } else {
