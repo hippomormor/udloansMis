@@ -9,6 +9,8 @@ import DTO.ComponentDTO;
 import DTO.LoanDTO;
 import DTO.StudentDTO;
 import RMI.IDatabaseRMI;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -22,6 +24,7 @@ import java.util.Date;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -43,6 +46,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     JCheckBoxMenuItem menuItemNotUdl;
     JCheckBoxMenuItem menuItemStudent;
     JCheckBoxMenuItem menuItemBarcode;
+    CustomCellRenderer cellrenderer;
+
     private boolean searchStudent = false;
     private boolean searchBarcode = false;
     private int searchState = 1;        // 0 == All, 1 == Loaned, 2 == Unloaned
@@ -57,6 +62,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     public void init() {
         initComponents();
+        cellrenderer = new CustomCellRenderer();
+        jTable.setDefaultRenderer(String.class, cellrenderer);
         popupMenu = new JPopupMenu();
         menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
         menuItemUdl = new JCheckBoxMenuItem("Vis udlånte komponenter");
@@ -78,6 +85,9 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         checkForServerThread.start();
         startLog();
     }
+    
+              
+
 
     public void CheckServer(boolean isConnectedToServer) {
         if (isConnectedToServer == true) {
@@ -110,13 +120,16 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jTextFieldServerCheck = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jRadioButtonLog = new javax.swing.JRadioButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(896, 743));
+        setPreferredSize(new java.awt.Dimension(896, 743));
 
         jTextFieldStregkode.setText("Stregkode eller navn");
         jTextFieldStregkode.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -154,6 +167,30 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         jTextFieldServerCheck.setFocusable(false);
         jTextFieldServerCheck.setRequestFocusEnabled(false);
         jTextFieldServerCheck.setVerifyInputWhenFocusTarget(false);
+
+        jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton2.setText("Udlån");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton3.setText("Aflevering");
+        jButton3.setActionCommand("Aflever");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jRadioButtonLog.setText("Log");
+        jRadioButtonLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonLogActionPerformed(evt);
+            }
+        });
 
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -277,6 +314,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable.getTableHeader().setReorderingAllowed(false);
         jTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableMouseClicked(evt);
@@ -288,49 +326,39 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             jTable.getColumnModel().getColumn(6).setPreferredWidth(30);
         }
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jButton2.setText("Udlån");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jButton3.setText("Aflevering");
-        jButton3.setActionCommand("Aflever");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jRadioButtonLog.setText("Log");
-        jRadioButtonLog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonLogActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 860, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jTextFieldStregkode, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addGap(0, 54, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -342,6 +370,10 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 .addComponent(jTextFieldServerCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jRadioButtonLog))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,8 +396,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldServerCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -388,8 +420,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -397,14 +429,332 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldStregkodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeActionPerformed
+    private void jRadioButtonLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonLogActionPerformed
+        setLog();
+    }//GEN-LAST:event_jRadioButtonLogActionPerformed
 
-        try {
-            search(jTextFieldStregkode.getText());
-        } catch (RemoteException ex) {
-            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String dialogText = "";
+        String errorText = "";
+        String buttonText = "";
+        String barcode = "";
+        String credentials = "";
+        ComponentDTO component = null;
+
+        // *****************************************************************************
+        // ***************************** SCAN THE BARCODE ******************************
+        // *****************************************************************************
+        errorText = "";
+        dialogText = SCAN_BARCODE;
+        while (true) {
+            barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
+            if (barcode == null) {
+                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!barcode.matches("^([0-9]{6,10})$")) {
+                errorText = INCORRECT_BARCODE_FORMAT;
+                continue;
+            }
+            try {
+                component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (component == null) {
+                    errorText = INCORRECT_BARCODE_FORMAT;
+                    continue;
+                }
+                if (!isLoaned(barcode)) {
+                    errorText = COMPONENT_IS_NOT_LOANED;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                continue;
+            }
+            break;
+
         }
-    }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
+
+        // *****************************************************************************
+        // **************************** INPUT CREDENTIALS ******************************
+        // *****************************************************************************
+        errorText = "";
+        dialogText = INPUT_CREDENTIALS;
+        while (true) {
+            credentials = JOptionPane.showInputDialog(null, errorText + dialogText);
+            if (credentials == null) {
+                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (credentials.length() < 2 || credentials.length() > 30) {
+                errorText = INCORRECT_CREDENTIALS_FORMAT;
+                continue;
+            }
+            break;
+        }
+
+        // *****************************************************************************
+        // ***************************** CONFIRM DELIVERY ******************************
+        // *****************************************************************************
+        buttonText = CONFIRM;
+        errorText = "";
+        dialogText = DOUBLE_CHECK_DELIVERY;
+        while (true) {
+            String resumeTekstBoks = String.format(errorText + dialogText, barcode, component.getComponentGroup().getName(), component.getComponentNumber());
+            Object[] options = {buttonText, CANCEL};
+            int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+            if (n != 0) {
+                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                LoanDTO loan = findLoaned(barcode);
+                if (loan == null) {
+                    JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Date currentDate = new Date();
+                loan.setDeliveryDate(dateToString(currentDate));
+                loan.setDeliveryDateFromDate(currentDate);
+                loan.setDeliveredTo(credentials);
+                int OK = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (OK < 1) {
+                    errorText = COMMUNICATION_ERROR;
+                    buttonText = TRY_AGAIN;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                buttonText = TRY_AGAIN;
+                continue;
+            }
+            break;
+        }
+        JOptionPane.showMessageDialog(null, DELIVERY_SUCCESSFUL);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String dialogText = "";
+        String errorText = "";
+        String buttonText = "";
+        String barcode = "";
+        String studentNumber = "";
+        String deliveryDateString = "";
+        int daysUntilDelivery = 0;
+        Date deliveryDate = null;
+        Date currentDate = null;
+
+        // *****************************************************************************
+        // ***************************** SCAN THE BARCODE ******************************
+        // *****************************************************************************
+        errorText = "";
+        dialogText = SCAN_BARCODE;
+        while (true) {
+            barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
+            if (barcode == null) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!barcode.matches("^([0-9]{6,10})$")) {
+                errorText = INCORRECT_BARCODE_FORMAT;
+                continue;
+            }
+            try {
+                ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (component == null) {
+                    errorText = COMPONENT_DOESNT_EXIST;
+                    continue;
+                }
+                if (component.getStatus() != 1) {
+                    errorText = COMPONENT_INACTIVE;
+                    continue;
+                }
+                if (isLoaned(barcode)) {
+                    errorText = COMPONENT_IS_LOANED;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                continue;
+            }
+            break;
+        }
+
+        // *****************************************************************************
+        // ************************* SCAN THE STUDENT NUMBER ***************************
+        // *****************************************************************************
+        errorText = "";
+        dialogText = SCAN_STUDENTNR;
+        while (true) {
+            studentNumber = JOptionPane.showInputDialog(null, errorText + dialogText);
+            if (studentNumber == null) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!studentNumber.matches("^([sS][0-9]{6})$")) {
+                errorText = INCORRECT_STUDENTNR_FORMAT;
+                continue;
+            }
+            try {
+                StudentDTO student = database.getStudent(studentNumber, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (student == null) {
+                    errorText = STUDENTNR_DOESNT_EXIST;
+                    continue;
+                }
+                if (student.getStatus() != 1) {
+                    errorText = STUDENT_IS_INACTIVE;
+                    continue;
+                }
+
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                continue;
+            }
+            break;
+        }
+
+        // *****************************************************************************
+        // ************************** TYPE THE DELIVERY DATE ***************************
+        // *****************************************************************************
+        errorText = "";
+        dialogText = INPUT_DELIVERY_DATE;
+        while (true) {
+            deliveryDateString = JOptionPane.showInputDialog(null, String.format(errorText + dialogText, dateToString(new Date())));
+            if (deliveryDateString == null) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!deliveryDateString.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
+                errorText = INCORRECT_DATE_FORMAT;
+                continue;
+            }
+            currentDate = new Date();
+            deliveryDate = getDateFromString(deliveryDateString);
+            daysUntilDelivery = (int) ((deliveryDate.getTime() - currentDate.getTime()) / 86400000) + 1;
+            if (daysUntilDelivery < 0) {
+                errorText = DATE_IS_OUTDATED;
+                continue;
+            }
+            break;
+        }
+
+        // *****************************************************************************
+        // ******************************* CONFIRM LOAN ********************************
+        // *****************************************************************************
+        buttonText = CONFIRM;
+        errorText = "";
+        dialogText = DOUBLE_CHECK_LOAN;
+        while (true) {
+            String resumeTekstBoks = String.format(errorText + dialogText, barcode, studentNumber, daysUntilDelivery);
+            Object[] options = {buttonText, CANCEL};
+            int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+            if (n != 0) {
+                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                LoanDTO loan = new LoanDTO();
+                loan.setComponent(database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID()));
+                loan.setBarcode(barcode);
+                loan.setStudentId(studentNumber);
+                loan.setLoanDateFromDate(currentDate);
+                loan.setDueDateFromDate(deliveryDate);
+                int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
+                if (OK < 1) {
+                    errorText = COMMUNICATION_ERROR;
+                    buttonText = TRY_AGAIN;
+                    continue;
+                }
+            } catch (RemoteException ex) {
+                errorText = COMMUNICATION_ERROR;
+                buttonText = TRY_AGAIN;
+                continue;
+            }
+            break;
+        }
+        JOptionPane.showMessageDialog(null, LOAN_SUCCESSFUL);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
+        searchText = jTextFieldStregkode.getText();
+
+        ActionListener menuListener = (ActionEvent event) -> {
+            try {
+                if (event.getSource() == menuItemAlle) {
+                    if (searchState != 0) {
+                        searchState = 0;
+                        menuItemAlle.setState(true);
+                        menuItemUdl.setState(false);
+                        menuItemNotUdl.setState(false);
+                        menuItemAlle.setEnabled(false);
+                        menuItemUdl.setEnabled(true);
+                        menuItemNotUdl.setEnabled(true);
+                        if (!searchText.equals("Stregkode eller navn"))
+                        search(searchText);
+                    }
+                } else if (event.getSource() == menuItemUdl) {
+                    if (searchState != 1) {
+                        searchState = 1;
+                        menuItemAlle.setState(false);
+                        menuItemUdl.setState(true);
+                        menuItemNotUdl.setState(false);
+                        menuItemAlle.setEnabled(true);
+                        menuItemUdl.setEnabled(false);
+                        menuItemNotUdl.setEnabled(true);
+                        if (!searchText.equals("Stregkode eller navn")) {
+                            search(searchText);
+                        }
+                    }
+                } else if (event.getSource() == menuItemNotUdl) {
+                    if (searchState != 2) {
+                        searchState = 2;
+                        menuItemAlle.setState(false);
+                        menuItemUdl.setState(false);
+                        menuItemNotUdl.setState(true);
+                        menuItemAlle.setEnabled(true);
+                        menuItemUdl.setEnabled(true);
+                        menuItemNotUdl.setEnabled(false);
+                        if (!searchText.equals("Stregkode eller navn")) {
+                            search(searchText);
+                        }
+                    }
+                } else if (event.getSource() == menuItemBarcode) {
+                    if (!searchBarcode) {
+                        searchStudent = false;
+                    }
+                    searchBarcode = !searchBarcode;
+                    menuItemBarcode.setState(searchBarcode);
+                    menuItemStudent.setState(searchStudent);
+                    if (!searchText.equals("Stregkode eller navn")) {
+                        search(searchText);
+                    }
+                } else if (event.getSource() == menuItemStudent) {
+                    if (!searchStudent) {
+                        searchBarcode = false;
+                    }
+                    searchStudent = !searchStudent;
+                    menuItemBarcode.setState(searchBarcode);
+                    menuItemStudent.setState(searchStudent);
+                    if (!searchText.equals("Stregkode eller navn")) {
+                        search(searchText);
+                    }
+                }
+            } catch (RemoteException e) {
+                logPanel.println("Fejl ved kommunikation." + e.getMessage());
+            }
+        };
+
+        menuItemAlle.addActionListener(menuListener);
+        menuItemUdl.addActionListener(menuListener);
+        menuItemNotUdl.addActionListener(menuListener);
+        menuItemBarcode.addActionListener(menuListener);
+        menuItemStudent.addActionListener(menuListener);
+
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+            jTable.setComponentPopupMenu(popupMenu);
+            popupMenu.show(jTable, evt.getX(), evt.getY());
+            popupMenu.setVisible(true);
+        }
+    }//GEN-LAST:event_jTableMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
@@ -456,6 +806,19 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             //jTable2.setBackground(Color.red);
         }*/
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextFieldStregkodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeActionPerformed
+
+        try {
+            search(jTextFieldStregkode.getText());
+        } catch (RemoteException ex) {
+            logPanel.println("Fejl ved kommunikation." + ex.getMessage());
+        }
+    }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
+
+    private void jTextFieldStregkodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeMouseClicked
+        jTextFieldStregkode.setText("");
+    }//GEN-LAST:event_jTextFieldStregkodeMouseClicked
 
     public void setLanguage() {
         dialogTexts = new String[]{
@@ -551,338 +914,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     final String DATE_IS_OUTDATED = dialogTexts[26];
     final String COMMUNICATION_ERROR = dialogTexts[27];
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String dialogText = "";
-        String errorText = "";
-        String buttonText = "";
-        String barcode = "";
-        String studentNumber = "";
-        String deliveryDateString = "";
-        int daysUntilDelivery = 0;
-        Date deliveryDate = null;
-        Date currentDate = null;
-
-// *****************************************************************************
-// ***************************** SCAN THE BARCODE ******************************
-// *****************************************************************************
-        errorText = "";
-        dialogText = SCAN_BARCODE;
-        while (true) {
-            barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
-            if (barcode == null) {
-                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (!barcode.matches("^([0-9]{6,10})$")) {
-                errorText = INCORRECT_BARCODE_FORMAT;
-                continue;
-            }
-            try {
-                ComponentDTO component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                if (component == null) {
-                    errorText = COMPONENT_DOESNT_EXIST;
-                    continue;
-                }
-                if (component.getStatus() != 1) {
-                    errorText = COMPONENT_INACTIVE;
-                    continue;
-                }
-                if (isLoaned(barcode)) {
-                    errorText = COMPONENT_IS_LOANED;
-                    continue;
-                }
-            } catch (RemoteException ex) {
-                errorText = COMMUNICATION_ERROR;
-                continue;
-            }
-            break;
-        }
-
-// *****************************************************************************
-// ************************* SCAN THE STUDENT NUMBER ***************************
-// *****************************************************************************
-        errorText = "";
-        dialogText = SCAN_STUDENTNR;
-        while (true) {
-            studentNumber = JOptionPane.showInputDialog(null, errorText + dialogText);
-            if (studentNumber == null) {
-                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (!studentNumber.matches("^([sS][0-9]{6})$")) {
-                errorText = INCORRECT_STUDENTNR_FORMAT;
-                continue;
-            }
-            try {
-                StudentDTO student = database.getStudent(studentNumber, tokenhandler.getKeyToken(), tokenhandler.getID());
-                if (student == null) {
-                    errorText = STUDENTNR_DOESNT_EXIST;
-                    continue;
-                }
-                if (student.getStatus() != 1) {
-                    errorText = STUDENT_IS_INACTIVE;
-                    continue;
-                }
-
-            } catch (RemoteException ex) {
-                errorText = COMMUNICATION_ERROR;
-                continue;
-            }
-            break;
-        }
-
-// *****************************************************************************
-// ************************** TYPE THE DELIVERY DATE ***************************
-// *****************************************************************************
-        errorText = "";
-        dialogText = INPUT_DELIVERY_DATE;
-        while (true) {
-            deliveryDateString = JOptionPane.showInputDialog(null, String.format(errorText + dialogText, dateToString(new Date())));
-            if (deliveryDateString == null) {
-                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (!deliveryDateString.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[-](20)?[0-9][0-9]$")) {
-                errorText = INCORRECT_DATE_FORMAT;
-                continue;
-            }
-            currentDate = new Date();
-            deliveryDate = getDateFromString(deliveryDateString);
-            daysUntilDelivery = (int) ((deliveryDate.getTime() - currentDate.getTime()) / 86400000) + 1;
-            if (daysUntilDelivery < 0) {
-                errorText = DATE_IS_OUTDATED;
-                continue;
-            }
-            break;
-        }
-
-// *****************************************************************************
-// ******************************* CONFIRM LOAN ********************************
-// *****************************************************************************
-        buttonText = CONFIRM;
-        errorText = "";
-        dialogText = DOUBLE_CHECK_LOAN;
-        while (true) {
-            String resumeTekstBoks = String.format(errorText + dialogText, barcode, studentNumber, daysUntilDelivery);
-            Object[] options = {buttonText, CANCEL};
-            int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-            if (n != 0) {
-                JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            try {
-                LoanDTO loan = new LoanDTO();
-                loan.setComponent(database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID()));
-                loan.setBarcode(barcode);
-                loan.setStudentId(studentNumber);
-                loan.setLoanDateFromDate(currentDate);
-                loan.setDueDateFromDate(deliveryDate);
-                int OK = database.createLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-                if (OK < 1) {
-                    errorText = COMMUNICATION_ERROR;
-                    buttonText = TRY_AGAIN;
-                    continue;
-                }
-            } catch (RemoteException ex) {
-                errorText = COMMUNICATION_ERROR;
-                buttonText = TRY_AGAIN;
-                continue;
-            }
-            break;
-        }
-        JOptionPane.showMessageDialog(null, LOAN_SUCCESSFUL);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String dialogText = "";
-        String errorText = "";
-        String buttonText = "";
-        String barcode = "";
-        String credentials = "";
-        ComponentDTO component = null;
-
-// *****************************************************************************
-// ***************************** SCAN THE BARCODE ******************************
-// *****************************************************************************
-        errorText = "";
-        dialogText = SCAN_BARCODE;
-        while (true) {
-            barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
-            if (barcode == null) {
-                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (!barcode.matches("^([0-9]{6,10})$")) {
-                errorText = INCORRECT_BARCODE_FORMAT;
-                continue;
-            }
-            try {
-                component = database.getComponent(barcode, tokenhandler.getKeyToken(), tokenhandler.getID());
-                if (component == null) {
-                    errorText = INCORRECT_BARCODE_FORMAT;
-                    continue;
-                }
-                if (!isLoaned(barcode)) {
-                    errorText = COMPONENT_IS_NOT_LOANED;
-                    continue;
-                }
-            } catch (RemoteException ex) {
-                errorText = COMMUNICATION_ERROR;
-                continue;
-            }
-            break;
-
-        }
-
-// *****************************************************************************
-// **************************** INPUT CREDENTIALS ******************************
-// *****************************************************************************
-        errorText = "";
-        dialogText = INPUT_CREDENTIALS;
-        while (true) {
-            credentials = JOptionPane.showInputDialog(null, errorText + dialogText);
-            if (credentials == null) {
-                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (credentials.length() < 2 || credentials.length() > 30) {
-                errorText = INCORRECT_CREDENTIALS_FORMAT;
-                continue;
-            }
-            break;
-        }
-
-// *****************************************************************************
-// ***************************** CONFIRM DELIVERY ******************************
-// *****************************************************************************
-        buttonText = CONFIRM;
-        errorText = "";
-        dialogText = DOUBLE_CHECK_DELIVERY;
-        while (true) {
-            String resumeTekstBoks = String.format(errorText + dialogText, barcode, component.getComponentGroup().getName(), component.getComponentNumber());
-            Object[] options = {buttonText, CANCEL};
-            int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-            if (n != 0) {
-                JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            try {
-                LoanDTO loan = findLoaned(barcode);
-                if (loan == null) {
-                    JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                Date currentDate = new Date();
-                loan.setDeliveryDate(dateToString(currentDate));
-                loan.setDeliveryDateFromDate(currentDate);
-                loan.setDeliveredTo(credentials);
-                int OK = database.updateLoan(loan, tokenhandler.getKeyToken(), tokenhandler.getID());
-                if (OK < 1) {
-                    errorText = COMMUNICATION_ERROR;
-                    buttonText = TRY_AGAIN;
-                    continue;
-                }
-            } catch (RemoteException ex) {
-                errorText = COMMUNICATION_ERROR;
-                buttonText = TRY_AGAIN;
-                continue;
-            }
-            break;
-        }
-        JOptionPane.showMessageDialog(null, DELIVERY_SUCCESSFUL);
-
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jRadioButtonLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonLogActionPerformed
-        setLog();
-    }//GEN-LAST:event_jRadioButtonLogActionPerformed
-
-    private void jTextFieldStregkodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeMouseClicked
-        jTextFieldStregkode.setText("");
-    }//GEN-LAST:event_jTextFieldStregkodeMouseClicked
-
-    private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
-        searchText = jTextFieldStregkode.getText();
-        
-        ActionListener menuListener = (ActionEvent event) -> {
-            try {
-                if (event.getSource() == menuItemAlle) {
-                    if (searchState != 0) {
-                        searchState = 0;
-                        menuItemAlle.setState(true);
-                        menuItemUdl.setState(false);
-                        menuItemNotUdl.setState(false);
-                        menuItemAlle.setEnabled(false);
-                        menuItemUdl.setEnabled(true);
-                        menuItemNotUdl.setEnabled(true);
-                        if (!searchText.equals("Stregkode eller navn"))
-                            search(searchText);
-                    }
-                } else if (event.getSource() == menuItemUdl) {
-                    if (searchState != 1) {
-                        searchState = 1;
-                        menuItemAlle.setState(false);
-                        menuItemUdl.setState(true);
-                        menuItemNotUdl.setState(false);
-                        menuItemAlle.setEnabled(true);
-                        menuItemUdl.setEnabled(false);
-                        menuItemNotUdl.setEnabled(true);
-                        if (!searchText.equals("Stregkode eller navn")) {
-                            search(searchText);
-                        }
-                    }
-                } else if (event.getSource() == menuItemNotUdl) {
-                    if (searchState != 2) {
-                        searchState = 2;
-                        menuItemAlle.setState(false);
-                        menuItemUdl.setState(false);
-                        menuItemNotUdl.setState(true);
-                        menuItemAlle.setEnabled(true);
-                        menuItemUdl.setEnabled(true);
-                        menuItemNotUdl.setEnabled(false);
-                        if (!searchText.equals("Stregkode eller navn")) {
-                            search(searchText);
-                        }
-                    }
-                } else if (event.getSource() == menuItemBarcode) {
-                    if (!searchBarcode) {
-                        searchStudent = false;
-                    }
-                    searchBarcode = !searchBarcode;
-                    menuItemBarcode.setState(searchBarcode);
-                    menuItemStudent.setState(searchStudent);
-                    if (!searchText.equals("Stregkode eller navn")) {
-                        search(searchText);
-                    }
-                } else if (event.getSource() == menuItemStudent) {
-                    if (!searchStudent) {
-                        searchBarcode = false;
-                    }
-                    searchStudent = !searchStudent;
-                    menuItemBarcode.setState(searchBarcode);
-                    menuItemStudent.setState(searchStudent);
-                    if (!searchText.equals("Stregkode eller navn")) {
-                        search(searchText);
-                    }
-                }
-            } catch (RemoteException e) {
-                logPanel.println("Fejl ved kommunikation." + e.getMessage());
-            }
-        };
-
-        menuItemAlle.addActionListener(menuListener);
-        menuItemUdl.addActionListener(menuListener);
-        menuItemNotUdl.addActionListener(menuListener);
-        menuItemBarcode.addActionListener(menuListener);
-        menuItemStudent.addActionListener(menuListener);
-
-        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
-            jTable.setComponentPopupMenu(popupMenu);
-            popupMenu.show(jTable, evt.getX(), evt.getY());
-            popupMenu.setVisible(true);
-        }
-    }//GEN-LAST:event_jTableMouseClicked
 
     public void setDate(String date) {
         jLabel5.setText(date);
@@ -919,17 +950,21 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
     }
 
-    private void paintTable(LoanDTO loan, int rowCount) throws NullPointerException {
+    
+    
+    private void paintTable(LoanDTO loan, int rowCount) throws NullPointerException {      
+        Date curDate = new Date();
+        double msPerDay = 86400 * 1000;
+        int dageTilAflevering = (int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
+
         jTable.setValueAt(loan.getComponent().getComponentGroup().getName(), rowCount, 0);
         jTable.setValueAt(loan.getBarcode(), rowCount, 1);
         jTable.setValueAt(loan.getStudentId(), rowCount, 2);
         jTable.setValueAt(loan.getLoanDate(), rowCount, 3);
         jTable.setValueAt(loan.getDueDate(), rowCount, 4);
-        Date curDate = new Date();
-        double msPerDay = 86400 * 1000;
-        int dageTilAflevering = (int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
         jTable.setValueAt(Integer.toString(dageTilAflevering), rowCount, 5);
         jTable.setValueAt(loan.getDeliveryDate(), rowCount, 6);
+        
     }
 
     private boolean isLoaned(String barcode) throws RemoteException {
@@ -1017,6 +1052,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton jRadioButtonLog;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable;
