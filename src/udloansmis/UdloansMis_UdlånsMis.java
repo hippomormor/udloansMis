@@ -46,7 +46,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     JCheckBoxMenuItem menuItemNotUdl;
     JCheckBoxMenuItem menuItemStudent;
     JCheckBoxMenuItem menuItemBarcode;
-    CustomCellRenderer cellrenderer;
+    UdloansMis_CellRenderer cellrenderer;
 
     private boolean searchStudent = false;
     private boolean searchBarcode = false;
@@ -62,7 +62,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     public void init() {
         initComponents();
-        cellrenderer = new CustomCellRenderer();
+        cellrenderer = new UdloansMis_CellRenderer();
         jTable.setDefaultRenderer(String.class, cellrenderer);
         popupMenu = new JPopupMenu();
         menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
