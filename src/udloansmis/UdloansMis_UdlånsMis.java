@@ -22,6 +22,9 @@ import java.util.Date;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
+import static javax.swing.SwingConstants.CENTER;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -60,6 +63,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     public void init() {
         initComponents();
         cellrenderer = new UdloansMis_CellRenderer();
+        cellrenderer.setHorizontalAlignment(CENTER);
+        ((DefaultTableCellRenderer) jTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(CENTER);
         jTable.setDefaultRenderer(String.class, cellrenderer);
         popupMenu = new JPopupMenu();
         menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
@@ -126,7 +131,6 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(896, 743));
-        setPreferredSize(new java.awt.Dimension(896, 743));
 
         jTextFieldStregkode.setText("Stregkode eller navn");
         jTextFieldStregkode.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -311,7 +315,11 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable.setFocusable(false);
+        jTable.setRequestFocusEnabled(false);
+        jTable.setRowSelectionAllowed(false);
         jTable.getTableHeader().setReorderingAllowed(false);
+        jTable.setVerifyInputWhenFocusTarget(false);
         jTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableMouseClicked(evt);
@@ -953,7 +961,8 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         Date curDate = new Date();
         double msPerDay = 86400 * 1000;
         int dageTilAflevering = (int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
-
+        
+  
         jTable.setValueAt(loan.getComponent().getComponentGroup().getName(), rowCount, 0);
         jTable.setValueAt(loan.getBarcode(), rowCount, 1);
         jTable.setValueAt(loan.getStudentId(), rowCount, 2);
