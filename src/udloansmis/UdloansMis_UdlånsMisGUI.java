@@ -30,10 +30,10 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
     UdloansMis_CellRenderer cellrenderer;
     UdloansMis_UdlånsMisLogic logic;
 
-    private boolean searchStudent = false;
-    private boolean searchBarcode = false;
-    private int searchState = 1;        // 0 == All, 1 == Loaned, 2 == Unloaned
-    private String searchText = "";
+    public boolean searchStudent = false;
+    public boolean searchBarcode = false;
+    public int searchState = 1;        // 0 == All, 1 == Loaned, 2 == Unloaned
+    public String searchText = "";
 
     public UdloansMis_UdlånsMisGUI(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.serverIP = serverIP;

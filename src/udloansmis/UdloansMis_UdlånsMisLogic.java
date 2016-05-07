@@ -23,16 +23,10 @@ public class UdloansMis_UdlånsMisLogic {
     private final JFrame logFrame;
     private final TokenHandlerClient tokenhandler;
     private final UdloansMis_CheckForServer checkforserver;
-
     private boolean logEnabled = false;
     private IDatabaseRMI database;
-    public UdloansMis_Log logPanel;
-
-    private UdloansMis_UdlånsMisGUI mainGUI;
-
-    private boolean searchStudent = false;
-    private boolean searchBarcode = false;
-    private int searchState = 1;        // 0 == All, 1 == Loaned, 2 == Unloaned
+    public static UdloansMis_Log logPanel;
+    private final UdloansMis_UdlånsMisGUI mainGUI;
 
     public UdloansMis_UdlånsMisLogic(UdloansMis_UdlånsMisGUI mainGUI, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis Log");
@@ -321,9 +315,9 @@ public class UdloansMis_UdlånsMisLogic {
 
         LoanDTO[] loans;
         // Check filter and get DTO
-        if (searchStudent) {
+        if (mainGUI.searchStudent) {
             loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
-        } else if (searchBarcode) {
+        } else if (mainGUI.searchBarcode) {
             loans = database.getLoansForBarcode(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         } else {
             loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
@@ -332,11 +326,11 @@ public class UdloansMis_UdlånsMisLogic {
             // Check if loaned and paint table
             int rowCount = 0;
             for (LoanDTO loan : loans) {
-                if (searchState == 0) {
+                if (mainGUI.searchState == 0) {
                     mainGUI.paintTable(loan, rowCount++);
-                } else if (searchState == 1 && loan.getDeliveryDate() == null) {
+                } else if (mainGUI.searchState == 1 && loan.getDeliveryDate() == null) {
                     mainGUI.paintTable(loan, rowCount++);
-                } else if (searchState == 2 && loan.getDeliveryDate() != null) {
+                } else if (mainGUI.searchState == 2 && loan.getDeliveryDate() != null) {
                     mainGUI.paintTable(loan, rowCount++);
                 }
             }
