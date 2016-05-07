@@ -14,7 +14,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author Christian Genter
  */
-public class UdloansMis_UdlånsMisMain {
+public class UdloansMis_Main {
 
     public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
 
@@ -33,7 +33,7 @@ public class UdloansMis_UdlånsMisMain {
                 System.out.println("Nimbus not found - resolving to default Look & Feel");
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(UdloansMis_UdlånsMisMain.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UdloansMis_Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
             

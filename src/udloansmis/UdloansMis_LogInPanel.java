@@ -29,7 +29,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
 
     private IDatabaseRMI databaseRMI;
 
-    private UdloansMis_UdlånsMis GUI;
+    private UdloansMis_UdlånsMisGUI GUI;
 
     /**
      * Creates new form UdloansMis_LogIn
@@ -281,7 +281,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                         w.setVisible(false);
 
                         // Create GUI
-                        GUI = new UdloansMis_UdlånsMis(tokenhandler, databaseRMI, serverIP);
+                        GUI = new UdloansMis_UdlånsMisGUI(tokenhandler, databaseRMI, serverIP);
                         GUI.init();
                         GUI.setResizable(true);
                         GUI.setSize(896, 743);

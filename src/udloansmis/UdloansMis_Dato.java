@@ -14,8 +14,8 @@ public class UdloansMis_Dato implements Runnable {
 
     private final DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
     private java.util.Date date;
-    private static UdloansMis_UdlånsMis GUI;
-    public UdloansMis_Dato(UdloansMis_UdlånsMis GUI) {
+    private UdloansMis_UdlånsMisGUI GUI;
+    public UdloansMis_Dato(UdloansMis_UdlånsMisGUI GUI) {
         date = new java.util.Date();
         this.GUI = GUI;
     }

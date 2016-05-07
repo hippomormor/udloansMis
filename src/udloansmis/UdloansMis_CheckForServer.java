@@ -20,15 +20,17 @@ public class UdloansMis_CheckForServer implements Runnable {
     private boolean isConnectionDropped = false;
     private String serverIP;    
 
-    private final UdloansMis_UdlånsMis GUI;
+    private final UdloansMis_UdlånsMisGUI GUI;
+    private final UdloansMis_UdlånsMisLogic logic;
     private final TokenHandlerClient tokenhandler;
     private IDatabaseRMI database;
 
-    public UdloansMis_CheckForServer(UdloansMis_UdlånsMis GUI, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
+    public UdloansMis_CheckForServer(UdloansMis_UdlånsMisGUI GUI, UdloansMis_UdlånsMisLogic logic, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.GUI = GUI;
         this.tokenhandler = tokenhandler;
         this.database = database;
         this.serverIP = serverIP;
+        this.logic = logic;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class UdloansMis_CheckForServer implements Runnable {
                     database = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
                     
                     // Sync database with GUI
-                    GUI.setDatabase(database);
+                    logic.setDatabase(database);
                     
                     tokenhandler.setID(database.getNewID());
                     
@@ -55,7 +57,7 @@ public class UdloansMis_CheckForServer implements Runnable {
                     isConnectionDropped = false;
                     
                     // Update GUI-status
-                    GUI.CheckServer(isConnectedToServer);
+                    GUI.setServerState(isConnectedToServer);
 
                 } else {
                     
@@ -63,7 +65,7 @@ public class UdloansMis_CheckForServer implements Runnable {
                     isConnectedToServer = tokenhandler.checkKey(database.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID()));
                     
                     // Update GUI-status
-                    GUI.CheckServer(isConnectedToServer);           
+                    GUI.setServerState(isConnectedToServer);           
                     
                     // Wait 2 sec's
                     try {
@@ -77,7 +79,7 @@ public class UdloansMis_CheckForServer implements Runnable {
             } catch (NotBoundException | MalformedURLException | RemoteException ex) {
                 isConnectedToServer = false;
                 isConnectionDropped = true;
-                GUI.CheckServer(isConnectedToServer);
+                GUI.setServerState(isConnectedToServer);
             }
         }
     }
