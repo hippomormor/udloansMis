@@ -853,7 +853,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         "Komponenten er inaktiv!\n",
         "Studienumeret er inaktiv!\n",
         "Komponenten er allerede lånt ud!\n",
-        "Komponenten er ikke lånet ud!\n",
+        "Komponenten er ikke lånt ud!\n",
         "Forældet dato!\n",
         "Kommunikations fejl!\n"
     };
