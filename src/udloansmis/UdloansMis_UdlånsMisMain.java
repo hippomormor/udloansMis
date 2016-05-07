@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package udloansmis;
 
 import java.net.MalformedURLException;
@@ -16,7 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author Lenovo
+ * @author Christian Genter
  */
 public class UdloansMis_UdlånsMisMain {
 
@@ -40,9 +36,7 @@ public class UdloansMis_UdlånsMisMain {
                 Logger.getLogger(UdloansMis_UdlånsMisMain.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        // Log-in (Din main bliver nu kørt fra "UdloansMis_LoginPanel", under "jButtonOKActionPerformed()" og "init()". 
-        // Den starter efter log-in er accepteret af jacobs server og nøglerne er lavet og tjekket);       
+            
         UdloansMis_LoginPanelCreator loginhandler = new UdloansMis_LoginPanelCreator();
         loginhandler.paintLogin();
     }

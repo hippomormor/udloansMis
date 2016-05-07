@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package udloansmis;
 
 import RMI.IDatabaseRMI;
@@ -16,7 +12,7 @@ import security.TokenHandlerClient;
 
 /**
  *
- * @author Lenovo
+ * @author Thomas D. Høybye-Jensen & Christian Genter
  */
 public class UdloansMis_CheckForServer implements Runnable {
 
@@ -46,6 +42,7 @@ public class UdloansMis_CheckForServer implements Runnable {
                     // Restart RMI-connection
                     database = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
                     
+                    // Sync database with GUI
                     GUI.setDatabase(database);
                     
                     tokenhandler.setID(database.getNewID());
@@ -68,6 +65,7 @@ public class UdloansMis_CheckForServer implements Runnable {
                     // Update GUI-status
                     GUI.CheckServer(isConnectedToServer);           
                     
+                    // Wait 2 sec's
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException ex) {

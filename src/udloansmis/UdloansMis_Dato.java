@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package udloansmis;
 
 import java.text.DateFormat;
@@ -12,7 +8,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Lenovo
+ * @author Thomas D. Høybye-Jensen
  */
 public class UdloansMis_Dato implements Runnable { 
 
@@ -29,7 +25,6 @@ public class UdloansMis_Dato implements Runnable {
     public void run(){
         while(true){
             date = new java.util.Date();
-            //System.out.println(dateFormat.format(date));
 
             GUI.setDate(dateFormat.format(date));
             try {

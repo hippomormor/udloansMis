@@ -1,19 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package udloansmis;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+package udloansmis;
 
 /**
  *
- * @author hippomormor
+ * @author Christian Genter
  */
 public class UdloansMis_Log extends javax.swing.JPanel {
-    private final DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
+
     private java.util.Date date;
     /**
      * Creates new form UdloansMis_Log
@@ -60,11 +53,13 @@ public class UdloansMis_Log extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    // Append text to log
     public void println(String text) {
         date = new java.util.Date();
         jTextArea1.append(date + ": " + text + "\n");
     }
     
+    // Set log text
     public void setText(String text) {
         jTextArea1.setText(text);
     }

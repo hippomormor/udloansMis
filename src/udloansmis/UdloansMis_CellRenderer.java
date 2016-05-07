@@ -1,3 +1,4 @@
+
 package udloansmis;
 
 import java.awt.Color;
@@ -7,7 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
- * @author hippomormor
+ * @author Christian Genter
  */
 public class UdloansMis_CellRenderer extends DefaultTableCellRenderer {
 
@@ -18,13 +19,17 @@ public class UdloansMis_CellRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
             boolean hasFocus, int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        
+        // Set even row to white & odd row to grey
         if (row % 2 == 0)
             c.setBackground(evenColor);
         else
             c.setBackground(oddColor);
         
+        // If table is not empty..
         if (!(value == null || value.toString().equals(""))) {
-
+            
+            // Set colors dependent on delivery-date value
             if (column == 5 && value.toString().equals("0"))
                 c.setBackground(new Color(250, 218, 100));
             else if (column == 5 && Integer.parseInt(value.toString()) < 0) 

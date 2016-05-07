@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package udloansmis;
 
 import RMI.IDatabaseRMI;
@@ -27,7 +23,7 @@ import security.TokenHandlerClient;
 
 /**
  *
- * @author hippomormor
+ * @author Christian Genter
  */
 public class UdloansMis_LogInPanel extends javax.swing.JPanel {
 
@@ -238,8 +234,9 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                 return null;
             });
 
+            // Wait 5 seconds
             try {
-                future.get(3, TimeUnit.SECONDS);
+                future.get(5, TimeUnit.SECONDS);
             } catch (InterruptedException | TimeoutException |
                     ExecutionException e) {
                 throw new RemoteException();

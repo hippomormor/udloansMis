@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package udloansmis;
 
 import java.awt.Dimension;
@@ -16,7 +12,7 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author hippomormor
+ * @author Christian Genter
  */
 public class UdloansMis_LoginPanelCreator {
 
@@ -24,7 +20,6 @@ public class UdloansMis_LoginPanelCreator {
     public JFrame vindue = new JFrame();
 
     public void paintLogin() throws NotBoundException, MalformedURLException, RemoteException {
-
   
             // Create jPanel
             loginPanel = new UdloansMis_LogInPanel();

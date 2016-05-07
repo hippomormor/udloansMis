@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package udloansmis;
 
 import DTO.ComponentDTO;
@@ -24,11 +20,10 @@ import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
- * @author Lenovo
+ * @author Thomas D. Høybye-Jensen, Christian Genter & Marcus Persson
  */
 public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
@@ -61,11 +56,17 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }
 
     public void init() {
+        
+        // Initialize main GUI components
         initComponents();
+        
+        // Make cell-renderer & center all text in table
         cellrenderer = new UdloansMis_CellRenderer();
         cellrenderer.setHorizontalAlignment(CENTER);
         ((DefaultTableCellRenderer) jTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(CENTER);
         jTable.setDefaultRenderer(String.class, cellrenderer);
+        
+        // Make popup-menu & options then add options to popup-menu
         popupMenu = new JPopupMenu();
         menuItemAlle = new JCheckBoxMenuItem("Vis alle komponenter");
         menuItemUdl = new JCheckBoxMenuItem("Vis udlånte komponenter");
@@ -78,19 +79,25 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         popupMenu.addSeparator();
         popupMenu.add(menuItemBarcode);
         popupMenu.add(menuItemStudent);
+        
+        // Set states on right click options
         menuItemUdl.setState(true);
         menuItemUdl.setEnabled(false);
+        
+        // Start date thread to show time/date in GUI
         Thread dateThread = new Thread(dato);
         dateThread.start();
+        
+        // Start server-checking thread
         checkforserver = new UdloansMis_CheckForServer(this, tokenhandler, database, serverIP);
         Thread checkForServerThread = new Thread(checkforserver);
         checkForServerThread.start();
+        
+        // Intialize log components
         startLog();
     }
-    
-              
 
-
+    // Method to set color & text on server status-bar
     public void CheckServer(boolean isConnectedToServer) {
         if (isConnectedToServer == true) {
             jTextFieldServerCheck.setForeground(new java.awt.Color(255, 255, 255));
@@ -682,6 +689,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
         searchText = jTextFieldStregkode.getText();
 
+        // Check what filter is clicked & set booleans and options acccordingly, then do search with filters
         ActionListener menuListener = (ActionEvent event) -> {
             try {
                 if (event.getSource() == menuItemAlle) {
@@ -748,12 +756,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             }
         };
 
+        // Add listeners to filter-menu options
         menuItemAlle.addActionListener(menuListener);
         menuItemUdl.addActionListener(menuListener);
         menuItemNotUdl.addActionListener(menuListener);
         menuItemBarcode.addActionListener(menuListener);
         menuItemStudent.addActionListener(menuListener);
-
+        
+        // Show filter-menu when right mouse-button is clicked
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
             jTable.setComponentPopupMenu(popupMenu);
             popupMenu.show(jTable, evt.getX(), evt.getY());
@@ -762,58 +772,16 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Search when search-button is pressed
         try {
             search(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
             logPanel.println("Fejl ved kommunikation." + ex.getMessage());
         }
-
-        /* if (checkforserver.isConnectedToServer) {
-            String stregkode = jTextFieldStregkode.getText();
-            String studienummer = jTextFieldStudieNr.getText();
-            if (!stregkode.equals("Stregkode eller navn")) {
-                StringSelection stringSelection = new StringSelection(stregkode);
-                Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clpbrd.setContents(stringSelection, null);
-
-            } else if ((studienummer.length() == 7) && (!studienummer.equals("Sxxxxxx"))) {
-                if (studienummer.startsWith("S") || studienummer.startsWith("s")) {
-                    String studietalString = studienummer.substring(1, 7);
-
-                    if (!studietalString.matches("^\\d+$")) {   // Check om der er bogstaver i studienummeret.
-                        String st = "Studienummer ukorrekt.";
-                        JOptionPane.showMessageDialog(null, st);
-
-                    } else {
-                        System.out.print("Det indtastede studienummer er: S" + studietalString + "\n");
-
-                        StringSelection stringSelection = new StringSelection(studienummer);
-                        Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        clpbrd.setContents(stringSelection, null);
-                        jTextFieldStudieNr.setText("Sxxxxxx");
-                    }
-                } else {
-                    String st = "Scan stregkode, skriv navn eller studienummer, og klik på søg.";
-                    JOptionPane.showMessageDialog(null, st);
-
-                }
-
-            }
-
-        } else {
-            String st = "Ikke forbundet til serveren. Check kabler, forbindelsen genoprettes automatisk";
-            JOptionPane.showMessageDialog(null, st);
-            jTable.setValueAt("123456789", 3, 0);
-            jTable.setValueAt("Zybo kit #16", 3, 1);
-            jTable.setValueAt("19/4-2016", 3, 2);
-            jTable.setValueAt("19/6-2016", 3, 3);
-            jTable.setValueAt("61", 3, 4);
-            //jTable2.setBackground(Color.red);
-        }*/
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextFieldStregkodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeActionPerformed
-
+        // Search when 'Enter' is pressed in search-field
         try {
             search(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
@@ -822,6 +790,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
 
     private void jTextFieldStregkodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldStregkodeMouseClicked
+        // Empty text box when clicked
         jTextFieldStregkode.setText("");
     }//GEN-LAST:event_jTextFieldStregkodeMouseClicked
 
@@ -926,12 +895,14 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
 
     private void search(String keyword) throws RemoteException {
         searchText = keyword;
+        // Empty table
         for (int i = 0; i < jTable.getRowCount(); i++) {
             for (int j = 0; j < jTable.getColumnCount(); j++) {
                 jTable.setValueAt("", i, j);
             }
         }
         LoanDTO[] loans;
+        // Check filter and get DTO
         if (searchStudent) {
             loans = database.getLoansForStudent(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         } else if (searchBarcode) {
@@ -940,6 +911,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
             loans = database.searchLoans(keyword, tokenhandler.getKeyToken(), tokenhandler.getID());
         }
         try {
+            // Check if loaned and paint table
             int rowCount = 0;
             for (int i = 0; i < loans.length; i++) {
                 if (searchState == 0) {
@@ -958,11 +930,12 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
     
     
     private void paintTable(LoanDTO loan, int rowCount) throws NullPointerException {      
+        // Calculate current date
         Date curDate = new Date();
         double msPerDay = 86400 * 1000;
         int dageTilAflevering = (int) ((loan.getDueDateAsDate().getTime() - curDate.getTime()) / msPerDay) + 1;
         
-  
+        // Paint collumns with DTO data
         jTable.setValueAt(loan.getComponent().getComponentGroup().getName(), rowCount, 0);
         jTable.setValueAt(loan.getBarcode(), rowCount, 1);
         jTable.setValueAt(loan.getStudentId(), rowCount, 2);
@@ -1012,6 +985,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         return date;
     }
 
+    // Initialise log
     private void startLog() {
 
         // Create jPanel
@@ -1033,6 +1007,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         });
     }
 
+    // Toggle log-window
     private void setLog() {
         if (!logEnabled) {
             // Show window
@@ -1044,6 +1019,7 @@ public class UdloansMis_UdlånsMis extends javax.swing.JFrame {
         }
     }
 
+    // Method to sync database when connection is lost
     public void setDatabase(IDatabaseRMI database) {
         this.database = database;
     }
