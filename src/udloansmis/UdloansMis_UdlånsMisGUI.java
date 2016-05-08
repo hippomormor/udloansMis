@@ -39,6 +39,9 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
     public UdloansMis_UdlånsMisGUI(TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.serverIP = serverIP;
         logic = new UdloansMis_UdlånsMisLogic(this, tokenhandler, database, serverIP);
+        
+        // Set GUI language
+        logic.setLanguage("DK");
         dato = new UdloansMis_Dato(this);
     }
 

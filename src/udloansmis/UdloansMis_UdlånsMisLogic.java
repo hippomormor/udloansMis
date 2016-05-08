@@ -28,13 +28,44 @@ public class UdloansMis_UdlånsMisLogic {
     public static UdloansMis_Log logPanel;
     private final UdloansMis_UdlånsMisGUI mainGUI;
 
-    public UdloansMis_UdlånsMisLogic(UdloansMis_UdlånsMisGUI mainGUI, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
+    String[] dialogTexts;
+
+    String SCAN_BARCODE;
+    String SCAN_STUDENTNR;
+    String INPUT_CREDENTIALS;
+    String INPUT_DELIVERY_DATE;
+    String DOUBLE_CHECK_LOAN;
+    String DOUBLE_CHECK_DELIVERY;
+    String LOAN_CANCELLED;
+    String DELIVERY_CANCELLED;
+    String CONFIRM_DELIVERY;
+    String CONFIRM_LOAN;
+    String CONFIRM;
+    String CANCEL;
+    String TRY_AGAIN;
+    String NOTE;
+    String LOAN_SUCCESSFUL;
+    String DELIVERY_SUCCESSFUL;
+    String INCORRECT_BARCODE_FORMAT;
+     String INCORRECT_STUDENTNR_FORMAT;
+     String INCORRECT_CREDENTIALS_FORMAT;
+     String INCORRECT_DATE_FORMAT;
+     String COMPONENT_DOESNT_EXIST;
+     String STUDENTNR_DOESNT_EXIST;
+     String COMPONENT_INACTIVE;
+     String STUDENT_IS_INACTIVE;
+    String COMPONENT_IS_LOANED;
+     String COMPONENT_IS_NOT_LOANED;
+     String DATE_IS_OUTDATED;
+     String COMMUNICATION_ERROR;
+     String NO_RESULT;
+
+    public UdloansMis_UdlånsMisLogic(UdloansMis_UdlånsMisGUI mainGUI, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {       
         this.logFrame = new JFrame("UdlånsMis Log");
         this.mainGUI = mainGUI;
         this.tokenhandler = tokenhandler;
         this.database = database;
         checkforserver = new UdloansMis_CheckForServer(mainGUI, this, tokenhandler, database, serverIP);
-
         init();
     }
 
@@ -395,101 +426,100 @@ public class UdloansMis_UdlånsMisLogic {
         this.database = database;
     }
 
-    public void setLanguage() {
-        dialogTexts = new String[]{
-            "Scan or type in the barcode on the component.\n(Fx. 12345678)",
-            "Put the studentcard on the RFID læser, or type it in manually.\n(Fx. s123456)",
-            "Returned to: (Type name or initials)",
-            "Type in the due date, with the following format dd/MM-yy. (Fx. %s)",
-            "Do you wish to create a loan for the following component?\n Barcode: %s, to %s, for %s days?",
-            "Do you wish to deliver the following component?\nBarcode: %s, component type: %s (#%s)?",
-            "The loan process has been cancelled.",
-            "The delivering process has been cancelled.",
-            "Confirm delivery",
-            "Confirm loan",
-            "Confirm",
-            "Cancel",
-            "Try again",
-            "Observe!!",
-            "The loan is registered.",
-            "The delivery is completed.",
-            "Incorrect barcode format!\n",
-            "Incorrect studentnumber format!\n",
-            "Incorrect credentials format!\n",
-            "Incorrect date format!\n",
-            "The component doesn't exist!\n",
-            "The studentnumber doesn't exist!\n",
-            "The component is inactive!\n",
-            "The studentnumber is inactive!\n",
-            "The component is already lent out!\n",
-            "The component isn't lent out!\n",
-            "Outdated date!\n",
-            "Communication error!\n",
-            "No result!\n"
-        };
+    public void setLanguage(String lang) {
+        if (lang.equals("EN")) {
+            dialogTexts = new String[]{
+                "Scan or type in the barcode on the component.\n(Fx. 12345678)",
+                "Put the studentcard on the RFID læser, or type it in manually.\n(Fx. s123456)",
+                "Returned to: (Type name or initials)",
+                "Type in the due date, with the following format dd/MM-yy. (Fx. %s)",
+                "Do you wish to create a loan for the following component?\n Barcode: %s, to %s, for %s days?",
+                "Do you wish to deliver the following component?\nBarcode: %s, component type: %s (#%s)?",
+                "The loan process has been cancelled.",
+                "The delivering process has been cancelled.",
+                "Confirm delivery",
+                "Confirm loan",
+                "Confirm",
+                "Cancel",
+                "Try again",
+                "Observe!!",
+                "The loan is registered.",
+                "The delivery is completed.",
+                "Incorrect barcode format!\n",
+                "Incorrect studentnumber format!\n",
+                "Incorrect credentials format!\n",
+                "Incorrect date format!\n",
+                "The component doesn't exist!\n",
+                "The studentnumber doesn't exist!\n",
+                "The component is inactive!\n",
+                "The studentnumber is inactive!\n",
+                "The component is already lent out!\n",
+                "The component isn't lent out!\n",
+                "Outdated date!\n",
+                "Communication error!\n",
+                "No result!\n"
+            };
+        } else if (lang.equals("DK")) {
+            dialogTexts = new String[]{
+                "Scan eller indtast stregkodenummer på udlånskomponent.\n(Ex. 12345678)",
+                "Læg studiekortet på RFID læser, eller indtast studienummer.\n(Ex. s123456)",
+                "Returneret til: (Indtast navn)",
+                "Indtast afleveringsdato i dette format dd/MM-yy. (Ex. %s)",
+                "Ønsker du at lave et udlån af følgende komponent?\nStregkode: %s, til %s i %s dage?",
+                "Ønsker du at aflevere følgende komponent?\nStregkode: %s, komponent navn: %s?",
+                "Udlånet er afbrudt.",
+                "Aflevereringen er afbrudt.",
+                "Bekræft afleverering",
+                "Bekræft udlån",
+                "Bekræft",
+                "Afbryd",
+                "Prøv igen",
+                "Bemærk!",
+                "Udlånet er gennemført.",
+                "Aflevereringen er gennemført.",
+                "Forkert stregkode-format!\n",
+                "Forkert studienummer-format!\n",
+                "Forkert credentials-format!\n",
+                "Forkert dato format!\n",
+                "Komponenten findes ikke!\n",
+                "Studienumeret findes ikke!\n",
+                "Komponenten er inaktiv!\n",
+                "Studienumeret er inaktiv!\n",
+                "Komponenten er allerede lånt ud!\n",
+                "Komponenten er ikke lånt ud!\n",
+                "Forældet dato!\n",
+                "Kommunikationsfejl!\n",
+                "Intet resultat!\n"
+            };
+        }
+        SCAN_BARCODE = dialogTexts[0];
+        SCAN_STUDENTNR = dialogTexts[1];
+        INPUT_CREDENTIALS = dialogTexts[2];
+        INPUT_DELIVERY_DATE = dialogTexts[3];
+        DOUBLE_CHECK_LOAN = dialogTexts[4];
+        DOUBLE_CHECK_DELIVERY = dialogTexts[5];
+        LOAN_CANCELLED = dialogTexts[6];
+        DELIVERY_CANCELLED = dialogTexts[7];
+        CONFIRM_DELIVERY = dialogTexts[8];
+        CONFIRM_LOAN = dialogTexts[9];
+        CONFIRM = dialogTexts[10];
+        CANCEL = dialogTexts[11];
+        TRY_AGAIN = dialogTexts[12];
+        NOTE = dialogTexts[13];
+        LOAN_SUCCESSFUL = dialogTexts[14];
+        DELIVERY_SUCCESSFUL = dialogTexts[15];
+        INCORRECT_BARCODE_FORMAT = dialogTexts[16];
+        INCORRECT_STUDENTNR_FORMAT = dialogTexts[17];
+        INCORRECT_CREDENTIALS_FORMAT = dialogTexts[18];
+        INCORRECT_DATE_FORMAT = dialogTexts[19];
+        COMPONENT_DOESNT_EXIST = dialogTexts[20];
+        STUDENTNR_DOESNT_EXIST = dialogTexts[21];
+        COMPONENT_INACTIVE = dialogTexts[22];
+        STUDENT_IS_INACTIVE = dialogTexts[23];
+        COMPONENT_IS_LOANED = dialogTexts[24];
+        COMPONENT_IS_NOT_LOANED = dialogTexts[25];
+        DATE_IS_OUTDATED = dialogTexts[26];
+        COMMUNICATION_ERROR = dialogTexts[27];
+        NO_RESULT = dialogTexts[28];
     }
-
-    String[] dialogTexts = new String[]{
-        "Scan eller indtast stregkodenummer på udlånskomponent.\n(Ex. 12345678)",
-        "Læg studiekortet på RFID læser, eller indtast studienummer.\n(Ex. s123456)",
-        "Returneret til: (Indtast navn)",
-        "Indtast afleveringsdato i dette format dd/MM-yy. (Ex. %s)",
-        "Ønsker du at lave et udlån af følgende komponent?\nStregkode: %s, til %s i %s dage?",
-        "Ønsker du at aflevere følgende komponent?\nStregkode: %s, komponent navn: %s?",
-        "Udlånet er afbrudt.",
-        "Aflevereringen er afbrudt.",
-        "Bekræft afleverering",
-        "Bekræft udlån",
-        "Bekræft",
-        "Afbryd",
-        "Prøv igen",
-        "Bemærk!",
-        "Udlånet er gennemført.",
-        "Aflevereringen er gennemført.",
-        "Forkert stregkode-format!\n",
-        "Forkert studienummer-format!\n",
-        "Forkert credentials-format!\n",
-        "Forkert dato format!\n",
-        "Komponenten findes ikke!\n",
-        "Studienumeret findes ikke!\n",
-        "Komponenten er inaktiv!\n",
-        "Studienumeret er inaktiv!\n",
-        "Komponenten er allerede lånt ud!\n",
-        "Komponenten er ikke lånt ud!\n",
-        "Forældet dato!\n",
-        "Kommunikationsfejl!\n",
-        "Intet resultat!\n"
-    };
-
-    final String SCAN_BARCODE = dialogTexts[0];
-    final String SCAN_STUDENTNR = dialogTexts[1];
-    final String INPUT_CREDENTIALS = dialogTexts[2];
-    final String INPUT_DELIVERY_DATE = dialogTexts[3];
-    final String DOUBLE_CHECK_LOAN = dialogTexts[4];
-    final String DOUBLE_CHECK_DELIVERY = dialogTexts[5];
-    final String LOAN_CANCELLED = dialogTexts[6];
-    final String DELIVERY_CANCELLED = dialogTexts[7];
-    final String CONFIRM_DELIVERY = dialogTexts[8];
-    final String CONFIRM_LOAN = dialogTexts[9];
-    final String CONFIRM = dialogTexts[10];
-    final String CANCEL = dialogTexts[11];
-    final String TRY_AGAIN = dialogTexts[12];
-    final String NOTE = dialogTexts[13];
-    final String LOAN_SUCCESSFUL = dialogTexts[14];
-    final String DELIVERY_SUCCESSFUL = dialogTexts[15];
-
-    final String INCORRECT_BARCODE_FORMAT = dialogTexts[16];
-    final String INCORRECT_STUDENTNR_FORMAT = dialogTexts[17];
-    final String INCORRECT_CREDENTIALS_FORMAT = dialogTexts[18];
-    final String INCORRECT_DATE_FORMAT = dialogTexts[19];
-    final String COMPONENT_DOESNT_EXIST = dialogTexts[20];
-    final String STUDENTNR_DOESNT_EXIST = dialogTexts[21];
-    final String COMPONENT_INACTIVE = dialogTexts[22];
-    final String STUDENT_IS_INACTIVE = dialogTexts[23];
-    final String COMPONENT_IS_LOANED = dialogTexts[24];
-    final String COMPONENT_IS_NOT_LOANED = dialogTexts[25];
-    final String DATE_IS_OUTDATED = dialogTexts[26];
-    final String COMMUNICATION_ERROR = dialogTexts[27];
-    final String NO_RESULT = dialogTexts[28];
-
 }
