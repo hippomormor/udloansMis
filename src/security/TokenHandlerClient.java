@@ -15,19 +15,24 @@ public class TokenHandlerClient {
     private BigInteger keyToken;
     private int clientID;
 
-    // Hash credentials, reduce and generate random prime and token. Check for negative
+    // Hash credentials, reduce with modulo and generate random prime and token. Check for negative
     public TokenHandlerClient(String user, String pass) {
         generateRandom();
-        BigInteger creds = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode())/10000000-8));
-        if (creds.signum() < 1)
-            generateToken(creds.negate());
-        else
-            generateToken(creds);
+        
+        BigInteger creds = new BigInteger(Integer.toString((user.hashCode() + pass.hashCode()) - 8));
+        if (creds.signum() < 0)
+            creds = creds.negate();
+        
+        // Reduce to max 16
+        creds = creds.mod(new BigInteger("16"));
+
+        generateToken(creds);
     }
 
-    // Generate random 7-bit prime number
+    // Generate random prime number
     private BigInteger generateRandom() {
-        randomToken = BigInteger.probablePrime(7, new SecureRandom());
+        randomToken = BigInteger.probablePrime(512, new SecureRandom());
+        randomToken = BigInteger.probablePrime(9, new SecureRandom());
         System.out.println("Random prime generated");
         return randomToken;
     }
@@ -39,9 +44,9 @@ public class TokenHandlerClient {
         return publicToken;
     }
 
-    // Generate key from recieved token and random prime: recievedToken^randomPrime (power)
+    // Generate key from recieved token and random prime: recievedToken^randomPrime (power). Reduce with Modulo
     public BigInteger generateKey(BigInteger token) {
-        keyToken = token.pow(Integer.parseInt(randomToken.toString()));
+        keyToken = token.modPow(randomToken, new BigInteger("1000000000000000000000000000000000000000000000000000"));
         System.out.println("Key generated");
         return keyToken;
     }
