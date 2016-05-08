@@ -446,9 +446,9 @@ public class UdloansMis_UdlånsMisLogic {
         "Bemærk!",
         "Udlånet er gennemført.",
         "Aflevereringen er gennemført.",
-        "Forkert stregkode format!\n",
-        "Forkert studienummer format!\n",
-        "Forkert credentials format!\n",
+        "Forkert stregkode-format!\n",
+        "Forkert studienummer-format!\n",
+        "Forkert credentials-format!\n",
         "Forkert dato format!\n",
         "Komponenten findes ikke!\n",
         "Studienumeret findes ikke!\n",
@@ -457,7 +457,7 @@ public class UdloansMis_UdlånsMisLogic {
         "Komponenten er allerede lånt ud!\n",
         "Komponenten er ikke lånt ud!\n",
         "Forældet dato!\n",
-        "Kommunikations fejl!\n",
+        "Kommunikationsfejl!\n",
         "Intet resultat!\n"
     };
 

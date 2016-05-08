@@ -20,6 +20,7 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
 
     private final UdloansMis_Dato dato;
     private final String serverIP;
+    private boolean isConnected = false;
 
     JPopupMenu popupMenu;
     JCheckBoxMenuItem menuItemAlle;
@@ -78,10 +79,12 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
     // Method to set color & text on server status-bar
     public void setServerState(boolean isConnectedToServer) {
         if (isConnectedToServer == true) {
+            isConnected = true;
             jTextFieldServerCheck.setForeground(new java.awt.Color(255, 255, 255));
             jTextFieldServerCheck.setBackground(new java.awt.Color(0, 150, 0));
             jTextFieldServerCheck.setText("Forbundet til komponentserver på " + serverIP);
         } else {
+            isConnected = false;
             jTextFieldServerCheck.setForeground(new java.awt.Color(255, 255, 255));
             jTextFieldServerCheck.setBackground(new java.awt.Color(150, 0, 0));
             jTextFieldServerCheck.setText("Ikke forbundet til komponentserver, automatisk genoprettelse foregår");
@@ -422,11 +425,19 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonLogActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        logic.delivery();
+        if (isConnected) {
+            logic.delivery();
+        } else {
+            UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        logic.loan();
+        if (isConnected) {
+            logic.loan();
+        } else {
+            UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMouseClicked
@@ -543,14 +554,19 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
     }
 
     private void search(String keyword) throws RemoteException {
-        searchText = keyword;
-        // Empty table
-        for (int i = 0; i < jTable.getRowCount(); i++) {
-            for (int j = 0; j < jTable.getColumnCount(); j++) {
-                jTable.setValueAt("", i, j);
+        if (isConnected) {
+
+            searchText = keyword;
+            // Empty table
+            for (int i = 0; i < jTable.getRowCount(); i++) {
+                for (int j = 0; j < jTable.getColumnCount(); j++) {
+                    jTable.setValueAt("", i, j);
+                }
             }
+            logic.search(keyword);
+        } else {
+            UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR);
         }
-        logic.search(keyword);
     }
 
     public void paintTable(LoanDTO loan, int rowCount) throws NullPointerException {
