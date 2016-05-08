@@ -47,20 +47,20 @@ public class UdloansMis_UdlånsMisLogic {
     String LOAN_SUCCESSFUL;
     String DELIVERY_SUCCESSFUL;
     String INCORRECT_BARCODE_FORMAT;
-     String INCORRECT_STUDENTNR_FORMAT;
-     String INCORRECT_CREDENTIALS_FORMAT;
-     String INCORRECT_DATE_FORMAT;
-     String COMPONENT_DOESNT_EXIST;
-     String STUDENTNR_DOESNT_EXIST;
-     String COMPONENT_INACTIVE;
-     String STUDENT_IS_INACTIVE;
+    String INCORRECT_STUDENTNR_FORMAT;
+    String INCORRECT_CREDENTIALS_FORMAT;
+    String INCORRECT_DATE_FORMAT;
+    String COMPONENT_DOESNT_EXIST;
+    String STUDENTNR_DOESNT_EXIST;
+    String COMPONENT_INACTIVE;
+    String STUDENT_IS_INACTIVE;
     String COMPONENT_IS_LOANED;
-     String COMPONENT_IS_NOT_LOANED;
-     String DATE_IS_OUTDATED;
-     String COMMUNICATION_ERROR;
-     String NO_RESULT;
+    String COMPONENT_IS_NOT_LOANED;
+    String DATE_IS_OUTDATED;
+    String COMMUNICATION_ERROR;
+    String NO_RESULT;
 
-    public UdloansMis_UdlånsMisLogic(UdloansMis_UdlånsMisGUI mainGUI, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {       
+    public UdloansMis_UdlånsMisLogic(UdloansMis_UdlånsMisGUI mainGUI, TokenHandlerClient tokenhandler, IDatabaseRMI database, String serverIP) {
         this.logFrame = new JFrame("UdlånsMis Log");
         this.mainGUI = mainGUI;
         this.tokenhandler = tokenhandler;
