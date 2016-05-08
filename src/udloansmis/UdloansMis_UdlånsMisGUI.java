@@ -496,7 +496,7 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
                     }
                 }
             } catch (RemoteException e) {
-                UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR + "\n" + e.getMessage());
+                UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR + e.getMessage());
             }
         };
 
@@ -520,7 +520,7 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
         try {
             search(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR + "\n" + ex.getMessage());
+            UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR + ex.getMessage());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -529,7 +529,7 @@ public class UdloansMis_UdlånsMisGUI extends javax.swing.JFrame {
         try {
             search(jTextFieldStregkode.getText());
         } catch (RemoteException ex) {
-            UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR + "\n" + ex.getMessage());
+            UdloansMis_UdlånsMisLogic.logPanel.println(logic.COMMUNICATION_ERROR + ex.getMessage());
         }
     }//GEN-LAST:event_jTextFieldStregkodeActionPerformed
 

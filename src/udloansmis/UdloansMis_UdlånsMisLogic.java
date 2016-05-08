@@ -335,7 +335,7 @@ public class UdloansMis_UdlånsMisLogic {
                 }
             }
         } catch (NullPointerException ex) {
-            logPanel.println("Intet resultat");
+            logPanel.println(NO_RESULT);
         }
     }
 
@@ -424,7 +424,8 @@ public class UdloansMis_UdlånsMisLogic {
             "The component is already lent out!\n",
             "The component isn't lent out!\n",
             "Outdated date!\n",
-            "Communication error!\n"
+            "Communication error!\n",
+            "No result!\n"
         };
     }
 
@@ -456,7 +457,8 @@ public class UdloansMis_UdlånsMisLogic {
         "Komponenten er allerede lånt ud!\n",
         "Komponenten er ikke lånt ud!\n",
         "Forældet dato!\n",
-        "Kommunikations fejl!\n"
+        "Kommunikations fejl!\n",
+        "Intet resultat!\n"
     };
 
     final String SCAN_BARCODE = dialogTexts[0];
@@ -488,5 +490,6 @@ public class UdloansMis_UdlånsMisLogic {
     final String COMPONENT_IS_NOT_LOANED = dialogTexts[25];
     final String DATE_IS_OUTDATED = dialogTexts[26];
     final String COMMUNICATION_ERROR = dialogTexts[27];
+    final String NO_RESULT = dialogTexts[28];
 
 }
