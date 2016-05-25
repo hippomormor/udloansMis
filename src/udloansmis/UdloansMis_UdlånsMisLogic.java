@@ -118,6 +118,9 @@ public class UdloansMis_UdlånsMisLogic {
         errorText = "";
         dialogText = SCAN_BARCODE;
         while (true) {
+            if (!errorText.equals("")) {
+                logPanel.println(errorText);
+            }
             barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
             if (barcode == null) {
                 JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -154,6 +157,9 @@ public class UdloansMis_UdlånsMisLogic {
         errorText = "";
         dialogText = SCAN_STUDENTNR;
         while (true) {
+            if (!errorText.equals("")) {
+                logPanel.println(errorText);
+            }
             studentNumber = JOptionPane.showInputDialog(null, errorText + dialogText);
             if (studentNumber == null) {
                 JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -187,6 +193,9 @@ public class UdloansMis_UdlånsMisLogic {
         errorText = "";
         dialogText = INPUT_DELIVERY_DATE;
         while (true) {
+            if (!errorText.equals("")) {
+                logPanel.println(errorText);
+            }
             deliveryDateString = JOptionPane.showInputDialog(null, String.format(errorText + dialogText, dateToString(new Date())));
             if (deliveryDateString == null) {
                 JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -215,6 +224,9 @@ public class UdloansMis_UdlånsMisLogic {
         while (true) {
             String resumeTekstBoks = String.format(errorText + dialogText, barcode, studentNumber, daysUntilDelivery);
             Object[] options = {buttonText, CANCEL};
+            if (!errorText.equals("")) {
+                logPanel.println(errorText);
+            }
             int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
             if (n != 0) {
                 JOptionPane.showMessageDialog(null, LOAN_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -240,6 +252,7 @@ public class UdloansMis_UdlånsMisLogic {
             }
             break;
         }
+        logPanel.println(LOAN_SUCCESSFUL);
         JOptionPane.showMessageDialog(null, LOAN_SUCCESSFUL);
     }
 
@@ -257,6 +270,9 @@ public class UdloansMis_UdlånsMisLogic {
         errorText = "";
         dialogText = SCAN_BARCODE;
         while (true) {
+            if (!errorText.equals("")) {
+                logPanel.println(errorText);
+            }
             barcode = JOptionPane.showInputDialog(null, errorText + dialogText);
             if (barcode == null) {
                 JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -290,6 +306,9 @@ public class UdloansMis_UdlånsMisLogic {
         errorText = "";
         dialogText = INPUT_CREDENTIALS;
         while (true) {
+            if (!errorText.equals("")) {
+                logPanel.println(errorText);
+            }
             credentials = JOptionPane.showInputDialog(null, errorText + dialogText);
             if (credentials == null) {
                 JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -311,6 +330,9 @@ public class UdloansMis_UdlånsMisLogic {
         while (true) {
             String resumeTekstBoks = String.format(errorText + dialogText, barcode, component.getComponentGroup().getName(), component.getComponentNumber());
             Object[] options = {buttonText, CANCEL};
+            if (!errorText.equals("")) {
+                logPanel.println(errorText);
+            }
             int n = JOptionPane.showOptionDialog(null, resumeTekstBoks, CONFIRM_LOAN, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
             if (n != 0) {
                 JOptionPane.showMessageDialog(null, DELIVERY_CANCELLED, NOTE, JOptionPane.ERROR_MESSAGE);
@@ -339,6 +361,7 @@ public class UdloansMis_UdlånsMisLogic {
             }
             break;
         }
+        logPanel.println(DELIVERY_SUCCESSFUL);
         JOptionPane.showMessageDialog(null, DELIVERY_SUCCESSFUL);
     }
 
