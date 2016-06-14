@@ -5,7 +5,6 @@ import RMI.IDatabaseRMI;
 import java.awt.Window;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -17,8 +16,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.swing.SwingUtilities;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 import security.TokenHandlerClient;
 
 /**
@@ -242,12 +239,6 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
                 throw new RemoteException();
             }
 
-            // Create brugeradmin SOAP-interface
-            URL url = new URL("http://javabog.dk:9901/brugeradmin?wsdl");
-            QName qname = new QName("http://soap.transport.brugerautorisation/", "BrugeradminImplService");
-            Service service = Service.create(url, qname);
-            brugerautorisation.transport.soap.Brugeradmin brugerAdmin = service.getPort(brugerautorisation.transport.soap.Brugeradmin.class);
-
             // Create database RMI-interface
             databaseRMI = (IDatabaseRMI) Naming.lookup("rmi://" + serverIP + "/databaseRMI");
 
@@ -258,42 +249,38 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
             char[] pass = jPasswordField.getPassword();
 
             try {
-                // Check javabog-brugeradmin if user is OK
-                if (brugerAdmin.hentBruger(user, new String(pass)) != null) {
+                // Create tokenhandler with user + password
+                TokenHandlerClient tokenhandler = new TokenHandlerClient(user, new String(pass));
 
-                    // Create tokenhandler with user + password
-                    TokenHandlerClient tokenhandler = new TokenHandlerClient(user, new String(pass));
+                tokenhandler.setID(databaseRMI.getNewID());
 
-                    tokenhandler.setID(databaseRMI.getNewID());
+                // Send own token to server. Then generate key from server token
+                tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken(), tokenhandler.getID()));
 
-                    // Send own token to server. Then generate key from server token
-                    tokenhandler.generateKey(databaseRMI.exchangeTokens(tokenhandler.getPublicToken(), tokenhandler.getID()));
+                // Send own key and request key from server
+                BigInteger serverKey = databaseRMI.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID());
 
-                    // Send own key and request key from server
-                    BigInteger serverKey = databaseRMI.exchangeKeys(tokenhandler.getKeyToken(), tokenhandler.getID());
+                // Check if server-key matches own key
+                if (tokenhandler.checkKey(serverKey)) {
+                    System.out.println("Nøgleudveksling godkendt");
 
-                    // Check if server-key matches own key
-                    if (tokenhandler.checkKey(serverKey)) {
-                        System.out.println("Nøgleudveksling godkendt");
+                    // Hide log-in panel
+                    Window w = SwingUtilities.getWindowAncestor(this);
+                    w.setVisible(false);
 
-                        // Hide log-in panel
-                        Window w = SwingUtilities.getWindowAncestor(this);
-                        w.setVisible(false);
-
-                        // Create GUI
-                        GUI = new UdloansMis_UdlånsMisGUI(tokenhandler, databaseRMI, serverIP);
-                        GUI.init();
-                        GUI.setResizable(true);
-                        GUI.setSize(896, 743);
-                        GUI.setTitle("UdlånsMis v1.0");
-                        GUI.setVisible(true);
-                    } else {
-                        // If credentials are accepted from javabog/brugeradmin, but rejected from server (different user on server and client)
-                        System.out.println("Nøgleudveksling fejlet");
-                        jLabelInfo.setText("Forkert brugernavn/adgangskode");
-                        jTextUser.setText("");
-                        jPasswordField.setText("");
-                    }
+                    // Create GUI
+                    GUI = new UdloansMis_UdlånsMisGUI(tokenhandler, databaseRMI, serverIP);
+                    GUI.init();
+                    GUI.setResizable(true);
+                    GUI.setSize(896, 743);
+                    GUI.setTitle("UdlånsMis v1.0");
+                    GUI.setVisible(true);
+                } else {
+                    // If credentials are accepted from javabog/brugeradmin, but rejected from server (different user on server and client)
+                    System.out.println("Nøgleudveksling fejlet");
+                    jLabelInfo.setText("Forkert brugernavn/adgangskode");
+                    jTextUser.setText("");
+                    jPasswordField.setText("");
                 }
             } catch (Exception ex) {
                 // If credentials are rejected from javabog/brugeradmin, then prompt user and clear text-/password-field
@@ -305,7 +292,6 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             jLabelInfo.setText("Kan ikke forbinde til server");
         }
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
