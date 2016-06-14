@@ -221,7 +221,7 @@ public class UdloansMis_LogInPanel extends javax.swing.JPanel {
             if (!jTextServer.getText().equals(""))
                 serverIP = jTextServer.getText();
             else
-                serverIP = "54.93.171.44";
+                serverIP = "54.93.99.67";
 
             // Check RMI-server state to avoid client hang
             ExecutorService executor = Executors.newSingleThreadExecutor();
